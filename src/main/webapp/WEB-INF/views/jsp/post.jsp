@@ -7,33 +7,37 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
-	<c:forEach items="${sessionScope.post}" var="p">
-			
-			Description :  <c:out value="${p.description }"></c:out>
-			Likes : <c:out value="${p.countsOfLikes }"></c:out>
-			Dislikes :  <c:out value="${p.countsOfDislikes }"></c:out>
-			Date :  <c:out value="${p.dateOfUpload }"></c:out>
-			
-			Who like post : 
-			<c:forEach items="${p.usersWhoLike}" var="user">
-				<c:out value="#${user.username }"></c:out>
+<body>	
+			<img src="${sessionScope.post.path}" width="50px" height="auto"/>
+			<h5>Description :  ${sessionScope.post.description} </h5><br>
+			<h5>Likes : ${sessionScope.post.countsOfLikes} </h5><br>
+			<h5>Dislikes : ${sessionScope.post.countsOfDislikes} </h5><br>
+			<h5>Date : ${sessionScope.post.dateOfUpload} </h5><br>
+			<br>
+			<h5>Tags : </h5>
+			<c:forEach items="${sessionScope.post.tagsOfPost}" var="tag">
+					<h6>${tag.title}</h6>
 			</c:forEach>
 			
-			<br> Tags :
-			<c:forEach items="${p.usersWhoDislike}" var="user">
-				<c:out value="#${user.username }"></c:out>
+			<br>
+			<h5>Who like post : </h5>  <br>
+			<c:forEach items="${sessionScope.post.usersWhoLike}" var="user">
+					<h6>${user.userName}</h6> 
 			</c:forEach>
-			
-			<br> Comments :
-			<c:forEach items="${p.commentsOfPost}" var="comment">
-				Username : <c:out value="#${comment.user.username }"></c:out>
-				Description : <c:out value="#${comment.description }"></c:out>
-				Date : <c:out value="#${comment.dateAndTimeOfUpload }"></c:out>
-				Likes : <c:out value="#${comment.numberOfLikes }"></c:out>
-				Dislikes :  <c:out value="#${comment.numberOfDislikes }"></c:out>
+			<br>
+			<h5>Who dislike post  : </h5> <br>
+			<c:forEach items="${sessionScope.post.usersWhoDislike}" var="user">
+					<h6> ${user.userName} </h6> 
 			</c:forEach>
-			
-	</c:forEach>
+			<br>
+			<h5> Comments : </h5> <br>
+			<c:forEach items="${sessionScope.post.commentsOfPost}" var="comment">
+				<h6>Username : ${comment.user.id} </h6> <br>
+				<h6>Description : ${comment.description} </h6> <br>
+				<h6>Date : ${comment.dateAndTimeOfUpload} </h6> <br>
+				<h6>Likes : ${comment.numberOfLikes} </h6> <br>
+				<h6>Dislikes : ${comment. numberOfDislikes} </h6> <br>
+			</c:forEach>
+	
 </body>
 </html>

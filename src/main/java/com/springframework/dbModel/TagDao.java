@@ -15,14 +15,14 @@ import com.springframework.model.Tag;
 @Component
 public class TagDao {
 
-	@Autowired
-	private DbManager manager;
-
 	private static final String INSERT_POST_TAG = "INSERT INTO post_tag (post_id, tag_id) VALUES (?, ?)";
 	private static final String SELECT_TAG = "SELECT * FROM tags WHERE title = ?";
 	private static final String SELECT_TITLE_OF_TAG = "SELECT title FROM tags WHERE title = ?";
 	private static final String INSERT_TAG = "INSERT INTO tags (title) VALUES (?)";
 	private static final String SELECT_TAGS_FROM_POST = "SELECT t.title FROM post_tag AS p JOIN tags AS t USING (tag_id) WHERE p.post_id = ? ";
+
+	@Autowired
+	private DbManager manager;
 
 	// insert into common table
 	public synchronized void insertPostTags(Post p) throws SQLException {
@@ -71,13 +71,12 @@ public class TagDao {
 
 	// get all tags from post
 	public HashSet<Tag> getAllTagsFromPost(long post_id) throws SQLException {
-		PreparedStatement ps;
-		ps = manager.getConnection().prepareStatement(SELECT_TAGS_FROM_POST);
+		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_TAGS_FROM_POST);
 		ps.setLong(1, post_id);
 		ResultSet rs = ps.executeQuery();
 		HashSet<Tag> tags = new HashSet<>();
 		while (rs.next()) {
-			tags.add(new Tag(rs.getLong("tag_id"), rs.getString("title")));
+			tags.add(new Tag(rs.getString("title")));
 		}
 		return tags;
 	}
@@ -87,6 +86,11 @@ public class TagDao {
 		// Tag tag = TagDao.getInstance().getTag("angry");
 		// System.out.println(tag);
 		// System.out.println(TagDao.getInstance().existTag(new Tag("angry")));
+		/*
+		 * HashSet<Tag> tags = TagDao.getInstance().getAllTagsFromPost(2); for
+		 * (Tag tag : tags) { System.out.println(tag); }
+		 */
+
 	}
 
 }

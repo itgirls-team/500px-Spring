@@ -1,4 +1,4 @@
-package model;
+package com.springframework.model;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -19,8 +19,8 @@ public class Post {
 	private Set<User> usersWhoDislike;
 	private Set<Tag> tagsOfPost;
 
-	public Post(String path, String description, int countsOfLikes, int countsOfDislikes,
-			Set<Tag> tags, long album_id ,Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
+	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long album_id,
+			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
 		this.path = path;
 		this.countsOfLikes = countsOfLikes;
 		this.countsOfDislikes = countsOfDislikes;
@@ -33,21 +33,39 @@ public class Post {
 		this.usersWhoDislike = usersWhoDislike;
 	}
 
-	public Post(long id, String path, String description,int countsOfLikes, int countsOfDislikes,
-			Set<Tag> tags, long album_id, Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
-		this(path, description,countsOfLikes,countsOfDislikes, tags, album_id,commentsOfPost,usersWhoLike,usersWhoDislike);
+	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tag,
+			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
+		this.path = path;
+		this.countsOfLikes = countsOfLikes;
+		this.countsOfDislikes = countsOfDislikes;
+		this.dateOfUpload = LocalDate.now();
+		this.description = description;
+		this.tagsOfPost = tag;
+		this.commentsOfPost = commentsOfPost;
+		this.usersWhoLike = usersWhoLike;
+		this.usersWhoDislike = usersWhoDislike;
+	}
+
+	public Post(long id, String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags,
+			long album_id, Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
+		this(path, description, countsOfLikes, countsOfDislikes, tags, album_id, commentsOfPost, usersWhoLike,
+				usersWhoDislike);
 		this.id = id;
 	}
-	
-	public Post(String path, String description,Set<Tag> tags, long album_id){
-		this(path,description,0,0,tags,album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
+
+	public Post(String path, String description, Set<Tag> tags, long album_id) {
+		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
 	}
-	
-	public Post(long id,String path, String description,Set<Tag> tags, long album_id){
-		this(path,description,0,0,tags,album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
+
+	public Post(String path, String description, Set<Tag> tags) {
+		this(path, description, 0, 0, tags, new HashSet<>(), new HashSet<>(), new HashSet<>());
+	}
+
+	public Post(long id, String path, String description, Set<Tag> tags, long album_id) {
+		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
 		this.id = id;
 	}
-	
+
 	// Getters
 	public long getId() {
 		return id;
@@ -127,6 +145,14 @@ public class Post {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", path=" + path + ", countsOfLikes=" + countsOfLikes + ", countsOfDislikes="
+				+ countsOfDislikes + ", dateOfUpload=" + dateOfUpload + ", description=" + description + ", albumId="
+				+ albumId + ", commentsOfPost=" + commentsOfPost + ", usersWhoLike=" + usersWhoLike
+				+ ", usersWhoDislike=" + usersWhoDislike + ", tagsOfPost=" + tagsOfPost + "]";
 	}
 
 }

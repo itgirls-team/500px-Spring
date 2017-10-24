@@ -1,4 +1,4 @@
-package model;
+package com.springframework.model;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -14,13 +14,7 @@ public class Album {
 	private long userId;
 	private Set<Post> posts;
 
-	@Override
-	public String toString() {
-		return "Album [id=" + id + ", category=" + category + ", dateOfUpload=" + dateOfUpload + ", picture=" + picture
-				+ ", userId=" + userId + ", posts=" + posts + "]";
-	}
-
-	public Album(String category, String picture, long user,Set<Post> posts) {
+	public Album(String category, String picture, long user, Set<Post> posts) {
 		this.category = category;
 		this.dateOfUpload = LocalDate.now();
 		this.picture = picture;
@@ -28,16 +22,25 @@ public class Album {
 		this.posts = posts;
 	}
 
-	public Album(long id, String category, String picture, long user,Set<Post> posts ) {
-		this(category, picture, user,posts);
+	public Album(String category, String picture) {
+		this.category = category;
+		this.dateOfUpload = LocalDate.now();
+		this.picture = picture;
+	}
+
+	public Album(long id, String category, String picture, long user, Set<Post> posts) {
+		this(category, picture, user, posts);
 		this.id = id;
 	}
-	
-	public Album(String category, String picture,long user) {
+
+	public Album(String category, String picture, long user) {
 		this(category, picture, user, new HashSet<>());
 	}
-	
 
+	public Album(long id, String category, String picture, long user) {
+		this(category, picture, user, new HashSet<>());
+		this.id = id;
+	}
 
 	// Getters
 	public long getId() {
@@ -59,7 +62,7 @@ public class Album {
 	public Set<Post> getPosts() {
 		return Collections.unmodifiableSet(posts);
 	}
-	
+
 	public String getPicture() {
 		return picture;
 	}
@@ -91,6 +94,12 @@ public class Album {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Album [id=" + id + ", category=" + category + ", dateOfUpload=" + dateOfUpload + ", picture=" + picture
+				+ ", userId=" + userId + ", posts=" + posts + "]";
 	}
 
 }

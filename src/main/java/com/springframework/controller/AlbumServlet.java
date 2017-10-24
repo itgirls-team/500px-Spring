@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.AlbumDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
 
 @WebServlet("/albums")
 public class AlbumServlet extends HttpServlet {
+
 	private Connection connection;
 
 	@Override
@@ -33,12 +35,16 @@ public class AlbumServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		try {
-			request.getSession().setAttribute("user", UserDao.getInstance(connection).getUser("username"));
-			request.getRequestDispatcher("album.jsp").forward(request, response);
+			User u = (User) request.getSession().getAttribute("user");
+			User realUser = UserDao.getInstance(connection).getUser(u.getUserName());
+			realUser.setAlbumsOfUser(AlbumDao.getInstance().getAllAlbumFromUser(realUser.getUserName()));
+			request.getSession().setAttribute("user", realUser);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		request.getRequestDispatcher("album.jsp").forward(request, response);
 	}
 
 }

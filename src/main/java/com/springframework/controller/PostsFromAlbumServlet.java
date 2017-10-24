@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Album;
-import model.db.PostDao;
+import com.springframework.dbModel.PostDao;
 
 @WebServlet("/posts")
 public class PostsFromAlbumServlet extends HttpServlet {
@@ -18,14 +17,13 @@ public class PostsFromAlbumServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		long albumId = Long.parseLong(request.getParameter("albumId"));
 		try {
-			Album album = (Album) request.getAttribute("albumId");
-			request.getSession().setAttribute("posts", PostDao.getInstance().getAllPostsFromAlbum(album));
-			System.out.println(PostDao.getInstance().getAllPostsFromAlbum(album));
-			request.getRequestDispatcher("posts.jsp").forward(request, response);
+			request.getSession().setAttribute("posts", PostDao.getInstance().getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		request.getRequestDispatcher("posts.jsp").forward(request, response);
 	}
 
 }
