@@ -10,13 +10,18 @@
 </head>
 <body>
 	<h1>Posts</h1>
-	<c:forEach items="${sessionScope.posts}" var="post">
+	<%--  <c:forEach items="${sessionScope.posts}" var="post">
+		<a href="post?postId=${post.id}">${post.path}</a>
+	</c:forEach>
+	--%>
+	
+	 <c:forEach items="${posts}" var="post">
 		<a href="post?postId=${post.id}">${post.path}</a>
 	</c:forEach>
 	
 	<form action="uploadPost.jsp" method="post">
 				<input type="submit" value="Upload Post">
-		</form>
+	</form>
 	
 </body>
 </html>

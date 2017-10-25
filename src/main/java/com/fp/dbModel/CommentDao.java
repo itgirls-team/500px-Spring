@@ -23,7 +23,8 @@ public class CommentDao {
 	private static final String DELETE_COMMENT = "DELETE FROM comments WHERE comment_id=?";
 	private static final String DELETE_ALL_COMMENTS = "DELETE FROM comments WHERE comment_id = ?";
 	private static final String LIKE_COMMENT = "INSERT INTO users_like_comments (user_id,comment_id) VALUES (?,?)";
-
+	private static final String REMOVE_COMMENTS_LIKES = "DELETE FROM users_like_comments WHERE comment_id = ?";
+	private static final String REMOVE_COMMENTS_DISLIKES = "DELETE FROM users_dislike_comments WHERE comment_id = ?";
 	@Autowired
 	private DbManager manager;
 	@Autowired
@@ -34,7 +35,7 @@ public class CommentDao {
 		ps.setDate(1, Date.valueOf(LocalDate.now()));
 		ps.setString(2, comment.getDescription());
 		ps.setLong(3, comment.getPost().getId());
-		ps.setLong(4, comment.getUser().getId());
+		ps.setLong(4, comment.getUserId());
 		ps.executeUpdate();
 
 		ResultSet rs = ps.getGeneratedKeys();
@@ -50,18 +51,7 @@ public class CommentDao {
 			rs.close();
 		}
 	}
-
-	// delete comment
-	public synchronized void deleteComment(Comment c) throws SQLException {
-		PreparedStatement ps = manager.getConnection().prepareStatement(DELETE_COMMENT);
-		ps.setLong(1, c.getId());
-		ps.executeUpdate();
-		if (ps != null) {
-			ps.close();
-		}
-
-	}
-
+	/*
 	// delete all comments
 	public synchronized void deleteComments(Post p) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(DELETE_ALL_COMMENTS);
@@ -70,8 +60,53 @@ public class CommentDao {
 		if (ps != null) {
 			ps.close();
 		}
+	}*/
+	
+	// delete all comments
+	public synchronized void deleteComments(Post p) throws SQLException {
+		Set<Comment> comments = this.getAllComments(p.getId());
+		for (Comment comment : comments) {
+			deleteComment(comment.getId());
+		}
 	}
 
+	// delete comment
+    public void deleteComment(long comment_id) throws SQLException {
+        PreparedStatement deleteLikes = null;
+        PreparedStatement deleteDislikes = null;
+        PreparedStatement deleteComment = null;
+        try {
+            manager.getConnection().setAutoCommit(false);
+            deleteLikes =  manager.getConnection().prepareStatement(REMOVE_COMMENTS_LIKES);
+            deleteLikes.setLong(1, comment_id);
+            deleteLikes.executeUpdate();
+            
+            deleteDislikes =  manager.getConnection().prepareStatement(REMOVE_COMMENTS_DISLIKES);
+            deleteDislikes.setLong(1, comment_id);
+            deleteDislikes.executeUpdate();
+
+            deleteComment =  manager.getConnection().prepareStatement(DELETE_COMMENT);
+            deleteComment.setLong(1, comment_id);
+            deleteComment.executeUpdate();
+            manager.getConnection().commit();
+        } catch (SQLException e) {
+            System.err.print("Transaction is being rolled back");
+            manager.getConnection().rollback();
+            throw e;
+        } finally {
+            if (deleteLikes != null) {
+                deleteLikes.close();
+            }
+            if (deleteDislikes != null) {
+                deleteDislikes.close();
+            }
+            if (deleteComment != null) {
+                deleteComment.close();
+            }
+            manager.getConnection().setAutoCommit(true);
+        }
+    }
+    
 	// like comment
 	public synchronized void likeComment(long commentId, String username) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(LIKE_COMMENT);

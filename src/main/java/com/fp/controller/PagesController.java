@@ -42,4 +42,10 @@ public class PagesController {
 	public String getFollowersPage() {
 		return "followers";
 	}
+	
+	
+
+	
+	
+	
 }

@@ -18,7 +18,7 @@ public class Comment {
 	private Post post;
 	private int numberOfLikes;
 	private int numberOfDislikes;
-	private User user = commentDao.getUser(id, userId);
+	//private User user = commentDao.getUser(id, userId);
 	// private HashSet<User> usersLikedTheComment = new HashSet<User>();
 
 	public Comment(long user, String description, Post post) {
@@ -48,10 +48,13 @@ public class Comment {
 		return id;
 	}
 
-	public User getUser() {
+	public long getUserId() {
+		return userId;
+	}
+	/*public User getUser() {
 		return user;
 	}
-
+	*/
 	public String getDescription() {
 		return description;
 	}
@@ -64,6 +67,14 @@ public class Comment {
 		return post;
 	}
 
+	public int getNumberOfLikes() {
+		return numberOfLikes;
+	}
+	
+	public int getNumberOfDislikes() {
+		return numberOfDislikes;
+	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}
