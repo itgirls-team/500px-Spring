@@ -14,7 +14,7 @@
 <c:if test="${ requestScope.error != null }">
 			<h4 style="color: red">Sorry, Reason: ${requestScope.error }.Please try again!</h4>
 </c:if>
-<form action="login" method="post">
+<form action="/login" method="post">
 	Username<input type="text" name="username"><br>
 	Password<input type="password" name="password"><br>
 	<input type="submit" value="Login">

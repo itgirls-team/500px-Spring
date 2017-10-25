@@ -140,7 +140,7 @@ public class UserController {
 			request.getSession().setAttribute("logged", false);
 		}
 		request.getSession().invalidate();
-		return "redirect:html/index.html";
+		return "index";
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)

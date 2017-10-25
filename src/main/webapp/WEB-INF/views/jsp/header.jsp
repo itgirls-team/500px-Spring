@@ -10,7 +10,7 @@
 	</head>
 	<body>
 		<div class="header">
-			<form  action="logout" method="post">
+			<form  action="/logout" method="post">
 				<input type="submit" value="Logout">
 			</form>
 			<img id="avatar" src="avatar">

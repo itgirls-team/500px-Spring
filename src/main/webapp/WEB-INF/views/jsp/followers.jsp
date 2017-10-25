@@ -22,14 +22,14 @@
 					<c:set var="followername" scope="session" value="${entry.key.userName}"/>			
 						<c:if test="${entry.value}">
 								<td>
-										<form action="/page/unfollow" method="post">
+										<form action="/unfollow" method="post">
 										<input type="hidden" name="followedUserName" value="${followername}" />
 											<input type="submit" value="Unfollow"/> 
 										</form>
 						</c:if>
 						<c:if test="${not entry.value}">
 								<td>
-										<form  action="/page/follow" method="post">
+										<form  action="/follow" method="post">
 										<input type="hidden" name="followedUserName" value="${followername}" />		
 											<input type="submit" value="Follow"/> 
 										</form>
