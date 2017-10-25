@@ -25,6 +25,6 @@
 	Avatar<input type="file" name="avatar"><br>
 	<input type="submit" value="Register">
 </form>
-If you already have an account, please login <a href="login.jsp">here</a>.
+If you already have an account, please login <a href="/page/login">here</a>.
 </body>
 </html>

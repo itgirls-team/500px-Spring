@@ -19,6 +19,6 @@
 	Password<input type="password" name="password"><br>
 	<input type="submit" value="Login">
 </form>
-If you don't have an account, please register <a href="register.jsp">here</a>.
+If you don't have an account, please register <a href="/page/register">here</a>.
 </body>
 </html>

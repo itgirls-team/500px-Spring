@@ -14,23 +14,23 @@
 <jsp:include page="header.jsp"></jsp:include>
 <img id="profilePicture" src="avatar">
 <div class="main">
-	<form action="description.jsp">
+	<form action="/page/description">
 				<input type="submit" value="Description">
 	</form>
-	<form action="contact.jsp">
+	<form action="/page/contact">
 				<input type="submit" value="Contacts">
 	</form>
-	<form action="albums">
+	<form action="/page/albums">
 			<input type="submit" value="Albums">
 	</form>
 
-	<form action="following">
-				<input type="hidden" name="pageToRedirect" value="following.jsp" /> 	
+	<form action="/page/following">
+				<input type="hidden" name="pageToRedirect" value="/page/following" /> 	
 				<input type="submit" value="Following">
 	</form>
 	
-	<form action="followers">
-				<input type="hidden" name="pageToRedirect" value="followers.jsp" />	
+	<form action="/page/followers">
+				<input type="hidden" name="pageToRedirect" value="/page/followers" />	
 				<input type="submit" value="Followers">
 	</form>
 </div>

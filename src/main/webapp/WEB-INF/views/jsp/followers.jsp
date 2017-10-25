@@ -9,7 +9,7 @@
 </head>
 <body>
 <c:if test="${ sessionScope.user == null }">
-			<c:redirect url="login.jsp"></c:redirect>
+			<c:redirect url="/page/login"></c:redirect>
 </c:if>
 <jsp:include page="main.jsp"></jsp:include>
 
@@ -22,14 +22,14 @@
 					<c:set var="followername" scope="session" value="${entry.key.userName}"/>			
 						<c:if test="${entry.value}">
 								<td>
-										<form action="unfollow" method="post">
+										<form action="/page/unfollow" method="post">
 										<input type="hidden" name="followedUserName" value="${followername}" />
 											<input type="submit" value="Unfollow"/> 
 										</form>
 						</c:if>
 						<c:if test="${not entry.value}">
 								<td>
-										<form  action="follow" method="post">
+										<form  action="/page/follow" method="post">
 										<input type="hidden" name="followedUserName" value="${followername}" />		
 											<input type="submit" value="Follow"/> 
 										</form>
