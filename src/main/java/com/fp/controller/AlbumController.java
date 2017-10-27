@@ -37,7 +37,6 @@ public class AlbumController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// request.getRequestDispatcher("album.jsp").forward(request, response);
 		return "album";
 	}
 
@@ -50,6 +49,8 @@ public class AlbumController {
 			try {
 				if (!albumDao.existAlbum(albumCategory)) {
 					String albumImage = "defaultAlbumImage.jpg";
+					// TODO
+					request.getSession().setAttribute("emptyAlbum", true);
 					Long userId = ((User) request.getSession().getAttribute("user")).getId();
 					albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
 					User u = (User) request.getSession().getAttribute("user");
@@ -72,7 +73,7 @@ public class AlbumController {
 	}
 
 	private String validateInputData(String category) {
-		if (category == null) {
+		if (category == null || category.isEmpty()) {
 			return "Please fill all the required fields!";
 		}
 		return REG_SUCC_MSG;

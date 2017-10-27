@@ -10,14 +10,14 @@
 </head>
 <body>
  		<h1>Albums</h1>
- 		
-		<c:forEach items="${sessionScope.user.albumsOfUser}"  var="a">		
-			<a href = "/posts?albumId=${a.id}">${a.category}</a>
-		</c:forEach>
-			
-		<form action="/page/addNewAlbum">
+ 		<form action="/page/addNewAlbum">
 				<input type="submit" value="Create new album">
 		</form>
-		
+		<c:forEach items="${sessionScope.user.albumsOfUser}"  var="a">	
+		<div id="albums">
+			<img id="albumCover" src="cover">
+			<a href = "/posts?albumId=${a.id}">${a.category}</a>
+		</div>
+		</c:forEach>	
 </body>
 </html>

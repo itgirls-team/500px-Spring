@@ -22,7 +22,7 @@
 	Last Name<input type="text" name="lastname"><br>
 	Email<input type="email" name="email"><br>
 	Description <input type="text" name="description"><br>
-	Avatar<input type="file" name="avatar"><br>
+	Profile picture<input type="file" name="avatar" accept="image/*"><br>
 	<input type="submit" value="Register">
 </form>
 If you already have an account, please login <a href="/page/login">here</a>.

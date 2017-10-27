@@ -12,7 +12,7 @@
 			<h4 style="color: red">Sorry, Reason: ${requestScope.albumAlreadyExists }.Please create new album!</h4>
 </c:if>
 <c:if test="${ requestScope.emptyCategoryField != null }">
-			<h1 style="color: red">Sorry, registration unsuccessful. Reason: ${requestScope.emptyCategoryField }</h1>
+			<h1 style="color: red">Sorry, create new album unsuccessful. Reason: ${requestScope.emptyCategoryField }</h1>
 </c:if>
 	<form action="/createAlbum" method="post" >
 			Add category for your album<br>
