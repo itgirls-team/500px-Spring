@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,6 +31,7 @@ import com.fp.model.Post;
 import com.fp.model.Tag;
 
 @Controller
+@MultipartConfig
 public class PostController {
 
 	@Autowired
@@ -37,37 +39,24 @@ public class PostController {
 	
 	public static final String POSTS_URL = "C:/pictures/";
 
-	
 	// Post
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
 	public String showPost(HttpSession session, HttpServletRequest request) {
 		try {
 			long postId = Long.parseLong(request.getParameter("postId"));
+			request.getSession().setAttribute("postId", postId);
 			request.getSession().setAttribute("post", postDao.getPost(postId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return "post";
 	}
-
-	// PostFromAlbum
-	/*
-	@RequestMapping(value="/posts/{albumId}" , method = RequestMethod.GET)
-	public String products(Model model, @PathVariable("albumId") Integer albumId) {
-		Set<Post> posts = null;
-		try {
-			posts = postDao.getAllPostsFromAlbum(albumId);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		model.addAttribute("posts", posts);
-		return "posts";
-	}
-	*/
 	
+	//ShowPostsFromAlbum
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
 	public String showAllPosts(HttpSession session, HttpServletRequest request) {
 		long albumId = Long.parseLong(request.getParameter("albumId"));
+		session.setAttribute("albumId", albumId);
 		try {
 			request.getSession().setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
@@ -77,59 +66,5 @@ public class PostController {
 		return "posts";
 	}
 
-	
-	
-	// UploadPost
-	@RequestMapping(value = "/UploadPost", method = RequestMethod.POST)
-	public String uploadPost(HttpSession session, HttpServletRequest request) {
-		try {
-			String description = request.getParameter("description");
-			String[] inputTags = request.getParameter("tags").split(",");
-			Set<Tag> tags = new HashSet<>();
-			for (String string : inputTags) {
-				tags.add(new Tag(string));
-			}
-
-			Part postPart = request.getPart("image");
-			InputStream fis = postPart.getInputStream();
-			File myFile = new File(POSTS_URL + description + ".jpg");
-			if (!myFile.exists()) {
-				myFile.createNewFile();
-			}
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(myFile);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			int b = fis.read();
-			while (b != -1) {
-				fos.write(b);
-				b = fis.read();
-			}
-			fis.close();
-			fos.close();
-
-			String postUrl = description + ".jpg";
-
-			Post p = new Post(postUrl, description, tags);
-			postDao.uploadPost(p);
-			request.getSession().setAttribute("post", p);
-			// request.getRequestDispatcher("post.jsp").forward(request,
-			// response);
-		} catch (SQLException e) {
-			System.out.println("Error with upload post!");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ServletException e1) {
-			e1.printStackTrace();
-		}
-		return "post";
-	}
-	
-	@RequestMapping(value = "/UploadPost", method = RequestMethod.GET)
-	public String doGet(HttpServletRequest request, HttpServletResponse response){
-		return "uploadPost.jsp";
-	}
 
 }

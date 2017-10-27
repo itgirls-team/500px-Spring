@@ -46,39 +46,5 @@ public class AlbumController {
 	public String doGet(HttpServletRequest request, HttpServletResponse response){
 		return "createAlbum.jsp";
 	}
-	
-	//@RequestMapping(value = "/CreateAlbum" , method = RequestMethod.POST)
-	//public String createAlbum(HttpServletRequest request, HttpServletResponse response){
-		
-			// String category = request.getParameter("category");
-			// Part postPart = request.getPart("picture");
-			// InputStream fis = postPart.getInputStream();
-			// File myFile = new File(ALBUM_PICTURE_URL + category + ".jpg");
-			// if (!myFile.exists()) {
-			// myFile.createNewFile();
-			// }
-			//
-			// FileOutputStream fos = new FileOutputStream(myFile);
-			// int b = fis.read();
-			// while (b != -1) {
-			// fos.write(b);
-			// b = fis.read();
-			// }
-			// fis.close();
-			// fos.close();
-			//
-			// String albumUrl = category + ".jpg";
-			// try {
-			// Album a = new Album(category, albumUrl);
-			// AlbumDao.getInstance().createAlbum(a);
-			// ;
-			// request.getSession().setAttribute("album", a);
-			// request.getRequestDispatcher("album.jsp").forward(request, response);
-			// } catch (SQLException e) {
-			// System.out.println("Error with create album!");
-			// }
-			//return "album.jsp";
-		//}
-	
-	
+
 }

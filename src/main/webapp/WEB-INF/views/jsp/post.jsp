@@ -8,7 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>	
-			<img src="${sessionScope.post.path}" width="50px" height="auto"/>
+			
+			<img src = "${post.path}" >
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
 			<h5>Likes : ${sessionScope.post.countsOfLikes} </h5><br>
 			<h5>Dislikes : ${sessionScope.post.countsOfDislikes} </h5><br>
