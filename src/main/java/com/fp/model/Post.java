@@ -116,6 +116,7 @@ public class Post {
 	}
 
 	// Setter
+	
 	public void setPostId(long id) {
 		this.id = id;
 	}

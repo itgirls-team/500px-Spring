@@ -10,12 +10,9 @@
 </head>
 <body>
 	<h1>Posts</h1>
-	<%--  <c:forEach items="${sessionScope.posts}" var="post">
-		<a href="post?postId=${post.id}">${post.path}</a>
-	</c:forEach>
-	--%>
 	
 	 <c:forEach items="${posts}" var="post">
+	 	<img src="showPosts"><br>
 		<a href="post?postId=${post.id}">${post.path}</a>
 	 </c:forEach>
 	

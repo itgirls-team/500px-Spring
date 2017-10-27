@@ -8,8 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>	
-			
-			<img src = "${post.path}" >
+
+			<img src="<c:url value = "/postId/${sessionScope.postId}" />">
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
 			<h5>Likes : ${sessionScope.post.countsOfLikes} </h5><br>
 			<h5>Dislikes : ${sessionScope.post.countsOfDislikes} </h5><br>
@@ -39,6 +39,8 @@
 				<h6>Likes : ${comment.numberOfLikes} </h6> <br>
 				<h6>Dislikes : ${comment. numberOfDislikes} </h6> <br>
 			</c:forEach>
+			
+			
 	
 </body>
 </html>

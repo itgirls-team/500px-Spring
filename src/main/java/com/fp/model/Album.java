@@ -41,6 +41,16 @@ public class Album {
 		this(category, picture, user, new HashSet<>());
 		this.id = id;
 	}
+	
+	public Album(long id, String category, LocalDate dateOfUpload, String picture, long userId) {
+		this.id = id;
+		this.category = category;
+		this.dateOfUpload = dateOfUpload;
+		this.picture = picture;
+		this.userId = userId;
+		posts = new HashSet<>();
+	}
+
 
 	// Getters
 	public long getId() {
@@ -66,13 +76,18 @@ public class Album {
 	public String getPicture() {
 		return picture;
 	}
-
+	
 	// Setters
 	public void setId(long id) {
 		this.id = id;
 	}
+	
+	public void setPosts(Set<Post> posts) {
+		this.posts = posts;
+	}
 
 	// HashCode and Equals
+
 
 	@Override
 	public int hashCode() {

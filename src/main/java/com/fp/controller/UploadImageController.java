@@ -21,9 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fp.config.WebAppInitializer;
+import com.fp.dbModel.AlbumDao;
 import com.fp.dbModel.PostDao;
+import com.fp.dbModel.UserDao;
+import com.fp.model.Album;
 import com.fp.model.Post;
 import com.fp.model.Tag;
+import com.fp.model.User;
 
 
 @Controller
@@ -32,6 +36,8 @@ class UploadImageController {
 
 	@Autowired
 	PostDao postDao;
+	@Autowired
+	AlbumDao albumDao;
 	
 	@RequestMapping(value="/upload", method=RequestMethod.GET)
 	public String uploadGet(){
@@ -58,6 +64,11 @@ class UploadImageController {
  			ses.setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
+			
+			Album album = albumDao.getAlbum(albumId);
+			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
+			request.getSession().setAttribute("album", album);
+			
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,31 +82,8 @@ class UploadImageController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "post";
+		return "upload";
 	}
 	
-	@RequestMapping(value="/upload/{id}", method = RequestMethod.GET)
-	public void daiSnimka(@RequestParam("id") Long postId){
-		Post p=null;
-		try {
-			p = postDao.getPost(postId);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		String url = p.getPath();
-		File f = new File(WebAppInitializer.LOCATION + File.separator + url);
-	}
-
-	/*
-	@RequestMapping(value="/upload", method = RequestMethod.GET)
-	public void daiSnimka(HttpServletResponse resp){
-		File f = new File(WebAppInitializer.LOCATION + File.separator + "homer-end-is-near.jpg");
-		try {
-			Files.copy(f.toPath(), resp.getOutputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
 	
 }

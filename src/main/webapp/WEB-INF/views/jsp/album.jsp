@@ -13,7 +13,6 @@
  		
 		<c:forEach items="${sessionScope.user.albumsOfUser}"  var="a">		
 			<a href = "/posts?albumId=${a.id}">${a.category}</a>
-			<img src = WebAppInitializer.Location + "" >
 		</c:forEach>
 			
 		<form action="createAlbum.jsp" method="post">

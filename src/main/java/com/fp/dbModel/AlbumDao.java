@@ -7,11 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fp.model.Album;
+import com.fp.model.Comment;
+import com.fp.model.Post;
+import com.fp.model.Tag;
+import com.fp.model.User;
 import com.fp.utils.CommonUtils;
 
 @Component
@@ -25,7 +30,8 @@ public class AlbumDao {
 	private static final String DELETE_POSTS_FROM_ALBUM = "DELETE FROM posts WHERE album_id = ?";
 	private static final String DELETE_ALBUM = "DELETE FROM albums WHERE album_id =?";
 	private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category LIKE ?";
-
+	private static final String SELECT_ALBUM_BY_ALBUM_ID = "SELECT album_id,category,date_upload,picture,user_id FROM albums WHERE album_id = ?";
+	
 	@Autowired
 	private DbManager manager;
 
@@ -78,6 +84,8 @@ public class AlbumDao {
 		}
 		return albums;
 	}
+
+	
 
 	// deleteAlbum
 	public void deleteAlbum(Album a) throws SQLException {
@@ -142,18 +150,14 @@ public class AlbumDao {
 
 		return albums;
 	}
-
-	public static void main(String[] args) {
-
-		// Set<Album> albums;
-		// try {
-		// albums = getAllAlbumFromUser(1);
-		// for (Album a : albums) {
-		// System.out.println(a);
-		// }
-		// } catch (SQLException e) {
-		// System.out.println("ops");
-		// }
+	
+	public Album getAlbum(long albumId) throws SQLException {
+		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_ALBUM_BY_ALBUM_ID);
+		ps.setLong(1, albumId);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		return new Album(albumId,rs.getString("category"),rs.getString("picture"),rs.getLong("user_id"));
 	}
+
 
 }
