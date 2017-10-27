@@ -12,26 +12,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fp.dbModel.AlbumDao;
-import com.fp.model.User;
+import com.fp.dbModel.UserDao;
 import com.fp.utils.CommonUtils;
 
 @Controller
-public class CoverController {
+public class FollowersAndFollowingImageController {
 
 	@Autowired
-	private AlbumDao albumDao;
+	private UserDao userDao;
 
-	@RequestMapping(value = "/fetch-cover", method = RequestMethod.GET)
-	public void getAvatar(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+	@RequestMapping(value = "/fetch-user-pic", method = RequestMethod.GET)
+	public void fetchUserPicture(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@RequestParam("id") Long id) {
-		String cover = null;
-		User user = (User) request.getSession().getAttribute("user");
-		try {
-			cover = albumDao.getCover(id);
-		} catch (SQLException e) {
-			// TODO handle error message
+		if (id == null) {
+			// TODO return response with error
 		}
-		CommonUtils.showPicture(cover, response, request);
+
+		String pic = null;
+		try {
+			pic = userDao.getUserPic(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		CommonUtils.showPicture(pic, response, request);
 	}
 }

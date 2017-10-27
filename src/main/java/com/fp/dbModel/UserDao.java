@@ -477,4 +477,25 @@ public class UserDao {
 		}
 		return userFollowerIsFollowed;
 	}
+
+	public synchronized String getUserPic(Long userId) throws SQLException {
+		if (userId == null) {
+			return null;
+		}
+
+		PreparedStatement ps = manager.getConnection()
+				.prepareStatement("SELECT profile_picture FROM users WHERE user_id=?;");
+		ps.setLong(1, userId);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		String pic = rs.getString("profile_picture");
+
+		if (ps != null) {
+			ps.close();
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		return pic;
+	}
 }

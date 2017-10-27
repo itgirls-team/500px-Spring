@@ -146,16 +146,24 @@ public class AlbumDao {
 		return albums;
 	}
 
-	public static void main(String[] args) {
-
-		try {
-			AlbumDao album = new AlbumDao();
-			album.createAlbum(new Album("love", "img.jpg", 4));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public String getCover(Long id) throws SQLException {
+		if (id == null) {
+			return null;
 		}
 
+		PreparedStatement ps = manager.getConnection().prepareStatement("SELECT picture FROM albums WHERE album_id=?;");
+		ps.setLong(1, id);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		String pic = rs.getString("picture");
+
+		if (ps != null) {
+			ps.close();
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		return pic;
 	}
 
 }
