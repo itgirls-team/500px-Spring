@@ -64,4 +64,5 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after
 														// which files will be
 														// written to disk
+
 }

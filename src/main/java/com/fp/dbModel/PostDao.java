@@ -61,7 +61,6 @@ public class PostDao {
 		ps.setDate(5, Date.valueOf(LocalDate.now()));
 		ps.setLong(6, p.getAlbumId());
 		ps.executeUpdate();
-
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
 		p.setPostId(rs.getLong(1));
@@ -69,7 +68,7 @@ public class PostDao {
 		tagDao.insertPostTags(p);
 	}
 
-	// getAllPostFromÒag - not work
+	// getAllPostFromTag - not work
 	public HashSet<Post> getAllPostsFromTag(String tag) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_POSTS_BY_TAG);
 		Tag t = tagDao.getTag(tag);

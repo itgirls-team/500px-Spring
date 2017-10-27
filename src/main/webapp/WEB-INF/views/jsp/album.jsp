@@ -10,8 +10,19 @@
 </head>
 <body>
  		<h1>Albums</h1>
+<<<<<<< HEAD
  		<form action="/page/addNewAlbum">
 				<input type="submit" value="Create new album">
+=======
+ 		
+		<c:forEach items="${sessionScope.user.albumsOfUser}"  var="a">		
+			<a href = "/posts?albumId=${a.id}">${a.category}</a>
+			<img src = WebAppInitializer.Location + "" >
+		</c:forEach>
+			
+		<form action="createAlbum.jsp" method="post">
+				<input type="submit" value="Create album">
+>>>>>>> feature/postAndAlbumController
 		</form>
 		<c:forEach items="${sessionScope.user.albumsOfUser}"  var="a">	
 		<div id="albums">

@@ -110,6 +110,10 @@ public class Post {
 	public Set<Tag> getTagsOfPost() {
 		return Collections.unmodifiableSet(tagsOfPost);
 	}
+	
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	// Setter
 	public void setPostId(long id) {
