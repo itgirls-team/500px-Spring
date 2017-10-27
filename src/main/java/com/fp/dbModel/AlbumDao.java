@@ -29,9 +29,14 @@ public class AlbumDao {
 	private static final String SELECT_POST_FROM_ALBUM = "SELECT post_id, image, counts_likes, counts_dislikes, description FROM posts WHERE album_id = ?";
 	private static final String DELETE_POSTS_FROM_ALBUM = "DELETE FROM posts WHERE album_id = ?";
 	private static final String DELETE_ALBUM = "DELETE FROM albums WHERE album_id =?";
+<<<<<<< HEAD
 	private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category LIKE ?";
 	private static final String SELECT_ALBUM_BY_ALBUM_ID = "SELECT album_id,category,date_upload,picture,user_id FROM albums WHERE album_id = ?";
 	
+=======
+	private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category=?";
+
+>>>>>>> feature/fix-controllers
 	@Autowired
 	private DbManager manager;
 
@@ -46,6 +51,9 @@ public class AlbumDao {
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
 		a.setId(rs.getLong(1));
+		if (ps != null) {
+			ps.close();
+		}
 	}
 
 	// getAllAlbumFromUser
@@ -150,6 +158,7 @@ public class AlbumDao {
 
 		return albums;
 	}
+<<<<<<< HEAD
 	
 	public Album getAlbum(long albumId) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_ALBUM_BY_ALBUM_ID);
@@ -157,6 +166,19 @@ public class AlbumDao {
 		ResultSet rs = ps.executeQuery();
 		rs.next();
 		return new Album(albumId,rs.getString("category"),rs.getString("picture"),rs.getLong("user_id"));
+=======
+
+	public static void main(String[] args) {
+
+		try {
+			AlbumDao album = new AlbumDao();
+			album.createAlbum(new Album("love", "img.jpg", 4));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+>>>>>>> feature/fix-controllers
 	}
 
 

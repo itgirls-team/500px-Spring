@@ -1,9 +1,7 @@
 package com.fp.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,18 +9,22 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.DbManager;
 import com.fp.dbModel.UserDao;
 import com.fp.model.User;
@@ -54,7 +56,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(HttpServletRequest request, HttpServletResponse response) {
+	public String registerUser(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("avatar") MultipartFile file) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
 		String confirmPassword = request.getParameter("confpassword");
@@ -62,30 +65,28 @@ public class UserController {
 		String firstName = request.getParameter("firstname");
 		String lastName = request.getParameter("lastname");
 		String description = request.getParameter("description");
-		Part avatarPart;
+		String avatarUrl = "";
 		try {
-			avatarPart = request.getPart("avatar");
-			InputStream fis = avatarPart.getInputStream();
-			File myFile = new File(AVATAR_URL + userName + ".jpg");
-			if (!myFile.exists()) {
-				myFile.createNewFile();
+			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
+			MimeType type = allTypes.forName(file.getContentType());
+			String ext = type.getExtension();
+			File f = new File(WebAppInitializer.LOCATION + File.separator + userName + ext);
+			file.transferTo(f);
+			if (f.length() == 0) {
+				avatarUrl = "default.jpg";
+			} else {
+				avatarUrl = userName + ext;
 			}
-			FileOutputStream fos = new FileOutputStream(myFile);
-			int b = fis.read();
-			while (b != -1) {
-				fos.write(b);
-				b = fis.read();
-			}
-			fis.close();
-			fos.close();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ServletException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IllegalStateException e) {
+			request.setAttribute("error", "A method has been invoked at an illegal or inappropriate time!");
+			return "register";
+		} catch (IOException e) {
+			request.setAttribute("error", "Problem with reading/writing from/to a file!");
+			return "register";
+		} catch (MimeTypeException e) {
+			request.setAttribute("error", "Problem with the parsing of the picture!");
+			return "register";
 		}
-		String avatarUrl = userName + ".jpg";
 
 		String validationMessage = validateRegisterData(userName, password, confirmPassword, email, firstName,
 				lastName);

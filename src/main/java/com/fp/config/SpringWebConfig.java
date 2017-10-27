@@ -68,10 +68,9 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
-	
+
 	@Bean(name = "multipartResolver")
 	public StandardServletMultipartResolver resolver() {
 	return new StandardServletMultipartResolver();
 	}
-
 }

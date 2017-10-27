@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value = { "password" })
 public class User implements Serializable {
 
-	private long id;
+	private Long id;
 	private String userName;
 	private String firstName;
 	private String lastName;
@@ -24,36 +24,43 @@ public class User implements Serializable {
 	private Set<User> following = new HashSet<>();;
 	private Set<Album> albumsOfUser = new HashSet<>();
 
-	public User(String userName, String password, String email, String firstName, String lastName, String description,
-			String profilePicture) {
-		this.userName = userName;
+	public User(String firstName, String lastName, String email, String userName, String profilePicture,
+			String description) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.password = password;
 		this.email = email;
+		this.userName = userName;
 		this.description = description;
 		this.profilePicture = profilePicture;
 	}
 
-	public User(long id, String userName, String firstName, String lastName, String password, String email,
-			String description, String profilePicture, LocalDate registerDate) {
-		this(userName, firstName, lastName, password, email, description, profilePicture);
+	public User(String userName, String password, String email, String firstName, String lastName, String description,
+			String profilePicture) {
+		this(firstName, lastName, email, userName, profilePicture, description);
+		this.password = password;
+	}
+
+	public User(Long id, String firstName, String lastName, String email, String userName, LocalDate registerDate,
+			String profilePicture, String description) {
+		this(firstName, lastName, email, userName, profilePicture, description);
 		this.id = id;
 		this.registerDate = registerDate;
 	}
 
 	public User(String firstName, String lastName, String email, String userName, LocalDate registerDate,
 			String profilePicture, String description) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.userName = userName;
-		this.description = description;
-		this.profilePicture = profilePicture;
+		this(firstName, lastName, email, userName, profilePicture, description);
 		this.registerDate = registerDate;
 	}
 
-	public void setId(long id) {
+	public User(Long id, String userName, String firstName, String lastName, String password, String email,
+			String description, String profilePicture, LocalDate registerDate) {
+		this(userName, firstName, lastName, password, email, description, profilePicture);
+		this.id = id;
+		this.registerDate = registerDate;
+	}
+
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -81,13 +81,13 @@ public class UserDao {
 		User user = null;
 		if (existUser(username)) {
 			PreparedStatement ps = manager.getConnection().prepareStatement(
-					"SELECT first_name,last_name,email,username,register_date,profile_picture,description FROM users WHERE username=?;");
+					"SELECT user_id,first_name,last_name,email,username,register_date,profile_picture,description FROM users WHERE username=?;");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 
 			rs.next();
-			user = new User(rs.getString("first_name"), rs.getString("last_name"), rs.getString("email"),
-					rs.getString("username"), rs.getDate("register_date").toLocalDate(),
+			user = new User(rs.getLong("user_id"), rs.getString("first_name"), rs.getString("last_name"),
+					rs.getString("email"), rs.getString("username"), rs.getDate("register_date").toLocalDate(),
 					rs.getString("profile_picture"), rs.getString("description"));
 
 			// Set<Album> albumsOfUser =
@@ -391,13 +391,13 @@ public class UserDao {
 		User user = null;
 		if (existUser(username)) {
 			PreparedStatement ps = manager.getConnection().prepareStatement(
-					"SELECT first_name,last_name,email,username,register_date,profile_picture,description FROM users WHERE username=?;");
+					"SELECT user_id,first_name,last_name,email,username,register_date,profile_picture,description FROM users WHERE username=?;");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 
 			rs.next();
-			user = new User(rs.getString("first_name"), rs.getString("last_name"), rs.getString("email"),
-					rs.getString("username"), rs.getDate("register_date").toLocalDate(),
+			user = new User(rs.getLong("user_id"), rs.getString("first_name"), rs.getString("last_name"),
+					rs.getString("email"), rs.getString("username"), rs.getDate("register_date").toLocalDate(),
 					rs.getString("profile_picture"), rs.getString("description"));
 
 			if (ps != null) {
