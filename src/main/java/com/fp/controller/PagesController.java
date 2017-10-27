@@ -42,10 +42,10 @@ public class PagesController {
 	public String getFollowersPage() {
 		return "followers";
 	}
-	
-	
 
-	
-	
-	
+	@GetMapping("/addNewAlbum")
+	public String getCreateAlbumPage() {
+		return "createAlbum";
+	}
+
 }

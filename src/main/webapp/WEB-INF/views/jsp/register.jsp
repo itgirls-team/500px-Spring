@@ -12,9 +12,9 @@
 			<h1>Welcome, please register!</h1>
 </c:if>
 <c:if test="${ requestScope.error != null }">
-			<h1 style="color: red">Sorry, registration unsuccessfull. Reason: ${requestScope.error }</h1>
+			<h1 style="color: red">Sorry, registration unsuccessful. Reason: ${requestScope.error }</h1>
 </c:if>
-<form action="register" method="post" enctype="multipart/form-data">
+<form action="/register" method="post" enctype="multipart/form-data">
 	Username<input type="text" name="username"><br>
 	Password<input type="password" name="password"><br>
 	Confirm password<input type="password" name="confpassword"><br>

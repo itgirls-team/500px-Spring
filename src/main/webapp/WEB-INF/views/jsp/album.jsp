@@ -15,8 +15,8 @@
 			<a href = "/posts?albumId=${a.id}">${a.category}</a>
 		</c:forEach>
 			
-		<form action="createAlbum.jsp" method="post">
-				<input type="submit" value="Create album">
+		<form action="/page/addNewAlbum">
+				<input type="submit" value="Create new album">
 		</form>
 		
 </body>
