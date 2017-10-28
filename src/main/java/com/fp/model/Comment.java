@@ -12,7 +12,7 @@ public class Comment {
 	private CommentDao commentDao;
 	private long id;
 	private long userId;
-	private User user;
+	private String userName;
 	private String description;
 	private LocalDateTime dateAndTimeOfUpload;
 	private Post post;
@@ -48,9 +48,9 @@ public class Comment {
 		return userId;
 	}
 	
-	public User getUser() {
-		user = commentDao.getUser(id, userId);
-		return user;
+	public String getUserName() {
+		userName = commentDao.getUserName(id, userId);
+		return userName;
 	}
 	
 	public String getDescription() {

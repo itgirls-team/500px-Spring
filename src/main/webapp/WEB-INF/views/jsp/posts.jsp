@@ -12,7 +12,7 @@
 	<h1>Posts</h1>
 	
 	 <c:forEach items="${posts}" var="post">
-	 	<a href="post?postId=${post.id}"><img src="showPosts"></a>
+	 	<a href="post?postId=${post.id}"><img src="/showPosts?postId=${post.id}"></a>
 	 </c:forEach>
 	
 	<form action="/upload" method="get">

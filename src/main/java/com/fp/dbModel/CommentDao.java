@@ -355,24 +355,20 @@ public class CommentDao {
 		return allComentDislikers;
 	}
 
-	public User getUser(long commentId, long userId) {
+	public String getUserName(long commentId, long userId) {
 		System.out.println("VLIZASH LI TUK????");
 		PreparedStatement ps;
-		User user = null;
+		String userName = null;
 		try {
 			ps = manager.getConnection().prepareStatement(
-					"SELECT u.user_id,first_name,last_name,email,username,password,register_date,profile_picture,u.description FROM comments AS c JOIN users AS u ON (c.user_id = u.user_id) WHERE c.user_id = ? AND c.comment_id = ? ");
+					"SELECT u.username FROM comments AS c JOIN users AS u ON (c.user_id = u.user_id) WHERE c.user_id = ? AND c.comment_id = ? ");
 
 			ps.setLong(1, userId);
 			ps.setLong(2, commentId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-
-			user = new User(rs.getString("username"), rs.getString("first_name"), rs.getString("last_name"),
-					rs.getString("password"), rs.getString("email"), rs.getString("description"),
-					rs.getString("profile_picture"));
-			System.out.println(user);
 			
+			userName = rs.getString("username");
 			if (ps != null) {
 				ps.close();
 			}
@@ -383,6 +379,6 @@ public class CommentDao {
 			e.printStackTrace();
 		}
 		System.out.println("IZLIZASH LI TUK?");
-		return user;
+		return userName;
 	}
 }

@@ -22,9 +22,11 @@ import javax.servlet.http.Part;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.AlbumDao;
@@ -33,6 +35,7 @@ import com.fp.model.Album;
 import com.fp.model.Post;
 import com.fp.model.Tag;
 import com.fp.model.User;
+import com.fp.utils.CommonUtils;
 
 @Controller
 @MultipartConfig
@@ -77,51 +80,29 @@ public class PostController {
 		return "posts";
 	}
 
-	private static void read(String absolutePath, Long postId, HttpServletResponse response) {
-		File myFile = new File(absolutePath);
-		try (OutputStream out = response.getOutputStream()) {
-			Files.copy(myFile.toPath(), out);
-			out.flush();
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void readPicture(String filename, Long postId, HttpServletResponse response) throws IOException {
-		String absolutePath = WebAppInitializer.LOCATION + File.separator + filename;
-		read(absolutePath, postId, response);
-	}
-
 	@RequestMapping(value = "/postId/{id}", method = RequestMethod.GET)
-	public void getPicture(@PathVariable("id") Long postId, HttpServletResponse response) {
+	public void getPicture(@PathVariable("id") Long postId, HttpServletResponse response ,
+			HttpServletRequest request) {
+		
 		try {
 			Post post = postDao.getPost(postId);
-			readPicture(post.getPath(), postId, response);
+			String cover = post.getPath();
+			CommonUtils.showPicture(cover, response, request);
+			//readPicture(post.getPath(), postId, response);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	// Show picture of post
 	@RequestMapping(value = "/showPosts", method = RequestMethod.GET)
-	public void getPicture(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		String cover = null;
-		Album album = (Album) request.getSession().getAttribute("album");
-		for (Post post : album.getPosts()) {
-			cover = post.getPath();
-			File file = new File(WebAppInitializer.LOCATION + cover);
-			try {
-				//Files.copy(file.toPath(), response.getOutputStream());
-				readPicture(post.getPath(), post.getId(), response);
-			} catch (IOException e) {
-				request.setAttribute("error", "problem with the stream. Could not open output stream!");
-			}
+	public void getPicture(@RequestParam ("postId") Long postId , HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		try {
+			Post post = (Post) postDao.getPost(postId);
+			String cover = post.getPath();
+			CommonUtils.showPicture(cover, response, request);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
-
 }
