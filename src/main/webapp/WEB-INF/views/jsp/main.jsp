@@ -9,10 +9,10 @@
 </head>
 <body>
 <c:if test="${ sessionScope.user == null }">
-			<c:redirect url="login.jsp"></c:redirect>
+			<c:redirect url="/page/login"></c:redirect>
 </c:if>
 <jsp:include page="header.jsp"></jsp:include>
-<img id="profilePicture" src="avatar">
+<img id="profilePicture" src="/avatar">
 <div class="main">
 	<form action="/description">
 				<input type="submit" value="Description">

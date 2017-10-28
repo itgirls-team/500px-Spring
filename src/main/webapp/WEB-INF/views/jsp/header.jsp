@@ -13,7 +13,7 @@
 			<form  action="/logout" method="post">
 				<input type="submit" value="Logout">
 			</form>
-			<img id="avatar" src="avatar">
+			<img id="avatar" src="/avatar">
 			<h3 class="welcome">Welcome, ${ sessionScope.user.userName }</h3>
 		</div>
 	</body>

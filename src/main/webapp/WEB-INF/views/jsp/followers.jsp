@@ -17,7 +17,7 @@
 <table id="followers-table" border="1">
 			<c:forEach var="entry" items="${sessionScope.isFollowed}">
 				<tr>
-					<td><img id="avatar" src="avatar"></td>
+					<td><img id="avatar" src="/fetch-user-pic?id=${entry.key.id}"></td>
 					<td> ${entry.key.userName}</td>	
 					<c:set var="followername" scope="session" value="${entry.key.userName}"/>			
 						<c:if test="${entry.value}">
