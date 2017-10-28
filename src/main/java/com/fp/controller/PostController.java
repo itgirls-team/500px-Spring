@@ -90,7 +90,6 @@ public class PostController {
 
 	public static void readPicture(String filename, Long postId, HttpServletResponse response) throws IOException {
 		String absolutePath = WebAppInitializer.LOCATION + File.separator + filename;
-		System.out.println("Resources:readImage:absolutePath:" + absolutePath);
 		read(absolutePath, postId, response);
 	}
 
@@ -110,14 +109,15 @@ public class PostController {
 
 	// Show picture of post
 	@RequestMapping(value = "/showPosts", method = RequestMethod.GET)
-	public void getPicture(HttpServletRequest request, HttpServletResponse response) {
+	public void getPicture(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String cover = null;
 		Album album = (Album) request.getSession().getAttribute("album");
 		for (Post post : album.getPosts()) {
 			cover = post.getPath();
 			File file = new File(WebAppInitializer.LOCATION + cover);
 			try {
-				Files.copy(file.toPath(), response.getOutputStream());
+				//Files.copy(file.toPath(), response.getOutputStream());
+				readPicture(post.getPath(), post.getId(), response);
 			} catch (IOException e) {
 				request.setAttribute("error", "problem with the stream. Could not open output stream!");
 			}

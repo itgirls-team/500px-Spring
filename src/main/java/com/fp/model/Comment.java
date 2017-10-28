@@ -12,18 +12,15 @@ public class Comment {
 	private CommentDao commentDao;
 	private long id;
 	private long userId;
-	// private User user;
+	private User user;
 	private String description;
 	private LocalDateTime dateAndTimeOfUpload;
 	private Post post;
 	private int numberOfLikes;
 	private int numberOfDislikes;
-	//private User user = commentDao.getUser(id, userId);
-	// private HashSet<User> usersLikedTheComment = new HashSet<User>();
 
-	public Comment(long user, String description, Post post) {
-		// this.user = user;
-		this.userId = user;
+	public Comment(long userId, String description, Post post) {
+		this.userId = userId;
 		this.description = description;
 		this.post = post;
 	}
@@ -36,7 +33,6 @@ public class Comment {
 	public Comment(long commentId, long userId, String description, LocalDateTime dateAndTimeOfUpload,
 			int numberOfLikes, int numberOfDislikes) {
 		this.userId = userId;
-		// this.user.setId(userId);
 		this.id = commentId;
 		this.description = description;
 		this.numberOfLikes = numberOfLikes;
@@ -51,10 +47,12 @@ public class Comment {
 	public long getUserId() {
 		return userId;
 	}
-	/*public User getUser() {
+	
+	public User getUser() {
+		user = commentDao.getUser(id, userId);
 		return user;
 	}
-	*/
+	
 	public String getDescription() {
 		return description;
 	}

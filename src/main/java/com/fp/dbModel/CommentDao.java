@@ -21,7 +21,6 @@ public class CommentDao {
 
 	private static final String ADD_COMMENT = "INSERT INTO comments (date_upload, description,post_id, user_id) VALUES (?,?,?,?)";
 	private static final String DELETE_COMMENT = "DELETE FROM comments WHERE comment_id=?";
-	private static final String DELETE_ALL_COMMENTS = "DELETE FROM comments WHERE comment_id = ?";
 	private static final String LIKE_COMMENT = "INSERT INTO users_like_comments (user_id,comment_id) VALUES (?,?)";
 	private static final String REMOVE_COMMENTS_LIKES = "DELETE FROM users_like_comments WHERE comment_id = ?";
 	private static final String REMOVE_COMMENTS_DISLIKES = "DELETE FROM users_dislike_comments WHERE comment_id = ?";
@@ -357,6 +356,7 @@ public class CommentDao {
 	}
 
 	public User getUser(long commentId, long userId) {
+		System.out.println("VLIZASH LI TUK????");
 		PreparedStatement ps;
 		User user = null;
 		try {
@@ -371,6 +371,8 @@ public class CommentDao {
 			user = new User(rs.getString("username"), rs.getString("first_name"), rs.getString("last_name"),
 					rs.getString("password"), rs.getString("email"), rs.getString("description"),
 					rs.getString("profile_picture"));
+			System.out.println(user);
+			
 			if (ps != null) {
 				ps.close();
 			}
@@ -380,7 +382,7 @@ public class CommentDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("IZLIZASH LI TUK?");
 		return user;
 	}
 }
