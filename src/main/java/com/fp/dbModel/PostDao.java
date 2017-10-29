@@ -28,8 +28,6 @@ public class PostDao {
 	private static final String SELECT_COUNT_OF_POSTS_IN_ALBUMS = "SELECT COUNT(P.post_id) AS posts, A.category FROM posts P INNER JOIN albums A USING(album_id) GROUP BY album_id";
 	private static final String LIKE_POST = "INSERT INTO users_like_posts (post_id,user_id) VALUES (?,?)";
 	private static final String DISLIKE_POST = "INSERT INTO users_dislike_posts (post_id,user_id) VALUES (?,?)";
-	private static final String UPDATE_LIKES = "UPDATE posts SET counts_likes = counts_likes + 1  WHERE post_id = ?";
-	private static final String UPDATE_DISLIKES = "UPDATE posts SET counts_dislikes = counts_dislikes + 1  WHERE post_id = ?";
 	private static final String SELECT_USERS_WHO_LIKE_POST = "SELECT user_id,username,first_name,last_name,password,email,description,profile_picture,register_date FROM users_like_posts JOIN users  USING (user_id) WHERE post_id = ?";
 	private static final String SELECT_USERS_WHO_DISLIKE_POST = "SELECT user_id,username,first_name,last_name,password,email,description,profile_picture,register_date FROM users_dislike_posts JOIN users  USING (user_id) WHERE post_id = ?";
 	private static final String SELECT_POSTS_BY_TAG = "SELECT image, counts_likes, counts_dislikes, description, date_upload, album_id FROM posts JOIN post_tag USING(post_id) JOIN tags USING (tag_id) WHERE title = ?";
@@ -48,8 +46,6 @@ public class PostDao {
 	private TagDao tagDao;
 	@Autowired
 	private CommentDao commentDao;
-	@Autowired
-	private PostDao postDao;
 
 	// insertPost
 	public synchronized void uploadPost(Post p) throws SQLException {
@@ -108,39 +104,54 @@ public class PostDao {
 	}
 
 	// like post
-	public void like(Post p, User u) throws SQLException {
+	public void like(Long postId, Long userId) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(LIKE_POST, Statement.RETURN_GENERATED_KEYS);
-		ps.setLong(1, p.getId());
-		ps.setLong(2, u.getId());
+		ps.setLong(1, postId);
+		ps.setLong(2, userId);
 		ps.executeUpdate();
 
-		PreparedStatement ps1 = manager.getConnection().prepareStatement(UPDATE_LIKES);
-		ps1.setLong(1, p.getId());
-		ps.executeUpdate();
+		if (ps != null) {
+			ps.close();
+		}
 	}
 
 	// dislike post
-	public void dislike(Post p, User u) throws SQLException {
+	public void dislike(Long postId, Long userId) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(DISLIKE_POST, Statement.RETURN_GENERATED_KEYS);
-		ps.setLong(1, p.getId());
-		ps.setLong(2, u.getId());
+		ps.setLong(1, postId);
+		ps.setLong(2, userId);
 		ps.executeUpdate();
 
-		PreparedStatement ps1 = manager.getConnection().prepareStatement(UPDATE_DISLIKES);
-		ps1.setLong(1, p.getId());
-		ps.executeUpdate();
+		if (ps != null) {
+			ps.close();
+		}
+
 	}
 
 	// remove like of a post
-	public void removePostLike(Post p, User u) throws SQLException {
+	public void removePostLike(Long postId, Long userId) throws SQLException {
 		String query = REMOVE_LIKE_OF_A_POST;
 		PreparedStatement ps = null;
-		try {
-			ps = manager.getConnection().prepareStatement(query);
-			ps.setLong(1, p.getId());
-			ps.setLong(2, u.getId());
-			ps.executeUpdate();
-		} finally {
+		ps = manager.getConnection().prepareStatement(query);
+		ps.setLong(1, postId);
+		ps.setLong(2, userId);
+		ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
+	}
+
+	// remove dislike of a post
+	public void removePostDislike(Long postId, Long userId) throws SQLException {
+		String query = "DELETE FROM users_dislike_posts WHERE  post_id = ? AND user_id = ?";
+		PreparedStatement ps = null;
+		ps = manager.getConnection().prepareStatement(query);
+		ps.setLong(1, postId);
+		ps.setLong(2, userId);
+		ps.executeUpdate();
+
+		if (ps != null) {
 			ps.close();
 		}
 	}

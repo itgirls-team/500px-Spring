@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fp.domain.UserDto;
 
 @JsonIgnoreProperties(value = { "password" })
 public class User implements Serializable {
@@ -164,6 +165,10 @@ public class User implements Serializable {
 		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
+	}
+
+	public UserDto dto() {
+		return new UserDto(id, userName);
 	}
 
 }

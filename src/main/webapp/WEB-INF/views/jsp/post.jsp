@@ -12,9 +12,10 @@
 
 			<img src="<c:url value = "/postId/${sessionScope.postId}" />">
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
+			<button style="background-color: white" id="likebutton" onclick="likePost()">Like</button>
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
-			<h5>Likes : ${sessionScope.post.countsOfLikes} </h5><br>
-			<h5>Dislikes : ${sessionScope.post.countsOfDislikes} </h5><br>
+			<h5>Likes: </h5><h5 id="number-of-likes-container"> ${sessionScope.post.usersWhoLike.size()} </h5>
+			<h5>Dislikes: </h5><h5 id="number-of-dislikes-container"> ${sessionScope.post.usersWhoDislike.size()} </h5>
 			<h5>Date : ${sessionScope.post.dateOfUpload} </h5><br>
 			<br>
 			<h5>Tags : </h5>

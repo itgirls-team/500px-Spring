@@ -7,6 +7,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+
+<style>
+	 .bg-img-c {
+	  -webkit-background-size: cover;
+	  background-size: cover;
+	  background-position: center;
+	 }
+	 .img {
+	  display: inline-block;
+	 }
+	 .img:before {
+	  content: '';
+	  display: block;
+	  padding-top: 75%;
+	 }
+</style>
+
 </head>
 <body>
  		<h1>Albums</h1>
@@ -14,8 +31,10 @@
 				<input type="submit" value="Create new album">
 		</form>
 		<c:forEach items="${sessionScope.user.albumsOfUser}"  var="album">	
-			<img id="albumCover" src="/fetch-cover?id=${album.id}">
+		<span>
+			<div id="albumCover" class="img bg-img-c" style="width: 400px; background-image: url(/fetch-cover?id=${album.id})"></div>
 			<a href = "/posts?albumId=${album.id}">${album.category}</a>
+		</span>
 		</c:forEach>	
 </body>
 </html>

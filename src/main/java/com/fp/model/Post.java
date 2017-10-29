@@ -103,6 +103,14 @@ public class Post {
 		return Collections.unmodifiableSet(usersWhoLike);
 	}
 
+	public void setUsersWhoLike(Set<User> usersWhoLike) {
+		this.usersWhoLike = usersWhoLike;
+	}
+
+	public void setUsersWhoDislike(Set<User> usersWhoDislike) {
+		this.usersWhoDislike = usersWhoDislike;
+	}
+
 	public Set<User> getUsersWhoDislike() {
 		return Collections.unmodifiableSet(usersWhoDislike);
 	}

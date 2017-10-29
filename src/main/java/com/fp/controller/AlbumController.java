@@ -50,7 +50,6 @@ public class AlbumController {
 			try {
 				if (!albumDao.existAlbum(albumCategory)) {
 					String albumImage = "defaultAlbumImage.jpg";
-					request.getSession().setAttribute("emptyAlbum", true);
 					Long userId = ((User) request.getSession().getAttribute("user")).getId();
 					albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
 					User u = (User) request.getSession().getAttribute("user");
