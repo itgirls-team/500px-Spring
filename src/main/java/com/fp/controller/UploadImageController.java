@@ -23,12 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.AlbumDao;
 import com.fp.dbModel.PostDao;
-import com.fp.dbModel.UserDao;
 import com.fp.model.Album;
 import com.fp.model.Post;
 import com.fp.model.Tag;
-import com.fp.model.User;
-
 
 @Controller
 @MultipartConfig
@@ -38,20 +35,20 @@ class UploadImageController {
 	PostDao postDao;
 	@Autowired
 	AlbumDao albumDao;
-	
-	@RequestMapping(value="/upload", method=RequestMethod.GET)
-	public String uploadGet(){
+
+	@RequestMapping(value = "/upload", method = RequestMethod.GET)
+	public String uploadGet() {
 		return "upload";
 	}
-	
-	@RequestMapping(value="/upload", method=RequestMethod.POST)
-	public String zapishiSnimka(@RequestParam("failche") MultipartFile file,HttpSession ses,
-								HttpServletRequest request){
-		//SAVE IMAGE
+
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpSession ses,
+			HttpServletRequest request) {
+		// SAVE IMAGE
 		try {
 			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
 			MimeType type = allTypes.forName(file.getContentType());
-			String ext = type.getExtension(); 
+			String ext = type.getExtension();
 			File f = new File(WebAppInitializer.LOCATION + File.separator + file.getOriginalFilename());
 			String description = request.getParameter("description");
 			String[] inputTags = request.getParameter("tags").split(",");
@@ -60,15 +57,23 @@ class UploadImageController {
 				tags.add(new Tag(string));
 			}
 			long albumId = (long) ses.getAttribute("albumId");
- 			Post post = new Post(file.getOriginalFilename(), description, tags,albumId);
- 			ses.setAttribute("post", post);
+			Post post = new Post(file.getOriginalFilename(), description, tags, albumId);
+			ses.setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
-			
+
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			request.getSession().setAttribute("album", album);
-			
+			// change album cover
+
+			boolean isEmptyAlbum = (boolean) (ses.getAttribute("emptyAlbum"));
+			if (isEmptyAlbum == true) {
+				String albumImage = post.getPath();
+				album.setPicture(albumImage);
+				request.getSession().setAttribute("emptyAlbum", false);
+			}
+
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,6 +89,5 @@ class UploadImageController {
 		}
 		return "upload";
 	}
-	
-	
+
 }

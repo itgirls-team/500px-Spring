@@ -104,7 +104,7 @@ public class User implements Serializable {
 		this.registerDate = registerDate;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

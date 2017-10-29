@@ -323,14 +323,4 @@ public class PostDao {
 
 		return post;
 	}
-
-	public static void main(String[] args) {
-		/*
-		 * try { HashSet<Post> posts = postDao.getAllPostsFromAlbum(1); for
-		 * (Post post : posts) { System.out.println(post); } } catch
-		 * (SQLException e) { System.out.println("offf"); }
-		 */
-
-	}
-
 }

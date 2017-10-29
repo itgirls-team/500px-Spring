@@ -1,13 +1,14 @@
 package com.fp.dbModel;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,19 +30,21 @@ public class CommentDao {
 	@Autowired
 	private UserDao userDao;
 
-	public synchronized void addComment(Comment comment) throws SQLException {
+	public synchronized Comment addComment(Long userId, String text, Long postId) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(ADD_COMMENT);
-		ps.setDate(1, Date.valueOf(LocalDate.now()));
-		ps.setString(2, comment.getDescription());
-		ps.setLong(3, comment.getPost().getId());
-		ps.setLong(4, comment.getUserId());
+		LocalDateTime dateAndTime = LocalDateTime.now();
+		ps.setTimestamp(1, Timestamp.valueOf(dateAndTime));
+		ps.setString(2, text);
+		ps.setLong(3, postId);
+		ps.setLong(4, userId);
 		ps.executeUpdate();
 
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
+		Comment comment = new Comment(userId, text, postId);
 		long id = rs.getLong(1);
 		comment.setId(id);
-		comment.setdateAndTimeOfUpload(LocalDateTime.now());
+		comment.setdateAndTimeOfUpload(dateAndTime);
 
 		if (ps != null) {
 			ps.close();
@@ -49,18 +52,16 @@ public class CommentDao {
 		if (rs != null) {
 			rs.close();
 		}
+		return comment;
 	}
 	/*
-	// delete all comments
-	public synchronized void deleteComments(Post p) throws SQLException {
-		PreparedStatement ps = manager.getConnection().prepareStatement(DELETE_ALL_COMMENTS);
-		ps.setLong(1, p.getId());
-		ps.executeUpdate();
-		if (ps != null) {
-			ps.close();
-		}
-	}*/
-	
+	 * // delete all comments public synchronized void deleteComments(Post p)
+	 * throws SQLException { PreparedStatement ps =
+	 * manager.getConnection().prepareStatement(DELETE_ALL_COMMENTS);
+	 * ps.setLong(1, p.getId()); ps.executeUpdate(); if (ps != null) {
+	 * ps.close(); } }
+	 */
+
 	// delete all comments
 	public synchronized void deleteComments(Post p) throws SQLException {
 		Set<Comment> comments = this.getAllComments(p.getId());
@@ -70,42 +71,42 @@ public class CommentDao {
 	}
 
 	// delete comment
-    public void deleteComment(long comment_id) throws SQLException {
-        PreparedStatement deleteLikes = null;
-        PreparedStatement deleteDislikes = null;
-        PreparedStatement deleteComment = null;
-        try {
-            manager.getConnection().setAutoCommit(false);
-            deleteLikes =  manager.getConnection().prepareStatement(REMOVE_COMMENTS_LIKES);
-            deleteLikes.setLong(1, comment_id);
-            deleteLikes.executeUpdate();
-            
-            deleteDislikes =  manager.getConnection().prepareStatement(REMOVE_COMMENTS_DISLIKES);
-            deleteDislikes.setLong(1, comment_id);
-            deleteDislikes.executeUpdate();
+	public void deleteComment(long comment_id) throws SQLException {
+		PreparedStatement deleteLikes = null;
+		PreparedStatement deleteDislikes = null;
+		PreparedStatement deleteComment = null;
+		try {
+			manager.getConnection().setAutoCommit(false);
+			deleteLikes = manager.getConnection().prepareStatement(REMOVE_COMMENTS_LIKES);
+			deleteLikes.setLong(1, comment_id);
+			deleteLikes.executeUpdate();
 
-            deleteComment =  manager.getConnection().prepareStatement(DELETE_COMMENT);
-            deleteComment.setLong(1, comment_id);
-            deleteComment.executeUpdate();
-            manager.getConnection().commit();
-        } catch (SQLException e) {
-            System.err.print("Transaction is being rolled back");
-            manager.getConnection().rollback();
-            throw e;
-        } finally {
-            if (deleteLikes != null) {
-                deleteLikes.close();
-            }
-            if (deleteDislikes != null) {
-                deleteDislikes.close();
-            }
-            if (deleteComment != null) {
-                deleteComment.close();
-            }
-            manager.getConnection().setAutoCommit(true);
-        }
-    }
-    
+			deleteDislikes = manager.getConnection().prepareStatement(REMOVE_COMMENTS_DISLIKES);
+			deleteDislikes.setLong(1, comment_id);
+			deleteDislikes.executeUpdate();
+
+			deleteComment = manager.getConnection().prepareStatement(DELETE_COMMENT);
+			deleteComment.setLong(1, comment_id);
+			deleteComment.executeUpdate();
+			manager.getConnection().commit();
+		} catch (SQLException e) {
+			System.err.print("Transaction is being rolled back");
+			manager.getConnection().rollback();
+			throw e;
+		} finally {
+			if (deleteLikes != null) {
+				deleteLikes.close();
+			}
+			if (deleteDislikes != null) {
+				deleteDislikes.close();
+			}
+			if (deleteComment != null) {
+				deleteComment.close();
+			}
+			manager.getConnection().setAutoCommit(true);
+		}
+	}
+
 	// like comment
 	public synchronized void likeComment(long commentId, String username) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(LIKE_COMMENT);
@@ -256,7 +257,7 @@ public class CommentDao {
 	}
 
 	public synchronized Set<Comment> getAllComments(long postId) throws SQLException {
-		Set<Comment> comments = new HashSet<>();
+		Set<Comment> comments = new TreeSet<>(Comparator.comparing(Comment::getdateAndTimeOfUpload).reversed());
 		PreparedStatement ps = manager.getConnection().prepareStatement(
 				"SELECT comment_id,user_id, description, date_upload , number_of_likes, number_of_dislikes FROM comments WHERE post_id=?;");
 		ps.setLong(1, postId);
@@ -367,7 +368,7 @@ public class CommentDao {
 			ps.setLong(2, commentId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			
+
 			userName = rs.getString("username");
 			if (ps != null) {
 				ps.close();

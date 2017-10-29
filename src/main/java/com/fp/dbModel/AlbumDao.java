@@ -6,17 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fp.model.Album;
-import com.fp.model.Comment;
-import com.fp.model.Post;
-import com.fp.model.Tag;
-import com.fp.model.User;
 import com.fp.utils.CommonUtils;
 
 @Component
@@ -29,7 +26,8 @@ public class AlbumDao {
 	private static final String SELECT_POST_FROM_ALBUM = "SELECT post_id, image, counts_likes, counts_dislikes, description FROM posts WHERE album_id = ?";
 	private static final String DELETE_POSTS_FROM_ALBUM = "DELETE FROM posts WHERE album_id = ?";
 	private static final String DELETE_ALBUM = "DELETE FROM albums WHERE album_id =?";
-	//private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category LIKE ?";
+	// private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums
+	// WHERE category LIKE ?";
 	private static final String SELECT_ALBUM_BY_ALBUM_ID = "SELECT album_id,category,date_upload,picture,user_id FROM albums WHERE album_id = ?";
 	private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category=?";
 
@@ -53,43 +51,16 @@ public class AlbumDao {
 	}
 
 	// getAllAlbumFromUser
-	public HashSet<Album> getAllAlbumFromUser(long userId) throws SQLException {
+	public Set<Album> getAllAlbumFromUser(long userId) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_ALBUMS_BY_USER);
 		ps.setLong(1, userId);
 		ResultSet rs = ps.executeQuery();
-		HashSet<Album> albums = new HashSet<>();
+		Set<Album> albums = new TreeSet<>(Comparator.comparing(Album::getCategory).reversed());
 		while (rs.next()) {
-			/*
-			 * HashSet<Post> posts = new HashSet<>(); PreparedStatement ps_posts
-			 * = con.prepareStatement(SELECT_POST_FROM_ALBUM);
-			 * ps_posts.setLong(1, rs.getLong("album_id")); ResultSet rs1 =
-			 * ps_posts.executeQuery(); while (rs.next()) { long postId =
-			 * rs.getLong("post_id"); String url = rs.getString("image"); String
-			 * description = rs.getString("description"); int countLikes =
-			 * rs.getInt("counts_likes"); int countDislikes =
-			 * rs.getInt("counts_dislikes"); Set<Tag> tags =
-			 * TagDao.getInstance().getAllTagsFromPost(postId); int albumId =
-			 * rs.getInt("album_id"); Set<Comment> commentsOfPost =
-			 * CommentDao.getInstance().getAllComments(rs.getLong("post_id"));
-			 * Set<User> usersWhoLike =
-			 * PostDao.getInstance().getAllUsersWhoLikePost(postId); Set<User>
-			 * usersWhoDislike =
-			 * PostDao.getInstance().getAllUsersWhoDislikePost(postId);
-			 * posts.add(new Post(postId, url, description, countLikes,
-			 * countDislikes, tags, albumId, commentsOfPost, usersWhoLike,
-			 * usersWhoDislike));
-			 * 
-			 * }
-			 */
-			// albums.add(new Album(rs.getLong("album_id"),
-			// rs.getString("category"), rs.getString("picture"), userId,
-			// posts));
 			albums.add(new Album(rs.getLong("album_id"), rs.getString("category"), rs.getString("picture"), userId));
 		}
 		return albums;
 	}
-
-	
 
 	// deleteAlbum
 	public void deleteAlbum(Album a) throws SQLException {
@@ -139,9 +110,9 @@ public class AlbumDao {
 		return albumExists;
 	}
 
-	public HashSet<Album> getAllAlbumFromUser(String username) throws SQLException {
+	public Set<Album> getAllAlbumFromUser(String username) throws SQLException {
 		manager.getConnection().setAutoCommit(false);
-		HashSet<Album> albums = new HashSet();
+		Set<Album> albums = new TreeSet<>(Comparator.comparing(Album::getCategory).reversed());
 		// take id of the user
 		PreparedStatement ps = manager.getConnection()
 				.prepareStatement("SELECT user_id FROM users WHERE username = ? ");
@@ -154,13 +125,13 @@ public class AlbumDao {
 
 		return albums;
 	}
-	
+
 	public Album getAlbum(long albumId) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_ALBUM_BY_ALBUM_ID);
 		ps.setLong(1, albumId);
 		ResultSet rs = ps.executeQuery();
 		rs.next();
-		return new Album(albumId,rs.getString("category"),rs.getString("picture"),rs.getLong("user_id"));
+		return new Album(albumId, rs.getString("category"), rs.getString("picture"), rs.getLong("user_id"));
 	}
 
 	public String getCover(Long id) throws SQLException {
