@@ -12,6 +12,7 @@
 
 			<img src="<c:url value = "/postId/${sessionScope.postId}" />">
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
+			<img width="640" src="<c:url value = "/postId/${sessionScope.postId}" />">
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
 			<h5>Likes : ${sessionScope.post.countsOfLikes} </h5><br>
 			<h5>Dislikes : ${sessionScope.post.countsOfDislikes} </h5><br>
@@ -49,5 +50,11 @@
 				</tr>
 			   </c:forEach> 
 		   </table>
+		   
+		   <!--
+		   <form action="/deletePost/postId" method="GET">
+		   <input type="submit" value="Delete Post">
+		   </form>
+		   -->
 </body>
 </html>

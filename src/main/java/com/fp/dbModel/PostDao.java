@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,7 @@ import com.fp.model.User;
 public class PostDao {
 
 	private static final String UPLOAD_POST = "INSERT INTO posts (image, counts_likes, counts_dislikes, description, date_upload, album_id) VALUES (?,?,?,?,?,?)";
-	private static final String SELECT_POSTS_BY_ALBUM = "SELECT post_id,image,counts_likes,counts_dislikes,description,album_id FROM posts WHERE album_id = ?";
+	private static final String SELECT_POSTS_BY_ALBUM = "SELECT post_id,image,counts_likes,counts_dislikes,description,album_id,date_upload FROM posts WHERE album_id = ?";
 	private static final String SELECT_COUNT_OF_POSTS_IN_ALBUMS = "SELECT COUNT(P.post_id) AS posts, A.category FROM posts P INNER JOIN albums A USING(album_id) GROUP BY album_id";
 	private static final String LIKE_POST = "INSERT INTO users_like_posts (post_id,user_id) VALUES (?,?)";
 	private static final String DISLIKE_POST = "INSERT INTO users_dislike_posts (post_id,user_id) VALUES (?,?)";
@@ -33,7 +34,7 @@ public class PostDao {
 	private static final String SELECT_USERS_WHO_LIKE_POST = "SELECT user_id,username,first_name,last_name,password,email,description,profile_picture,register_date FROM users_like_posts JOIN users  USING (user_id) WHERE post_id = ?";
 	private static final String SELECT_USERS_WHO_DISLIKE_POST = "SELECT user_id,username,first_name,last_name,password,email,description,profile_picture,register_date FROM users_dislike_posts JOIN users  USING (user_id) WHERE post_id = ?";
 	private static final String SELECT_POSTS_BY_TAG = "SELECT image, counts_likes, counts_dislikes, description, date_upload, album_id FROM posts JOIN post_tag USING(post_id) JOIN tags USING (tag_id) WHERE title = ?";
-	private static final String SELECT_POSTS_ORDER_BY_LIKES = "SELECT post_id,image,counts_likes,counts_dislikes,description,album_id, SUM(counts_likes) AS likes FROM posts JOIN users_like_posts USING (post_id) GROUP BY post_id ORDER BY SUM(counts_likes) DESC";
+	private static final String SELECT_POSTS_ORDER_BY_LIKES = "SELECT post_id,image,counts_likes,counts_dislikes,description,album_id,date_upload FROM posts WHERE album_id = ? ORDER BY counts_likes";
 	private static final String SELECT_POSTS_ORDER_BY_DATE = "SELECT * FROM posts ORDER BY date_upload DESC";
 	private static final String DELETE_POST = "DELETE FROM posts WHERE post_id = ?";
 	private static final String DELETE_ALL_TAGS_FROM_POST = "DELETE FROM post_tag WHERE post_id = ?";
@@ -64,7 +65,6 @@ public class PostDao {
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
 		p.setPostId(rs.getLong(1));
-
 		tagDao.insertPostTags(p);
 	}
 
@@ -81,13 +81,14 @@ public class PostDao {
 			String description = rs.getString("description");
 			int countLikes = rs.getInt("counts_likes");
 			int countDislikes = rs.getInt("counts_dislikes");
+			Timestamp date = rs.getTimestamp("date_upload");
 			Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
 			int albumId = rs.getInt("album_id");
 			Set<Comment> commentsOfPost = commentDao.getAllComments(rs.getLong("post_id"));
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike));
+					usersWhoLike, usersWhoDislike,date));
 		}
 		return posts;
 	}
@@ -176,23 +177,24 @@ public class PostDao {
 	}
 
 	// sort by like
-	public LinkedHashSet<Post> getAllPostOrderByLikes() throws SQLException {
+	public HashSet<Post> getAllPostOrderByLikes() throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_POSTS_ORDER_BY_LIKES);
 		ResultSet rs = ps.executeQuery();
-		LinkedHashSet<Post> posts = new LinkedHashSet<>();
+		HashSet<Post> posts = new HashSet<>();
 		while (rs.next()) {
 			long postId = rs.getLong("post_id");
 			String url = rs.getString("image");
 			String description = rs.getString("description");
 			int countLikes = rs.getInt("counts_likes");
 			int countDislikes = rs.getInt("counts_dislikes");
+			Timestamp date = rs.getTimestamp("date_upload");
 			Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
 			int albumId = rs.getInt("album_id");
 			Set<Comment> commentsOfPost = commentDao.getAllComments(rs.getLong("post_id"));
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike));
+					usersWhoLike, usersWhoDislike,date));
 		}
 		return posts;
 
@@ -209,13 +211,14 @@ public class PostDao {
 			String description = rs.getString("description");
 			int countLikes = rs.getInt("counts_likes");
 			int countDislikes = rs.getInt("counts_dislikes");
+			Timestamp date = rs.getTimestamp("date_upload");
 			Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
 			int albumId = rs.getInt("album_id");
 			Set<Comment> commentsOfPost = commentDao.getAllComments(rs.getLong("post_id"));
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike));
+					usersWhoLike, usersWhoDislike,date));
 		}
 		return posts;
 
@@ -285,6 +288,7 @@ public class PostDao {
 			String description = rs.getString("description");
 			int countLikes = rs.getInt("counts_likes");
 			int countDislikes = rs.getInt("counts_dislikes");
+			Timestamp date = rs.getTimestamp("date_upload");
 			// OK
 			Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
 			// OK
@@ -295,7 +299,7 @@ public class PostDao {
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike));
+					usersWhoLike, usersWhoDislike,date));
 		}
 		return posts;
 	}
@@ -309,6 +313,7 @@ public class PostDao {
 		String description = rs.getString("description");
 		int countLikes = rs.getInt("counts_likes");
 		int countDislikes = rs.getInt("counts_dislikes");
+		Timestamp date = rs.getTimestamp("date_upload");
 		// OK
 		Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
 		// OK
@@ -318,9 +323,9 @@ public class PostDao {
 		// OK
 		Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 
-		Post post = new Post(url, description, countLikes, countDislikes, tags, commentsOfPost, usersWhoLike,
-				usersWhoDislike);
+		Post post = new Post(postId,url, description, countLikes, countDislikes, tags, commentsOfPost, usersWhoLike,
+				usersWhoDislike,date);
 
 		return post;
-	}
+	} 
 }

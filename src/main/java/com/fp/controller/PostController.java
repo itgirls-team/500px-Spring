@@ -1,5 +1,13 @@
 package com.fp.controller;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.sql.SQLException;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -7,8 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.taglibs.standard.resources.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,15 +57,16 @@ public class PostController {
 
 	// ShowPostsFromAlbum
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
-	public String showAllPosts(HttpSession session, HttpServletRequest request) {
-
+	public String showAllPosts(HttpSession session, HttpServletRequest request,Model model) {
 		try {
 			long albumId = Long.parseLong(request.getParameter("albumId"));
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			session.setAttribute("album", album);
 			session.setAttribute("albumId", albumId);
-			request.getSession().setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
+			model.addAttribute("hideUploadPost",false);
+			model.addAttribute("currentPage", "posts");
+			session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
 			System.out.println();
 			e.printStackTrace();
@@ -70,7 +81,6 @@ public class PostController {
 			Post post = postDao.getPost(postId);
 			String cover = post.getPath();
 			CommonUtils.showPicture(cover, response, request);
-			// readPicture(post.getPath(), postId, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -88,4 +98,20 @@ public class PostController {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	@RequestMapping(value = "/deletePost/postId", method = RequestMethod.GET)	
+	public String deleteVideoPost(@RequestParam ("postId") Long postId,HttpServletRequest request) {
+		try {
+			System.out.println("vleze tuk");
+			//long postId = Long.parseLong(request.getParameter("postId"));
+			Post post = postDao.getPost(postId);
+			postDao.deletePost(post);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "posts";
+	}
+	*/
+	
 }

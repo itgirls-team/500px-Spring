@@ -12,6 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fp.model.Post;
 import com.fp.model.User;
 import com.fp.utils.CommonUtils;
 

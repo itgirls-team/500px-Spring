@@ -3,14 +3,19 @@ package com.fp.dbModel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fp.model.Comment;
 import com.fp.model.Post;
 import com.fp.model.Tag;
+import com.fp.model.User;
 
 @Component
 public class TagDao {
@@ -20,10 +25,15 @@ public class TagDao {
 	private static final String SELECT_TITLE_OF_TAG = "SELECT title FROM tags WHERE title = ?";
 	private static final String INSERT_TAG = "INSERT INTO tags (title) VALUES (?)";
 	private static final String SELECT_TAGS_FROM_POST = "SELECT t.title FROM post_tag AS p JOIN tags AS t USING (tag_id) WHERE p.post_id = ? ";
-
+	private static final String SELECT_POSTS_BY_TAG = "SELECT p.post_id,p.image,p.counts_likes,p.counts_dislikes,p.description,p.album_id,p.date_upload FROM posts AS p JOIN post_tag AS t USING(post_id) WHERE tag_id = ?";
+	
 	@Autowired
 	private DbManager manager;
-
+	@Autowired
+	private PostDao postDao;
+	@Autowired
+	private CommentDao commentDao;
+	
 	// insert into common table
 	public synchronized void insertPostTags(Post p) throws SQLException {
 		Set<Tag> tags = p.getTagsOfPost();
@@ -81,16 +91,30 @@ public class TagDao {
 		return tags;
 	}
 
-	public static void main(String[] args) throws SQLException {
-		// TagDao.getInstance().insertTag(new Tag("angry"));
-		// Tag tag = TagDao.getInstance().getTag("angry");
-		// System.out.println(tag);
-		// System.out.println(TagDao.getInstance().existTag(new Tag("angry")));
-		/*
-		 * HashSet<Tag> tags = TagDao.getInstance().getAllTagsFromPost(2); for
-		 * (Tag tag : tags) { System.out.println(tag); }
-		 */
-
+	public List<Post> searchPostByTag(String title) throws SQLException{
+		Tag tag = getTag(title);
+		try (PreparedStatement ps = manager.getConnection().prepareStatement(SELECT_POSTS_BY_TAG);) {
+			ps.setLong(1, tag.getId());
+			try (ResultSet rs = ps.executeQuery();) {
+				List<Post> posts = new ArrayList<>();
+				while (rs.next()) {
+					long postId = rs.getLong("post_id");
+					String url = rs.getString("image");
+					String description = rs.getString("description");
+					int countLikes = rs.getInt("counts_likes");
+					int countDislikes = rs.getInt("counts_dislikes");
+					Timestamp date = rs.getTimestamp("date_upload");
+					Set<Tag> tags = getAllTagsFromPost(postId);
+					int albumId = rs.getInt("album_id");
+					Set<Comment> commentsOfPost = commentDao.getAllComments(rs.getLong("post_id"));
+					Set<User> usersWhoLike = postDao.getAllUsersWhoLikePost(postId);
+					Set<User> usersWhoDislike = postDao.getAllUsersWhoDislikePost(postId);
+					posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
+									usersWhoLike, usersWhoDislike,date));
+				}
+				return posts;
+			}
+		}
 	}
 
 }

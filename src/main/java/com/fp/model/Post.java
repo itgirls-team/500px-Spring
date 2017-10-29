@@ -1,5 +1,6 @@
 package com.fp.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,7 +12,7 @@ public class Post {
 	private String path;
 	private int countsOfLikes;
 	private int countsOfDislikes;
-	private LocalDate dateOfUpload;
+	private Timestamp dateOfUpload;
 	private String description;
 	private long albumId;
 	private Set<Comment> commentsOfPost;
@@ -19,53 +20,47 @@ public class Post {
 	private Set<User> usersWhoDislike;
 	private Set<Tag> tagsOfPost;
 
-	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long album_id,
-			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
+
+	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags,
+			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike,Timestamp dateOfUpload) {
 		this.path = path;
 		this.countsOfLikes = countsOfLikes;
 		this.countsOfDislikes = countsOfDislikes;
-		this.dateOfUpload = LocalDate.now();
+		this.dateOfUpload = dateOfUpload;
 		this.description = description;
 		this.tagsOfPost = tags;
-		this.albumId = album_id;
 		this.commentsOfPost = commentsOfPost;
 		this.usersWhoLike = usersWhoLike;
 		this.usersWhoDislike = usersWhoDislike;
 	}
-
-	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tag,
-			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
-		this.path = path;
-		this.countsOfLikes = countsOfLikes;
-		this.countsOfDislikes = countsOfDislikes;
-		this.dateOfUpload = LocalDate.now();
-		this.description = description;
-		this.tagsOfPost = tag;
-		this.commentsOfPost = commentsOfPost;
-		this.usersWhoLike = usersWhoLike;
-		this.usersWhoDislike = usersWhoDislike;
-	}
-
-	public Post(long id, String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags,
-			long album_id, Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
-		this(path, description, countsOfLikes, countsOfDislikes, tags, album_id, commentsOfPost, usersWhoLike,
-				usersWhoDislike);
+	
+	public Post(long id,String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags,
+			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike,Timestamp dateOfUpload) {
+		this(path,description,countsOfLikes,countsOfDislikes,tags,commentsOfPost,usersWhoLike,usersWhoDislike,dateOfUpload);
 		this.id = id;
 	}
 
-	public Post(String path, String description, Set<Tag> tags, long album_id) {
-		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
+	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long albumId,
+			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike,Timestamp dateOfUpload) {
+		this(path,description,countsOfLikes,countsOfDislikes,tags,commentsOfPost,usersWhoLike,usersWhoDislike,dateOfUpload);
+		this.albumId = albumId;
+	}
+	
+	public Post(long id,String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long albumId,
+			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike,Timestamp dateOfUpload) {
+		this(id,path,description,countsOfLikes,countsOfDislikes,tags,commentsOfPost,usersWhoLike,usersWhoDislike,dateOfUpload);
+		this.albumId = albumId;
 	}
 
-	public Post(String path, String description, Set<Tag> tags) {
-		this(path, description, 0, 0, tags, new HashSet<>(), new HashSet<>(), new HashSet<>());
+	public Post(String path, String description, Set<Tag> tags, long album_id,Timestamp dateOfUpload) {
+		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>(),dateOfUpload);
 	}
-
-	public Post(long id, String path, String description, Set<Tag> tags, long album_id) {
-		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
+  
+	public Post(long id,String path, String description, Set<Tag> tags, long album_id,Timestamp dateOfUpload) {
+		this(id,path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>(),dateOfUpload);
 		this.id = id;
 	}
-
+	
 	// Getters
 	public long getId() {
 		return id;
@@ -83,7 +78,7 @@ public class Post {
 		return countsOfDislikes;
 	}
 
-	public LocalDate getDateOfUpload() {
+	public Timestamp getDateOfUpload() {
 		return dateOfUpload;
 	}
 

@@ -9,15 +9,22 @@
 <title>Insert title here</title>
 </head>
 <body>
+
 	<h1>Posts</h1>
 	
+	<select onchange="location = this.value;">
+			 <option value="<c:url value="/${currentPage}/date" />" <c:if test="${sessionScope.sort eq \"date\" }"> selected </c:if>>SortByDate</option>
+			 <option value="<c:url value="/${currentPage}/like" />" <c:if test="${sessionScope.sort eq \"like\" }"> selected </c:if>>SortByLikes</option>
+	</select>
+	
 	 <c:forEach items="${posts}" var="post">
-	 	<a href="post?postId=${post.id}"><img src="/showPosts?postId=${post.id}"></a>
+	 	<a href="/post?postId=${post.id}"><img width="300" src="/showPosts?postId=${post.id}"></a>
 	 </c:forEach>
 	
+	<c:if test = "${hideUploadPost != null && !hideUploadPost}">
 	<form action="/upload" method="get">
 		<input type="submit" value="Upload Post">
 	</form>
-	
+	</c:if>
 </body>
 </html>

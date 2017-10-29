@@ -1,6 +1,7 @@
 package com.fp.dbModel;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,8 +20,8 @@ import com.fp.utils.CommonUtils;
 @Component
 public class AlbumDao {
 
-	private static final String CREATE_ALBUM = "INSERT INTO albums (category, date_upload, picture, user_id ) VALUES (?,?,?,?)";
-	private static final String SELECT_ALBUMS_BY_USER = "SELECT album_id, category, picture, user_id FROM albums WHERE user_id = ?";
+	private static final String CREATE_ALBUM = "INSERT INTO albums (category, date_upload, picture, user_id ) VALUES (?,now(),?,?)";
+	private static final String SELECT_ALBUMS_BY_USER = "SELECT album_id, category, picture, user_id, date_upload FROM albums WHERE user_id = ?";
 	// private static final String SELECT_TAGS_FROM_POST = "SELECT t.title FROM
 	// post_tag AS p JOIN tags AS t USING (tag_id) WHERE p.post_id = ? ";
 	private static final String SELECT_POST_FROM_ALBUM = "SELECT post_id, image, counts_likes, counts_dislikes, description FROM posts WHERE album_id = ?";
@@ -38,7 +39,7 @@ public class AlbumDao {
 	public synchronized void createAlbum(Album a) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(CREATE_ALBUM, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, a.getCategory());
-		ps.setDate(2, Date.valueOf(LocalDate.now()));
+		//ps.setDate(2, Date.valueOf(LocalDate.now()));
 		ps.setString(3, a.getPicture());
 		ps.setLong(4, a.getUser());
 		ps.executeUpdate();
@@ -57,7 +58,7 @@ public class AlbumDao {
 		ResultSet rs = ps.executeQuery();
 		Set<Album> albums = new TreeSet<>(Comparator.comparing(Album::getCategory).reversed());
 		while (rs.next()) {
-			albums.add(new Album(rs.getLong("album_id"), rs.getString("category"), rs.getString("picture"), userId));
+			albums.add(new Album(rs.getLong("album_id"), rs.getString("category"), rs.getString("picture"), userId, rs.getTimestamp("date_upload")));
 		}
 		return albums;
 	}
@@ -131,7 +132,7 @@ public class AlbumDao {
 		ps.setLong(1, albumId);
 		ResultSet rs = ps.executeQuery();
 		rs.next();
-		return new Album(albumId, rs.getString("category"), rs.getString("picture"), rs.getLong("user_id"));
+		return new Album(albumId,rs.getString("category"),rs.getString("picture"),rs.getLong("user_id"),rs.getTimestamp("date_upload"));
 	}
 
 	public String getCover(Long id) throws SQLException {

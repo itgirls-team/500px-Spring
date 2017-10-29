@@ -16,8 +16,13 @@ public class AvatarController {
 
 	@RequestMapping(value = "/avatar", method = RequestMethod.GET)
 	public void getAvatar(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		User user = (User) request.getSession().getAttribute("user");
-		String avatar = user.getProfilePicture();
+		String avatar;
+		if (request.getParameter("profilePicture") != null) {
+			avatar = (String) request.getParameter("profilePicture");
+		} else {
+			User user = (User) request.getSession().getAttribute("user");
+			avatar = user.getProfilePicture();
+		}
 		CommonUtils.showPicture(avatar, response, request);
 	}
 }

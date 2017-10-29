@@ -1,6 +1,8 @@
 package com.fp.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,46 +11,37 @@ public class Album {
 
 	private long id;
 	private String category;
-	private LocalDate dateOfUpload;
+	private Timestamp dateOfUpload;
 	private String picture;
 	private long userId;
 	private Set<Post> posts;
 
-	public Album(String category, String picture, long user, Set<Post> posts) {
+	public Album(String category, String picture, long user, Set<Post> posts,Timestamp dateOfUpload) {
 		this.category = category;
-		this.dateOfUpload = LocalDate.now();
+		this.dateOfUpload = dateOfUpload;
 		this.picture = picture;
 		this.userId = user;
 		this.posts = posts;
 	}
 
-	public Album(String category, String picture) {
-		this.category = category;
-		this.dateOfUpload = LocalDate.now();
-		this.picture = picture;
-	}
-
-	public Album(long id, String category, String picture, long user, Set<Post> posts) {
-		this(category, picture, user, posts);
-		this.id = id;
-	}
-
-	public Album(String category, String picture, long user) {
-		this(category, picture, user, new HashSet<>());
-	}
-
-	public Album(long id, String category, String picture, long user) {
-		this(category, picture, user, new HashSet<>());
-		this.id = id;
-	}
-
-	public Album(long id, String category, LocalDate dateOfUpload, String picture, long userId) {
-		this.id = id;
+	public Album(String category, String picture,Timestamp dateOfUpload) {
 		this.category = category;
 		this.dateOfUpload = dateOfUpload;
 		this.picture = picture;
-		this.userId = userId;
-		posts = new HashSet<>();
+	}
+
+	public Album(long id, String category, String picture, long user, Set<Post> posts ,Timestamp dateOfUpload) {
+		this(category, picture, user, posts,dateOfUpload);
+		this.id = id;
+	}
+
+	public Album(String category, String picture, long user,Timestamp dateOfUpload) {
+		this(category, picture, user, new HashSet<>(),dateOfUpload);
+	}
+
+	public Album(long id, String category, String picture, long user,Timestamp dateOfUpload) {
+		this(category, picture, user, new HashSet<>(),dateOfUpload);
+		this.id = id;
 	}
 
 	// Getters
@@ -60,7 +53,7 @@ public class Album {
 		return category;
 	}
 
-	public LocalDate getDateOfUpload() {
+	public Timestamp getDateOfUpload() {
 		return dateOfUpload;
 	}
 

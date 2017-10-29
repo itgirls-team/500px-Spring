@@ -1,6 +1,10 @@
 package com.fp.controller;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,8 +34,13 @@ public class AlbumController {
 	@RequestMapping(value = "/albums", method = RequestMethod.GET)
 	public String showAlbums(HttpSession session, HttpServletRequest request) {
 		try {
-			User u = (User) request.getSession().getAttribute("user");
-			User realUser = userDao.getUser(u.getUserName());
+			User realUser;
+			if (request.getParameter("searchUser") != null) {
+				realUser = userDao.getUser((String) request.getParameter("searchUser"));
+			} else {
+				User u = (User) request.getSession().getAttribute("user");
+				realUser = userDao.getUser(u.getUserName());
+			}
 			realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
 			request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
 			request.getSession().setAttribute("user", realUser);
@@ -52,7 +61,8 @@ public class AlbumController {
 					String albumImage = "defaultAlbumImage.jpg";
 					request.getSession().setAttribute("emptyAlbum", true);
 					Long userId = ((User) request.getSession().getAttribute("user")).getId();
-					albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
+					albumDao.createAlbum(
+							new Album(albumCategory, albumImage, userId, Timestamp.valueOf(LocalDateTime.now())));
 					User u = (User) request.getSession().getAttribute("user");
 					User realUser = userDao.getUser(u.getUserName());
 					realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));

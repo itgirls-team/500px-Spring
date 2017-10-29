@@ -11,21 +11,20 @@
 <c:if test="${ sessionScope.user == null }">
 			<c:redirect url="/page/login"></c:redirect>
 </c:if>
-<jsp:include page="header.jsp"></jsp:include>
-	
-<img id="profilePicture" src="/avatar">
+
+<img id="profilePicture" src="/avatar?profilePicture=${searchUser.profilePicture}" style = "width: 100px ; heigth : 100px; ">
 <div class="main">
-	<form action="/description">
-				<input type="submit" value="Description">
-	</form>
-	<form action="/contact">
-				<input type="submit" value="Contacts">
-	</form>
-	<form action="/albums">
+	<p>${searchUser.userName}</p>
+	<p>${searchUser.firstName}</p>
+	<p>${searchUser.lastName}</p>
+	<p>${searchUser.description}</p>
+	<p>${searchUser.email}</p>
+	
+	<form action="/albums?searchUser=${searchUser.userName}">
 			<input type="submit" value="Albums">
 	</form>
 
-	<form action="/following">
+	<form action="/following?searchUser=${searchUser.userName}">
 				<input type="hidden" name="pageToRedirect" value="following" /> 	
 				<input type="submit" value="Following">
 	</form>

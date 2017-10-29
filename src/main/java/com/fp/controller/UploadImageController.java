@@ -3,6 +3,8 @@ package com.fp.controller;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,11 +59,11 @@ class UploadImageController {
 				tags.add(new Tag(string));
 			}
 			long albumId = (long) ses.getAttribute("albumId");
-			Post post = new Post(file.getOriginalFilename(), description, tags, albumId);
-			ses.setAttribute("post", post);
+ 			Post post = new Post(file.getOriginalFilename(), description, tags,albumId,Timestamp.valueOf(LocalDateTime.now()));
+ 			ses.setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
-
+			//update session
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			request.getSession().setAttribute("album", album);
@@ -87,7 +89,7 @@ class UploadImageController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "upload";
+		return "album";
 	}
 
 }

@@ -10,6 +10,11 @@
 	</head>
 	<body>
 		<div class="header">
+		    <form action="<c:url value="/search" />" method="get">
+				<h5>Search : <input type="search" name="search" placeholder="Search.."> </h5>
+			</form> 
+			
+			<br>
 			<form  action="/logout" method="post">
 				<input type="submit" value="Logout">
 			</form>
@@ -17,4 +22,18 @@
 			<h3 class="welcome">Welcome, ${ sessionScope.user.userName }</h3>
 		</div>
 	</body>
+	<!--
+	<script>
+	 function searchAutoComplete(term) {
+	        $.ajax({
+	            type: 'GET',
+	            url: "http://localhost:8080/search/"+term,
+	            success: function (response) {
+	                fillSearchDropdown(response);
+	            }
+	        });
+	    }
+
+	</script>
+	  -->
 </html>
