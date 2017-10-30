@@ -18,6 +18,7 @@ public class Post {
 	private Set<User> usersWhoLike;
 	private Set<User> usersWhoDislike;
 	private Set<Tag> tagsOfPost;
+	private boolean isLiked;
 
 	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long album_id,
 			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike) {
@@ -53,8 +54,9 @@ public class Post {
 		this.id = id;
 	}
 
-	public Post(String path, String description, Set<Tag> tags, long album_id) {
+	public Post(String path, String description, Set<Tag> tags, long album_id, boolean isLiked) {
 		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>());
+		this.isLiked = isLiked;
 	}
 
 	public Post(String path, String description, Set<Tag> tags) {
@@ -139,6 +141,14 @@ public class Post {
 
 	public void setCountsOfDislikes(int countsOfDislikes) {
 		this.countsOfDislikes = countsOfDislikes;
+	}
+
+	public boolean isLiked() {
+		return isLiked;
+	}
+
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
 	}
 
 	// HashCode and Equals

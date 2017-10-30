@@ -12,7 +12,18 @@
 
 			<img src="<c:url value = "/postId/${sessionScope.postId}" />">
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
-			<button style="background-color: white" id="likebutton" onclick="likePost()">Like</button>
+			<c:if test="${sessionScope.Liked}">
+				<button style="background-color: grey" id="likebutton" onclick="likePost()">Unlike</button>
+			</c:if>
+			<c:if test="${!sessionScope.Liked}">
+				<button style="background-color: blue" id="likebutton" onclick="likePost()">Like</button>
+			</c:if>
+			<c:if test="${sessionScope.Disliked}">
+				<button style="background-color: grey" id="dislikebutton" onclick="disLikePost()">Undislike</button>
+			</c:if>
+			<c:if test="${!sessionScope.Disliked}">
+				<button style="background-color: blue" id="dislikebutton" onclick="disLikePost()">Dislike</button>
+			</c:if>
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
 			<h5>Likes: </h5><h5 id="number-of-likes-container"> ${sessionScope.post.usersWhoLike.size()} </h5>
 			<h5>Dislikes: </h5><h5 id="number-of-dislikes-container"> ${sessionScope.post.usersWhoDislike.size()} </h5>

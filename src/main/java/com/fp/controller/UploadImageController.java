@@ -59,7 +59,9 @@ class UploadImageController {
 				tags.add(new Tag(string));
 			}
 			long albumId = (long) request.getSession().getAttribute("albumId");
-			Post post = new Post(file.getOriginalFilename(), description, tags, albumId);
+
+			Post post = new Post(file.getOriginalFilename(), description, tags, albumId, false);
+
 			request.getSession().setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
