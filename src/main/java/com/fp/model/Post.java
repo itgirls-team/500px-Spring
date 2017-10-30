@@ -19,6 +19,7 @@ public class Post {
 	private Set<User> usersWhoLike;
 	private Set<User> usersWhoDislike;
 	private Set<Tag> tagsOfPost;
+	private boolean isLiked;
 
 
 	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags,
@@ -40,10 +41,16 @@ public class Post {
 		this.id = id;
 	}
 
+
 	public Post(String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long albumId,
 			Set<Comment> commentsOfPost, Set<User> usersWhoLike, Set<User> usersWhoDislike,Timestamp dateOfUpload) {
 		this(path,description,countsOfLikes,countsOfDislikes,tags,commentsOfPost,usersWhoLike,usersWhoDislike,dateOfUpload);
 		this.albumId = albumId;
+	}
+	
+	public Post(String path, String description, Set<Tag> tags, long album_id,Timestamp dateOfUpload, boolean isLiked) {
+		this(path, description, 0, 0, tags, album_id, new HashSet<>(), new HashSet<>(), new HashSet<>(),dateOfUpload);
+		this.isLiked = isLiked;
 	}
 	
 	public Post(long id,String path, String description, int countsOfLikes, int countsOfDislikes, Set<Tag> tags, long albumId,
@@ -98,6 +105,14 @@ public class Post {
 		return Collections.unmodifiableSet(usersWhoLike);
 	}
 
+	public void setUsersWhoLike(Set<User> usersWhoLike) {
+		this.usersWhoLike = usersWhoLike;
+	}
+
+	public void setUsersWhoDislike(Set<User> usersWhoDislike) {
+		this.usersWhoDislike = usersWhoDislike;
+	}
+
 	public Set<User> getUsersWhoDislike() {
 		return Collections.unmodifiableSet(usersWhoDislike);
 	}
@@ -126,6 +141,14 @@ public class Post {
 
 	public void setCountsOfDislikes(int countsOfDislikes) {
 		this.countsOfDislikes = countsOfDislikes;
+	}
+
+	public boolean isLiked() {
+		return isLiked;
+	}
+
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
 	}
 
 	// HashCode and Equals

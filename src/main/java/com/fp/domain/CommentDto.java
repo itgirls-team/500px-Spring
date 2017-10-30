@@ -17,7 +17,6 @@ public class CommentDto {
 
 	public CommentDto(Long id, Long userId, Long postId, String description, LocalDateTime dateAndTimeOfUpload,
 			int numberOfLikes, int numberOfDislikes) {
-		super();
 		this.id = id;
 		this.userId = userId;
 		this.postId = postId;

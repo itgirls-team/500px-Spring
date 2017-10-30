@@ -154,4 +154,19 @@ public class AlbumDao {
 		return pic;
 	}
 
+	public void changeCover(Long id, String picture) throws SQLException {
+		if (id == null) {
+			return;
+		}
+		PreparedStatement ps = manager.getConnection()
+				.prepareStatement("UPDATE albums SET picture=? WHERE album_id=?;");
+		ps.setString(1, picture);
+		ps.setLong(2, id);
+		ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
+	}
+
 }

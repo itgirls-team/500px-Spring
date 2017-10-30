@@ -25,9 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.AlbumDao;
 import com.fp.dbModel.PostDao;
+import com.fp.dbModel.UserDao;
 import com.fp.model.Album;
 import com.fp.model.Post;
 import com.fp.model.Tag;
+import com.fp.model.User;
 
 @Controller
 @MultipartConfig
@@ -37,6 +39,8 @@ class UploadImageController {
 	PostDao postDao;
 	@Autowired
 	AlbumDao albumDao;
+	@Autowired
+	UserDao userDao;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
 	public String uploadGet() {
@@ -44,8 +48,7 @@ class UploadImageController {
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpSession ses,
-			HttpServletRequest request) {
+	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request,HttpSession ses) {
 		// SAVE IMAGE
 		try {
 			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
@@ -58,9 +61,11 @@ class UploadImageController {
 			for (String string : inputTags) {
 				tags.add(new Tag(string));
 			}
+
 			long albumId = (long) ses.getAttribute("albumId");
  			Post post = new Post(file.getOriginalFilename(), description, tags,albumId,Timestamp.valueOf(LocalDateTime.now()));
  			ses.setAttribute("post", post);
+
 			postDao.uploadPost(post);
 			file.transferTo(f);
 			//update session
@@ -68,13 +73,14 @@ class UploadImageController {
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			request.getSession().setAttribute("album", album);
 			// change album cover
+			String albumImage = post.getPath();
+			album.setPicture(albumImage);
+			albumDao.changeCover(album.getId(), albumImage);
 
-			boolean isEmptyAlbum = (boolean) (ses.getAttribute("emptyAlbum"));
-			if (isEmptyAlbum == true) {
-				String albumImage = post.getPath();
-				album.setPicture(albumImage);
-				request.getSession().setAttribute("emptyAlbum", false);
-			}
+			User u = (User) request.getSession().getAttribute("user");
+			User realUser = userDao.getUser(u.getUserName());
+			realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
+			request.getSession().setAttribute("user", realUser);
 
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
