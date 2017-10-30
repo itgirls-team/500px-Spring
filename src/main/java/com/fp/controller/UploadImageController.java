@@ -61,11 +61,14 @@ class UploadImageController {
 			for (String string : inputTags) {
 				tags.add(new Tag(string));
 			}
-
+			
+			for (Tag tag : tags) {
+				System.out.println(tag);
+			}
+			
 			long albumId = (long) ses.getAttribute("albumId");
  			Post post = new Post(file.getOriginalFilename(), description, tags,albumId,Timestamp.valueOf(LocalDateTime.now()));
  			ses.setAttribute("post", post);
-
 			postDao.uploadPost(post);
 			file.transferTo(f);
 			//update session

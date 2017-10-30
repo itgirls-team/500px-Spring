@@ -21,8 +21,13 @@
 	<form action="/contact">
 				<input type="submit" value="Contacts">
 	</form>
+	
 	<form action="/albums">
 			<input type="submit" value="Albums">
+	</form>
+	
+	<form action="/newsfeed">
+			<input type="submit" value="Newsfeed">
 	</form>
 
 	<form action="/following">
@@ -34,6 +39,8 @@
 				<input type="hidden" name="pageToRedirect" value="followers" />	
 				<input type="submit" value="Followers">
 	</form>
+	
+	
 </div>
 				
 </body>	

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -19,6 +21,7 @@ import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.DbManager;
+import com.fp.dbModel.PostDao;
 import com.fp.dbModel.UserDao;
+import com.fp.model.Post;
 import com.fp.model.User;
 
 @Controller
@@ -42,7 +47,10 @@ public class UserController {
 	private DbManager manager;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private PostDao postDao;
 
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcome(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
@@ -144,6 +152,7 @@ public class UserController {
 		return "index";
 	}
 
+	
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
 	public String follow(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String pageToRedirect = "";
@@ -167,7 +176,34 @@ public class UserController {
 		}
 		return pageToRedirect;
 	}
+	
+	/*
+	@RequestMapping(value = "/followUser", method = RequestMethod.GET)
+	public String followUser(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		String pageToRedirect = request.getParameter("pageToRedirect");
+		request.getSession().setAttribute("pageToRedirect", pageToRedirect);
+		boolean followedUserIsFollowed = true;
+		Set<User> followed;
+		Map<User, Boolean> followedUsersAreFollowed = new HashMap<User, Boolean>();
+		try {
+			followed = userDao
+					.getAllFollowedForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
+			request.getSession().setAttribute("followed", followed);
 
+			for (User followedUser : followed) {
+				followedUsersAreFollowed.put(followedUser, followedUserIsFollowed);
+			}
+			request.getSession().setAttribute("isFollowed", followedUsersAreFollowed);
+			if (followedUsersAreFollowed.isEmpty()) {
+				request.getSession().setAttribute("noFollowed", true);
+			}
+		} catch (SQLException e) {
+			request.setAttribute("error", "problem with the database. Could not execute query!");
+		}
+		return "redirect:follow";
+	}
+	*/
+	
 	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
 	public String unfollow(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String pageToRedirect = "";
@@ -190,7 +226,9 @@ public class UserController {
 		}
 		return pageToRedirect;
 	}
-
+ 
+ 
+	
 	@RequestMapping(value = "/following", method = RequestMethod.GET)
 	public String following(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String pageToRedirect = request.getParameter("pageToRedirect");
@@ -243,6 +281,20 @@ public class UserController {
 		return "followers";
 	}
 
+
+	@RequestMapping(value = "/newsfeed", method = RequestMethod.GET)
+	public String showNewsFeed(HttpServletRequest request, Model model, HttpSession session) {
+		LinkedHashSet<Post> posts;
+		try {
+			posts = postDao.getAllPostOrderByDate();
+			model.addAttribute("posts", posts);
+			request.getSession().setAttribute("posts", posts);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			return "posts";
+	}
+	
 	private boolean validateLogInData(String username, String password) throws SQLException {
 		if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
 			if (userDao.existUser(username) && userDao.checkUserPass(username, password)) {
@@ -312,4 +364,5 @@ public class UserController {
 		}
 		return REG_SUCC_MSG;
 	}
+	
 }

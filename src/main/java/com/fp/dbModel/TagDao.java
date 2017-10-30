@@ -37,7 +37,7 @@ public class TagDao {
 	// insert into common table
 	public synchronized void insertPostTags(Post p) throws SQLException {
 		Set<Tag> tags = p.getTagsOfPost();
-
+		
 		String insert_into_post_tag = INSERT_POST_TAG;
 
 		for (Tag tag : tags) {

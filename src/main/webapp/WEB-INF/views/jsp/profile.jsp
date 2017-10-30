@@ -12,7 +12,7 @@
 			<c:redirect url="/page/login"></c:redirect>
 </c:if>
 
-<img id="profilePicture" src="/avatar?profilePicture=${searchUser.profilePicture}" style = "width: 100px ; heigth : 100px; ">
+<img id="profilePicture" src="/avatar?profilePicture=${searchUser.profilePicture}" style = "width: 300px ; heigth : 100px; ">
 <div class="main">
 	<p>${searchUser.userName}</p>
 	<p>${searchUser.firstName}</p>
@@ -20,11 +20,13 @@
 	<p>${searchUser.description}</p>
 	<p>${searchUser.email}</p>
 	
-	<form action="/albums?searchUser=${searchUser.userName}">
-			<input type="submit" value="Albums">
+	<form action="/albums">
+			<input type="hidden" name ="searchUser" value="${searchUser.userName}"/>
+			<input type="submit" value="Albums"/>
 	</form>
 
-	<form action="/following?searchUser=${searchUser.userName}">
+	<!-- 
+	<form action="/following">
 				<input type="hidden" name="pageToRedirect" value="following" /> 	
 				<input type="submit" value="Following">
 	</form>
@@ -33,8 +35,14 @@
 				<input type="hidden" name="pageToRedirect" value="followers" />	
 				<input type="submit" value="Followers">
 	</form>
-</div>
-				
+	 -->
+	 
+	 <form action="/followUser" method = "POST">
+	 	<input type="hidden" name ="searchUser" value="${searchUser.userName}"/>
+	 	<input type="submit" value="Follow">
+	 </form>
+	
+</div>			
 </body>	
 </body>
 </html>

@@ -20,7 +20,7 @@ import com.fp.utils.CommonUtils;
 @Component
 public class AlbumDao {
 
-	private static final String CREATE_ALBUM = "INSERT INTO albums (category, date_upload, picture, user_id ) VALUES (?,now(),?,?)";
+	private static final String CREATE_ALBUM = "INSERT INTO albums (category, date_upload, picture, user_id ) VALUES (?,?,?,?)";
 	private static final String SELECT_ALBUMS_BY_USER = "SELECT album_id, category, picture, user_id, date_upload FROM albums WHERE user_id = ?";
 	// private static final String SELECT_TAGS_FROM_POST = "SELECT t.title FROM
 	// post_tag AS p JOIN tags AS t USING (tag_id) WHERE p.post_id = ? ";
@@ -39,7 +39,7 @@ public class AlbumDao {
 	public synchronized void createAlbum(Album a) throws SQLException {
 		PreparedStatement ps = manager.getConnection().prepareStatement(CREATE_ALBUM, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, a.getCategory());
-		//ps.setDate(2, Date.valueOf(LocalDate.now()));
+		ps.setDate(2, Date.valueOf(LocalDate.now()));
 		ps.setString(3, a.getPicture());
 		ps.setLong(4, a.getUser());
 		ps.executeUpdate();

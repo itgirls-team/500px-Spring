@@ -10,7 +10,7 @@
 </head>
 <body>	
 
-			<img src="<c:url value = "/postId/${sessionScope.postId}" />">
+			<img  style = "width: 300px ; heigth : 100px;" src="<c:url value = "/postId/${sessionScope.postId}" />">
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
 			<c:if test="${sessionScope.Liked}">
 				<button style="background-color: grey" id="likebutton" onclick="likePost()">Unlike</button>

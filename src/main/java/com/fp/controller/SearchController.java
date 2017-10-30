@@ -33,11 +33,8 @@ public class SearchController {
 		String search = (String) request.getParameter("search");
 		try {
 			if (search != null) {
-				System.out.println(search);
 				if (search.charAt(0) == '@') {
-					System.out.println(search.substring(1, search.length()));
 					User user = userDao.getUser(search.substring(1, search.length()));
-					System.out.println(user);
 					if(user != null){
 						model.addAttribute("searchUser", user);
 						return "profile";
@@ -45,10 +42,9 @@ public class SearchController {
 				} else {
 					List<Post> posts = tagDao.searchPostByTag(search);
 					if (posts != null) {
-						model.addAttribute("hideUploadPost",true);
+						//model.addAttribute("hideUploadPost",true);
 						model.addAttribute("posts", posts);
 						request.getSession().setAttribute("posts", posts);
-						//model.addAttribute("search", "posts");
 						model.addAttribute("currentPage", "search");
 						return "posts";
 					}
@@ -65,9 +61,7 @@ public class SearchController {
 	public String showProfile(HttpServletRequest request, Model model, HttpServletResponse response) {
 		try {
 			model.addAttribute("searchUser",userDao.getUser((String)request.getParameter("searchUsername")));
-			System.out.println(userDao.getUser((String)request.getParameter("searchUsername")));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "profile";
