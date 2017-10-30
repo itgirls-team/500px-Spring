@@ -57,7 +57,7 @@ public class AlbumController {
 		String validationMessage = validateInputData(albumCategory);
 		if (validationMessage.equals(REG_SUCC_MSG)) {
 			try {
-				if (!albumDao.existAlbum(albumCategory)) {
+				if (!albumDao.existAlbum(albumCategory, ((User) (request.getSession().getAttribute("user"))).getId())) {
 					String albumImage = "defaultAlbumImage.jpg";
 					Long userId = ((User) request.getSession().getAttribute("user")).getId();
 					albumDao.createAlbum(

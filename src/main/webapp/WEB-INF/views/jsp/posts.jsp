@@ -18,7 +18,11 @@
 	</select>
 	
 	 <c:forEach items="${posts}" var="post">
+<<<<<<< Updated upstream
 	 	<a href="/post?postId=${post.id}"><img width="300" src="/showPosts?postId=${post.id}"></a>
+=======
+	 	<a href="post?postId=${post.id}"><img width ="300" src="/showPosts?postId=${post.id}"></a>
+>>>>>>> Stashed changes
 	 </c:forEach>
 	
 	<c:if test = "${hideUploadPost != null && !hideUploadPost}">

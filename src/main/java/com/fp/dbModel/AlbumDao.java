@@ -30,7 +30,7 @@ public class AlbumDao {
 	// private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums
 	// WHERE category LIKE ?";
 	private static final String SELECT_ALBUM_BY_ALBUM_ID = "SELECT album_id,category,date_upload,picture,user_id FROM albums WHERE album_id = ?";
-	private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category=?";
+	private static final String EXISTS_ALBUM = "SELECT count(*)>0 FROM albums WHERE category=? AND user_id=?";
 
 	@Autowired
 	private DbManager manager;
@@ -92,7 +92,7 @@ public class AlbumDao {
 		}
 	}
 
-	public synchronized boolean existAlbum(String category) throws SQLException {
+	public synchronized boolean existAlbum(String category, Long userId) throws SQLException {
 		PreparedStatement ps = null;
 		boolean albumExists = true;
 		if (!CommonUtils.isValidString(category)) {
@@ -100,6 +100,7 @@ public class AlbumDao {
 		}
 		ps = manager.getConnection().prepareStatement(EXISTS_ALBUM);
 		ps.setString(1, category);
+		ps.setLong(2, userId);
 		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {

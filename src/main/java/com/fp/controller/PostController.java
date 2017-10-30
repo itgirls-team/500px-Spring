@@ -155,7 +155,6 @@ public class PostController {
 					request.setAttribute("error", "Problem with the database. Could not execute query!");
 				}
 				request.getSession().setAttribute("Liked", true);
-				post.setLiked(true);
 				request.getSession().setAttribute("post", post);
 				// remove it from dislike list if it's there
 				usersDislikeNew = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
@@ -184,7 +183,6 @@ public class PostController {
 			} else {
 				likersUpdated.remove(loggedUser);
 				request.getSession().setAttribute("Liked", false);
-				post.setLiked(false);
 				request.getSession().setAttribute("post", post);
 				try {
 					postDao.removePostLike(postId, userId);
