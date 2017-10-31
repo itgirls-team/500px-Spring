@@ -48,7 +48,7 @@ class UploadImageController {
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request,HttpSession ses) {
+	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request,HttpSession sess) {
 		// SAVE IMAGE
 		try {
 			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
@@ -61,17 +61,13 @@ class UploadImageController {
 			for (String string : inputTags) {
 				tags.add(new Tag(string));
 			}
-			
-			for (Tag tag : tags) {
-				System.out.println(tag);
-			}
-			
-			long albumId = (long) ses.getAttribute("albumId");
+
+			long albumId = (long) sess.getAttribute("albumId");
  			Post post = new Post(file.getOriginalFilename(), description, tags,albumId,Timestamp.valueOf(LocalDateTime.now()));
- 			ses.setAttribute("post", post);
+ 			sess.setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
-			//update session
+
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			request.getSession().setAttribute("album", album);
@@ -98,7 +94,7 @@ class UploadImageController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "album";
+		return "upload";
 	}
 
 }

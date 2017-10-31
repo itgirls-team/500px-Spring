@@ -1,8 +1,6 @@
 package com.fp.model;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +14,7 @@ public class Album {
 	private long userId;
 	private Set<Post> posts;
 
-	public Album(String category, String picture, long user, Set<Post> posts,Timestamp dateOfUpload) {
+	public Album(String category, String picture, long user, Set<Post> posts, Timestamp dateOfUpload) {
 		this.category = category;
 		this.dateOfUpload = dateOfUpload;
 		this.picture = picture;
@@ -24,23 +22,29 @@ public class Album {
 		this.posts = posts;
 	}
 
-	public Album(String category, String picture,Timestamp dateOfUpload) {
+	public Album(String category, String picture, Timestamp dateOfUpload) {
 		this.category = category;
 		this.dateOfUpload = dateOfUpload;
 		this.picture = picture;
 	}
 
-	public Album(long id, String category, String picture, long user, Set<Post> posts ,Timestamp dateOfUpload) {
-		this(category, picture, user, posts,dateOfUpload);
+	public Album(String category, String picture, Long userId) {
+		this.category = category;
+		this.picture = picture;
+		this.userId = userId;
+	}
+
+	public Album(long id, String category, String picture, long user, Set<Post> posts, Timestamp dateOfUpload) {
+		this(category, picture, user, posts, dateOfUpload);
 		this.id = id;
 	}
 
-	public Album(String category, String picture, long user,Timestamp dateOfUpload) {
-		this(category, picture, user, new HashSet<>(),dateOfUpload);
+	public Album(String category, String picture, long user, Timestamp dateOfUpload) {
+		this(category, picture, user, new HashSet<>(), dateOfUpload);
 	}
 
-	public Album(long id, String category, String picture, long user,Timestamp dateOfUpload) {
-		this(category, picture, user, new HashSet<>(),dateOfUpload);
+	public Album(long id, String category, String picture, long user, Timestamp dateOfUpload) {
+		this(category, picture, user, new HashSet<>(), dateOfUpload);
 		this.id = id;
 	}
 

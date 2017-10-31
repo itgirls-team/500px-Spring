@@ -84,7 +84,7 @@ public class PostDao {
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike,date));
+					usersWhoLike, usersWhoDislike, date));
 		}
 		return posts;
 	}
@@ -126,7 +126,30 @@ public class PostDao {
 		if (ps != null) {
 			ps.close();
 		}
+	}
 
+	public void addCountsOfLikes(Long postId, int countsOfLikes) throws SQLException {
+		PreparedStatement ps = manager.getConnection()
+				.prepareStatement("UPDATE posts SET counts_likes=? WHERE post_id=?");
+		ps.setInt(1, countsOfLikes);
+		ps.setLong(2, postId);
+		ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
+	}
+
+	public void addCountsOfDislikes(Long postId, int countsOfDislikes) throws SQLException {
+		PreparedStatement ps = manager.getConnection()
+				.prepareStatement("UPDATE posts SET counts_dislikes=? WHERE post_id=?");
+		ps.setInt(1, countsOfDislikes);
+		ps.setLong(2, postId);
+		ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
 	}
 
 	// remove like of a post
@@ -205,7 +228,7 @@ public class PostDao {
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike,date));
+					usersWhoLike, usersWhoDislike, date));
 		}
 		return posts;
 
@@ -229,7 +252,7 @@ public class PostDao {
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike,date));
+					usersWhoLike, usersWhoDislike, date));
 		}
 		return posts;
 	}
@@ -309,7 +332,7 @@ public class PostDao {
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
-					usersWhoLike, usersWhoDislike,date));
+					usersWhoLike, usersWhoDislike, date));
 		}
 		return posts;
 	}
@@ -333,9 +356,9 @@ public class PostDao {
 		// OK
 		Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 
-		Post post = new Post(postId,url, description, countLikes, countDislikes, tags, commentsOfPost, usersWhoLike,
-				usersWhoDislike,date);
+		Post post = new Post(postId, url, description, countLikes, countDislikes, tags, commentsOfPost, usersWhoLike,
+				usersWhoDislike, date);
 
 		return post;
-	} 
+	}
 }

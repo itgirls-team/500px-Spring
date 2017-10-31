@@ -1,29 +1,54 @@
 package com.fp.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CommentDto {
 
 	private Long id;
 	private Long userId;
+	private String userName;
+	UserDto userDto;
 	private Long postId;
-	private String description;
-	private LocalDateTime dateAndTimeOfUpload;
+	private List<UserDto> usersWhoLike;
+	private List<UserDto> usersWhoDislike;
 	private int numberOfLikes;
 	private int numberOfDislikes;
+	private String description;
+	private LocalDateTime dateAndTimeOfUpload;
 
 	public CommentDto() {
 	}
 
-	public CommentDto(Long id, Long userId, Long postId, String description, LocalDateTime dateAndTimeOfUpload,
-			int numberOfLikes, int numberOfDislikes) {
+	public CommentDto(Long id, UserDto userDto, Long postId, List<UserDto> usersWhoLike,
+			List<UserDto> usersWhoDislike) {
 		this.id = id;
-		this.userId = userId;
 		this.postId = postId;
+		this.usersWhoLike = usersWhoLike;
+		this.usersWhoDislike = usersWhoDislike;
+		this.userDto = userDto;
+	}
+
+	public CommentDto(Long id, String userName, Long postId, String description, LocalDateTime dateAndTimeOfUpload,
+			int numbersOfLikes, int numbersOfDislikes) {
+		this.id = id;
+		this.postId = postId;
+		this.numberOfLikes = numbersOfLikes;
+		this.numberOfDislikes = numbersOfDislikes;
+		this.userName = userName;
 		this.description = description;
 		this.dateAndTimeOfUpload = dateAndTimeOfUpload;
-		this.numberOfLikes = numberOfLikes;
-		this.numberOfDislikes = numberOfDislikes;
+	}
+
+	public CommentDto(Long id, Long userId, Long postId, String description, LocalDateTime dateAndTimeOfUpload,
+			int numbersOfLikes, int numbersOfDislikes) {
+		this.id = id;
+		this.postId = postId;
+		this.numberOfLikes = numbersOfLikes;
+		this.numberOfDislikes = numbersOfDislikes;
+		this.userId = userId;
+		this.description = description;
+		this.dateAndTimeOfUpload = dateAndTimeOfUpload;
 	}
 
 	public Long getId() {
@@ -34,12 +59,12 @@ public class CommentDto {
 		this.id = id;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public UserDto getUserDto() {
+		return userDto;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUserDto(UserDto userDto) {
+		this.userDto = userDto;
 	}
 
 	public Long getPostId() {
@@ -50,12 +75,36 @@ public class CommentDto {
 		this.postId = postId;
 	}
 
-	public String getDescription() {
-		return description;
+	public List<UserDto> getUsersWhoLike() {
+		return usersWhoLike;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setUsersWhoLike(List<UserDto> usersWhoLike) {
+		this.usersWhoLike = usersWhoLike;
+	}
+
+	public List<UserDto> getUsersWhoDislike() {
+		return usersWhoDislike;
+	}
+
+	public void setUsersWhoDislike(List<UserDto> usersWhoDislike) {
+		this.usersWhoDislike = usersWhoDislike;
+	}
+
+	public int getNumberOfLikes() {
+		return numberOfLikes;
+	}
+
+	public void setNumberOfLikes(int numbersOfLikes) {
+		this.numberOfLikes = numbersOfLikes;
+	}
+
+	public int getNumberOfDislikes() {
+		return numberOfDislikes;
+	}
+
+	public void setNumberOfDislikes(int numbersOfDislikes) {
+		this.numberOfDislikes = numbersOfDislikes;
 	}
 
 	public LocalDateTime getDateAndTimeOfUpload() {
@@ -66,20 +115,28 @@ public class CommentDto {
 		this.dateAndTimeOfUpload = dateAndTimeOfUpload;
 	}
 
-	public int getNumberOfLikes() {
-		return numberOfLikes;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setNumberOfLikes(int numberOfLikes) {
-		this.numberOfLikes = numberOfLikes;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public int getNumberOfDislikes() {
-		return numberOfDislikes;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setNumberOfDislikes(int numberOfDislikes) {
-		this.numberOfDislikes = numberOfDislikes;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

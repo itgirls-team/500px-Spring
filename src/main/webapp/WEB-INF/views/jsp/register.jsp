@@ -5,16 +5,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" href="/static/css/register.css">
 <title>Register</title>
 </head>
 <body>
-<c:if test="${ requestScope.error == null }">
+<%-- <c:if test="${ requestScope.error == null }">
 			<h1>Welcome, please register!</h1>
-</c:if>
+</c:if> 
+--%>
 <c:if test="${ requestScope.error != null }">
 			<h1 style="color: red">Sorry, registration unsuccessful. Reason: ${requestScope.error }</h1>
 </c:if>
-<form action="/register" method="post" enctype="multipart/form-data">
+
+<div id="register">
+<form action="/register" method="post" enctype="multipart/form-data" name='form-register'>
 	Username<input type="text" name="username"><br>
 	Password<input type="password" name="password"><br>
 	Confirm password<input type="password" name="confpassword"><br>
@@ -23,8 +27,11 @@
 	Email<input type="email" name="email"><br>
 	Description <input type="text" name="description"><br>
 	Profile picture<input type="file" name="avatar" accept="image/*"><br>
+	
 	<input type="submit" value="Register">
+	If you already have an account, please login <a style="color: white" href="/page/login">here</a>.
 </form>
-If you already have an account, please login <a href="/page/login">here</a>.
+</div>
+
 </body>
 </html>

@@ -112,7 +112,7 @@ public class CommentDao {
 		PreparedStatement ps = manager.getConnection().prepareStatement(LIKE_COMMENT);
 
 		PreparedStatement selectUserId = manager.getConnection()
-				.prepareStatement("SELECT user_id FROM userd WHERE username=?;");
+				.prepareStatement("SELECT user_id FROM users WHERE username=?;");
 		selectUserId.setString(1, username);
 		ResultSet rs = selectUserId.executeQuery();
 		rs.next();
@@ -140,7 +140,7 @@ public class CommentDao {
 					.prepareStatement("DELETE FROM users_like_comments WHERE user_id=? AND comment_id=?");
 
 			PreparedStatement selectUserId = manager.getConnection()
-					.prepareStatement("SELECT user_id FROM userd WHERE username=?;");
+					.prepareStatement("SELECT user_id FROM users WHERE username=?;");
 			selectUserId.setString(1, username);
 			ResultSet rs = selectUserId.executeQuery();
 			rs.next();
@@ -175,7 +175,7 @@ public class CommentDao {
 					.prepareStatement("INSERT INTO users_dislike_comments (user_id, comment_id) VALUES (?,?);");
 
 			PreparedStatement selectUserId = manager.getConnection()
-					.prepareStatement("SELECT user_id FROM userd WHERE username=?;");
+					.prepareStatement("SELECT user_id FROM users WHERE username=?;");
 			selectUserId.setString(1, username);
 			ResultSet rs = selectUserId.executeQuery();
 			rs.next();
@@ -212,7 +212,7 @@ public class CommentDao {
 					.prepareStatement("DELETE FROM users_dislike_comments WHERE user_id=? AND comment_id=?");
 
 			PreparedStatement selectUserId = manager.getConnection()
-					.prepareStatement("SELECT user_id FROM userd WHERE username=?;");
+					.prepareStatement("SELECT user_id FROM users WHERE username=?;");
 			selectUserId.setString(1, username);
 			ResultSet rs = selectUserId.executeQuery();
 			rs.next();
@@ -263,7 +263,9 @@ public class CommentDao {
 		ps.setLong(1, postId);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			Comment comment = new Comment(rs.getLong("comment_id"), rs.getLong("user_id"), rs.getString("description"),
+			Long userId = rs.getLong("user_id");
+			User user = userDao.getUser(userId);
+			Comment comment = new Comment(rs.getLong("comment_id"), user.getUserName(), rs.getString("description"),
 					rs.getTimestamp("date_upload").toLocalDateTime(), rs.getInt("number_of_likes"),
 					rs.getInt("number_of_dislikes"));
 			comments.add(comment);
