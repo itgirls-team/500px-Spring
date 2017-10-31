@@ -12,7 +12,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fp.model.Post;
 import com.fp.model.User;
 import com.fp.utils.CommonUtils;
 
@@ -64,6 +63,28 @@ public class UserDao {
 		return userExists;
 	}
 
+	public synchronized boolean existUser(Long id) throws SQLException {
+		PreparedStatement ps = null;
+		boolean userExists = true;
+		if (id == null) {
+			userExists = false;
+		}
+		ps = manager.getConnection().prepareStatement("SELECT count(*)>0 FROM users WHERE user_id=?;");
+		ps.setLong(1, id);
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.next()) {
+			userExists = rs.getBoolean(1);
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		return userExists;
+	}
+
 	public synchronized String deleteUser(String username) throws SQLException {
 		if (!CommonUtils.isValidString(username)) {
 			return "Invalid username";
@@ -99,6 +120,39 @@ public class UserDao {
 			user.setFollowers(followers);
 
 			Set<User> following = getAllFollowedForUser(username);
+			user.setFollowing(following);
+
+			if (ps != null) {
+				ps.close();
+			}
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return user;
+	}
+
+	public synchronized User getUser(Long id) throws SQLException {
+		User user = null;
+		if (existUser(id)) {
+			PreparedStatement ps = manager.getConnection().prepareStatement(
+					"SELECT user_id,first_name,last_name,email,username,register_date,profile_picture,description FROM users WHERE user_id=?;");
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+
+			rs.next();
+			user = new User(rs.getLong("user_id"), rs.getString("first_name"), rs.getString("last_name"),
+					rs.getString("email"), rs.getString("username"), rs.getDate("register_date").toLocalDate(),
+					rs.getString("profile_picture"), rs.getString("description"));
+
+			// Set<Album> albumsOfUser =
+			// AlbumDao.getInstance().getAllAlbumFromUser(user);
+			// user.setAlbumsOfUser(albumsOfUser);
+
+			Set<User> followers = getAllFollowersForUser(user.getUserName());
+			user.setFollowers(followers);
+
+			Set<User> following = getAllFollowedForUser(user.getUserName());
 			user.setFollowing(following);
 
 			if (ps != null) {

@@ -1,13 +1,5 @@
 package com.fp.controller;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.taglibs.standard.resources.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,14 +58,14 @@ public class PostController {
 
 	// ShowPostsFromAlbum
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
-	public String showAllPosts(HttpSession session, HttpServletRequest request,Model model) {
+	public String showAllPosts(HttpSession session, HttpServletRequest request, Model model) {
 		try {
 			long albumId = Long.parseLong(request.getParameter("albumId"));
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			session.setAttribute("album", album);
 			session.setAttribute("albumId", albumId);
-			model.addAttribute("hideUploadPost",false);
+			model.addAttribute("hideUploadPost", false);
 			model.addAttribute("currentPage", "posts");
 			session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
@@ -108,21 +99,15 @@ public class PostController {
 			e.printStackTrace();
 		}
 	}
-/*
-	@RequestMapping(value = "/deletePost/postId", method = RequestMethod.GET)	
-	public String deleteVideoPost(@RequestParam ("postId") Long postId,HttpServletRequest request) {
-		try {
-			System.out.println("vleze tuk");
-			//long postId = Long.parseLong(request.getParameter("postId"));
-			Post post = postDao.getPost(postId);
-			postDao.deletePost(post);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return "posts";
-	}
-	*/
-
+	/*
+	 * @RequestMapping(value = "/deletePost/postId", method = RequestMethod.GET)
+	 * public String deleteVideoPost(@RequestParam ("postId") Long
+	 * postId,HttpServletRequest request) { try {
+	 * System.out.println("vleze tuk"); //long postId =
+	 * Long.parseLong(request.getParameter("postId")); Post post =
+	 * postDao.getPost(postId); postDao.deletePost(post); } catch (SQLException
+	 * e) { e.printStackTrace(); } return "posts"; }
+	 */
 
 	@RequestMapping(value = "/likePost", method = RequestMethod.POST)
 	public ResponseEntity likePost(@RequestParam("postId") Long postId, HttpSession session, HttpServletRequest request,
@@ -149,6 +134,12 @@ public class PostController {
 			}
 			if (!userIsInLikers) {
 				likersUpdated.add(loggedUser);
+				post.setCountsOfLikes(post.getCountsOfLikes() + 1);
+				try {
+					postDao.addCountsOfLikes(postId, post.getCountsOfLikes());
+				} catch (SQLException e2) {
+					request.setAttribute("error", "Problem with the database. Could not execute query!");
+				}
 				try {
 					postDao.like(postId, userId);
 				} catch (SQLException e1) {
@@ -170,9 +161,13 @@ public class PostController {
 				}
 				if (userIsInDislikers) {
 					usersDislikeNew.remove(loggedUser);
+					post.setCountsOfDislikes(post.getCountsOfDislikes() - 1);
+					try {
+						postDao.addCountsOfDislikes(postId, post.getCountsOfDislikes());
+					} catch (SQLException e2) {
+						request.setAttribute("error", "Problem with the database. Could not execute query!");
+					}
 					request.getSession().setAttribute("Disliked", false);
-					// TODO post.setDisliked(true);
-					// TODO request.getSession().setAttribute("post",post);
 					try {
 						postDao.removePostDislike(postId, userId);
 					} catch (SQLException e) {
@@ -182,6 +177,12 @@ public class PostController {
 				post.setUsersWhoDislike(usersDislikeNew);
 			} else {
 				likersUpdated.remove(loggedUser);
+				post.setCountsOfLikes(post.getCountsOfLikes() - 1);
+				try {
+					postDao.addCountsOfLikes(postId, post.getCountsOfLikes());
+				} catch (SQLException e2) {
+					request.setAttribute("error", "Problem with the database. Could not execute query!");
+				}
 				request.getSession().setAttribute("Liked", false);
 				request.getSession().setAttribute("post", post);
 				try {
@@ -195,6 +196,7 @@ public class PostController {
 			// return "login"; // TODO return RespEntity with status and error
 			// message
 		}
+		request.getSession().setAttribute("post", post);
 		PostDto dto = null;
 		UserDto userDto = new UserDto(userId, loggedUser.getUserName());
 		List<UserDto> dtoLikers = likersUpdated.stream().map(userLiker -> userLiker.dto()).collect(Collectors.toList());
@@ -229,13 +231,18 @@ public class PostController {
 			}
 			if (!userIsInDislikers) {
 				usersDislikeNew.add(loggedUser);
+				post.setCountsOfDislikes(post.getCountsOfDislikes() + 1);
+				try {
+					postDao.addCountsOfDislikes(postId, post.getCountsOfDislikes());
+				} catch (SQLException e2) {
+					request.setAttribute("error", "Problem with the database. Could not execute query!");
+				}
 				try {
 					postDao.dislike(postId, userId);
 				} catch (SQLException e1) {
 					request.setAttribute("error", "Problem with the database. Could not execute query!");
 				}
 				request.getSession().setAttribute("Disliked", true);
-				// post.setLiked(true);
 				request.getSession().setAttribute("post", post);
 				// remove it from dislike list if it's there
 				likersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
@@ -251,9 +258,13 @@ public class PostController {
 				}
 				if (userIsInLikers) {
 					likersUpdated.remove(loggedUser);
+					post.setCountsOfLikes(post.getCountsOfLikes() - 1);
+					try {
+						postDao.addCountsOfLikes(postId, post.getCountsOfLikes());
+					} catch (SQLException e2) {
+						request.setAttribute("error", "Problem with the database. Could not execute query!");
+					}
 					request.getSession().setAttribute("Liked", false);
-					// TODO post.setDisliked(true);
-					// TODO request.getSession().setAttribute("post",post);
 					try {
 						postDao.removePostLike(postId, userId);
 					} catch (SQLException e) {
@@ -263,6 +274,12 @@ public class PostController {
 				post.setUsersWhoLike(likersUpdated);
 			} else {
 				usersDislikeNew.remove(loggedUser);
+				post.setCountsOfDislikes(post.getCountsOfDislikes() - 1);
+				try {
+					postDao.addCountsOfDislikes(postId, post.getCountsOfDislikes());
+				} catch (SQLException e2) {
+					request.setAttribute("error", "Problem with the database. Could not execute query!");
+				}
 				request.getSession().setAttribute("Disliked", false);
 				// post.setLiked(false);
 				request.getSession().setAttribute("post", post);
@@ -277,6 +294,7 @@ public class PostController {
 			// return "login"; // TODO return RespEntity with status and error
 			// message
 		}
+		request.getSession().setAttribute("post", post);
 		PostDto dto = null;
 		UserDto userDto = new UserDto(userId, loggedUser.getUserName());
 		List<UserDto> dtoLikers = likersUpdated.stream().map(userLiker -> userLiker.dto()).collect(Collectors.toList());

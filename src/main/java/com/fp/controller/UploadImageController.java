@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
@@ -48,8 +47,7 @@ class UploadImageController {
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request,
-			HttpSession ses) {
+	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request) {
 		// SAVE IMAGE
 		try {
 			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
@@ -62,15 +60,15 @@ class UploadImageController {
 			for (String string : inputTags) {
 				tags.add(new Tag(string));
 			}
+			long albumId = (long) request.getSession().getAttribute("albumId");
 
-			long albumId = (long) ses.getAttribute("albumId");
 			Post post = new Post(file.getOriginalFilename(), description, tags, albumId,
 					Timestamp.valueOf(LocalDateTime.now()));
-			ses.setAttribute("post", post);
 
+			request.getSession().setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
-			// update session
+
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			request.getSession().setAttribute("album", album);
@@ -97,7 +95,7 @@ class UploadImageController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "album";
+		return "upload";
 	}
 
 }

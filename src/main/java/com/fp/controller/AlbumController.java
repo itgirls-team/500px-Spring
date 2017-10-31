@@ -1,10 +1,6 @@
 package com.fp.controller;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,8 +56,7 @@ public class AlbumController {
 				if (!albumDao.existAlbum(albumCategory, ((User) (request.getSession().getAttribute("user"))).getId())) {
 					String albumImage = "defaultAlbumImage.jpg";
 					Long userId = ((User) request.getSession().getAttribute("user")).getId();
-					albumDao.createAlbum(
-							new Album(albumCategory, albumImage, userId, Timestamp.valueOf(LocalDateTime.now())));
+					albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
 					User u = (User) request.getSession().getAttribute("user");
 					User realUser = userDao.getUser(u.getUserName());
 					realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
