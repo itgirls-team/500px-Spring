@@ -5,20 +5,33 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="stylesheet" href="/static/css/login.css">
 <title>Login</title>
 </head>
 <body>
-<c:if test="${ requestScope.error == null }">
-			<h1>Welcome, please login!</h1>
-</c:if>
+<%-- <c:if test="${ requestScope.error == null }">
+			<h1  style="color: white">Welcome, please login!</h1>
+</c:if> --%>
 <c:if test="${ requestScope.error != null }">
 			<h4 style="color: red">Sorry, Reason: ${requestScope.error }.Please try again!</h4>
 </c:if>
-<form action="/login" method="post">
-	Username<input type="text" name="username"><br>
-	Password<input type="password" name="password"><br>
-	<input type="submit" value="Login">
+
+ <div id="login">	
+	<form  action="/login" name='form-login' method="post">
+		<h1 style="color: white">Login Form</h1>
+				<span class="fontawesome-user"></span>
+	          <input type="text" name="username" placeholder="Username">
+	       
+	        <span class="fontawesome-lock"></span>
+	          <input type="password" name="password" placeholder="Password">
+	        
+	        <input type="submit" value="Login">
+			If you do not have an account, please register<a  style="color: white" href="/page/register">here</a>
+	
+		<!-- Username<input type="text" name="username"><br>
+		Password<input type="password" name="password"><br>
+		<input type="submit" value="Login"> -->
 </form>
-If you don't have an account, please register <a href="/page/register">here</a>.
+</div>
 </body>
 </html>
