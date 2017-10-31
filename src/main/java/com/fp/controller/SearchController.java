@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class SearchController {
 	UserDao userDao;
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(HttpServletRequest request, Model model, HttpServletResponse response) {
+	public String search(HttpServletRequest request, Model model, HttpServletResponse response,HttpSession session) {
 
 		String search = (String) request.getParameter("search");
 		try {
@@ -37,6 +38,7 @@ public class SearchController {
 					User user = userDao.getUser(search.substring(1, search.length()));
 					if(user != null){
 						model.addAttribute("searchUser", user);
+						session.setAttribute("searchUser", user);
 						return "profile";
 					}
 				} else {
