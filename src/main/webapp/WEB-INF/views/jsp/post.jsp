@@ -191,8 +191,8 @@ text-align:center;
 					<td>Username : ${comment.userName} </td> 
 					<td>Description : ${comment.description} </td> 
 					<td>Date : ${comment.dateAndTimeOfUpload} </td>
-					<td><h5>Likes: </h5><h5 id="number-of-commentslikes-container"> ${comment.usersWhoLikeComment.size()} </h5></td>
-					<td><h5>Dislikes: </h5><h5 id="number-of-commentsdislikes-container"> ${comment.usersWhoDislikeComment.size()} </h5></td>
+					<td><h5>Likes: </h5><h5 id="number-of-commentslikes-container-${comment.id}"> ${comment.usersWhoLikeComment.size()} </h5></td>
+					<td><h5>Dislikes: </h5><h5 id="number-of-commentsdislikes-container-${comment.id}"> ${comment.usersWhoDislikeComment.size()} </h5></td>
 					
 							<c:set var="isCommentLiked" value="false"/>
 					<c:forEach items="${comment.usersWhoLikeComment}"  var="liker">
@@ -201,10 +201,10 @@ text-align:center;
 						</c:if>
 					</c:forEach>
 					<c:if test="${isCommentLiked==true}">
-						<td><button style="background-color: grey" id="commentlikebutton" onclick="likeComment()">Unlike</button></td>
+						<td><button style="background-color: grey" id="commentlikebutton-${comment.id}" onclick="likeComment( ${comment.id} )">Unlike</button></td>
 					</c:if>
 					<c:if test="${isCommentLiked==false}">
-						<td><button style="background-color: blue" id="commentlikebutton" onclick="likeComment()">Like</button></td>
+						<td><button style="background-color: blue" id="commentlikebutton-${comment.id}" onclick="likeComment( ${comment.id} )">Like</button></td>
 					</c:if>
 					
 					<c:set var="isCommentDisliked" value="false"/>
@@ -214,10 +214,10 @@ text-align:center;
 						</c:if>
 					</c:forEach>
 					<c:if test="${isCommentDisliked==true}">
-						<td><button style="background-color: grey" id="commentdislikebutton" onclick="disLikeComment()">Undislike</button></td>
+						<td><button style="background-color: grey" id="commentdislikebutton-${comment.id}" onclick="disLikeComment(${comment.id})">Undislike</button></td>
 					</c:if>
 					<c:if test="${isCommentDisliked==false}">
-						<td><button style="background-color: blue" id="commentdislikebutton" onclick="disLikeComment()">Dislike</button></td>
+						<td><button style="background-color: blue" id="commentdislikebutton-${comment.id}" onclick="disLikeComment(${comment.id})">Dislike</button></td>
 					</c:if>
 					
 				</tr>

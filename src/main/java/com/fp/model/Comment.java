@@ -81,6 +81,16 @@ public class Comment {
 		this.dateAndTimeOfUpload = dateAndTimeOfUpload;
 	}
 
+	public Comment(Long commentId, String username, String description, LocalDateTime dateAndTimeOfUpload,
+			Set<User> usersWhoLikeComment, Set<User> usersWhoDislikeComment) {
+		this.userName = username;
+		this.id = commentId;
+		this.description = description;
+		this.usersWhoLikeComment = usersWhoLikeComment;
+		this.usersWhoDislikeComment = usersWhoDislikeComment;
+		this.dateAndTimeOfUpload = dateAndTimeOfUpload;
+	}
+
 	public Long getId() {
 		return id;
 	}

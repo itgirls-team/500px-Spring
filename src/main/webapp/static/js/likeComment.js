@@ -1,40 +1,40 @@
-function likeComment() {
-	var commentId=document.getElementById("comment-id-container").value;
+function likeComment(id) {
+	var commentId = id;
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function() {
 		//when response is received
 		if (this.readyState == 4 && this.status == 200) {
-			renderNewCommentInTable(this);
+			renderNewCommentInTable(this, commentId);
 		}
 		else
 		if (this.readyState == 4 && this.status == 401) {
-			alert("Sorry, you must log in to like this post!");
+			alert("Sorry, you must log in to like this comment!");
 		}	
 	}
 	request.open("POST", "/comment/likeComment?commentId="+commentId, true);
 	request.send();
 }
-function disLikeComment() {
-	var commentId=document.getElementById("comment-id-container").value;
+function disLikeComment(id) {
+	var commentId = id;
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function() {
 		//when response is received
 		if (this.readyState == 4 && this.status == 200) {
-			renderNewCommentInTable(this);
+			renderNewCommentInTable(this, commentId);
 		}
 		else
 		if (this.readyState == 4 && this.status == 401) {
-			alert("Sorry, you must log in to like this post!");
+			alert("Sorry, you must log in to like this comment!");
 		}	
 	}
 	request.open("POST", "/comment/dislikeComment?commentId="+commentId, true);
 	request.send();
 }
 
-function renderNewCommentInTable(result){
+function renderNewCommentInTable(result, commentId){
 	var newComment = JSON.parse(result.response);
-	var button = document.getElementById("commentlikebutton");
-	var dislikeBtn=document.getElementById("commentdislikebutton");
+	var button = document.getElementById("commentlikebutton-"+commentId);
+	var dislikeBtn=document.getElementById("commentdislikebutton-"+commentId);
 	var likers = newComment.usersWhoLike;
 	var dislikers=newComment.usersWhoDislike;
 	var userId=newComment.userDto.userId;
@@ -74,7 +74,6 @@ function renderNewCommentInTable(result){
 		dislikeBtn.innerHTML = "Dislike";
 		dislikeBtn.style.background='blue';
 	}
-	document.getElementById("number-of-commentslikes-container").innerHTML=likers.length;
-	document.getElementById("number-of-commentsdislikes-container").innerHTML=dislikers.length;
-	
+	document.getElementById("number-of-commentslikes-container-"+commentId).innerHTML=likers.length;
+	document.getElementById("number-of-commentsdislikes-container-"+commentId).innerHTML=dislikers.length;
 }

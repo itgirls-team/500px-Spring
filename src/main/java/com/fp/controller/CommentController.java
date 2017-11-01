@@ -84,194 +84,177 @@ public class CommentController {
 	@RequestMapping(value = "/likeComment", method = RequestMethod.POST)
 	public ResponseEntity likeComment(@RequestParam("commentId") Long commentId, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		Long userId = ((User) session.getAttribute("user")).getId();
-		Post post = ((Post) session.getAttribute("post"));
-		User loggedUser = (User) session.getAttribute("user");
-		Set<Comment> comments = post.getCommentsOfPost();
+		// TODO validate input data
 
-		Set<Comment> commentsNew = new TreeSet<>(Comparator.comparing(Comment::getdateAndTimeOfUpload).reversed());
-		for (Comment commentInPost : comments) {
-			commentsNew.add(commentInPost);
+		Post post = ((Post) session.getAttribute("post"));
+		if (session.getAttribute("user") == null) {
+			// return "login"; // TODO !!!! return RespEntity with status and
+			// error message
+			return null;
 		}
+		User loggedUser = (User) session.getAttribute("user");
+		Long userId = loggedUser.getId();
+
+		Set<Comment> postComments = post.getCommentsOfPost();
 		Comment comment = null;
-		for (Comment com : commentsNew) {
-			if (com.getId().equals(commentId)) {
-				comment = com;
-				comment.setUserName(loggedUser.getUserName());
+		for (Comment commentOfPost : postComments) {
+			if (commentOfPost.getId().equals(commentId)) {
+				comment = commentOfPost;
 				break;
 			}
 		}
-		Set<User> likers = comment.getUsersWhoLikeComment();
-		Set<User> likersUpdated = likers;
-		Set<User> usersDislike = comment.getUsersWhoDislikeComment();
-		Set<User> usersDislikeNew = usersDislike;
 
-		if (session.getAttribute("user") != null) {
-			// TODO add user to people who likes
-			likersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
-			for (User user : likers) {
-				likersUpdated.add(user);
+		Set<User> likers = comment.getUsersWhoLikeComment();
+		Set<User> likersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
+		likersUpdated.addAll(likers);
+
+		Set<User> dislikers = comment.getUsersWhoDislikeComment();
+		Set<User> dislikersUpdated = dislikers; // by default
+
+		boolean userIsInLikers = false;
+		for (User user : likersUpdated) {
+			if (user.getId().equals(userId)) {
+				userIsInLikers = true;
+				break;
 			}
-			boolean userIsInLikers = false;
-			for (User user : likersUpdated) {
+		}
+
+		if (userIsInLikers) {
+			// unlike only
+			likersUpdated.remove(loggedUser);
+			try {
+				commentDao.removeLikeComment(commentId, loggedUser.getUserName());
+			} catch (SQLException e) {
+				request.setAttribute("error", "Problem with the database. Could not execute query!");
+			}
+		} else {
+			dislikersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
+			dislikersUpdated.addAll(dislikers);
+
+			boolean userIsInDislikers = false;
+			for (User user : dislikersUpdated) {
 				if (user.getId().equals(userId)) {
-					userIsInLikers = true;
+					userIsInDislikers = true;
 					break;
 				}
 			}
-			if (!userIsInLikers) {
-				likersUpdated.add(loggedUser);
+
+			if (userIsInDislikers) {
+				// remove it from dislike list
+				dislikersUpdated.remove(loggedUser);
 				try {
-					commentDao.likeComment(commentId, loggedUser.getUserName());
-				} catch (SQLException e1) {
-					request.setAttribute("error", "Problem with the database. Could not execute query!");
-				}
-				request.getSession().setAttribute("Liked", true);
-				request.getSession().setAttribute("post", post);
-				// remove it from dislike list if it's there
-				usersDislikeNew = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
-				for (User user : usersDislike) {
-					usersDislikeNew.add(user);
-				}
-				boolean userIsInDislikers = false;
-				for (User user : usersDislikeNew) {
-					if (user.getId().equals(userId)) {
-						userIsInDislikers = true;
-						break;
-					}
-				}
-				if (userIsInDislikers) {
-					usersDislikeNew.remove(loggedUser);
-					request.getSession().setAttribute("Disliked", false);
-					try {
-						commentDao.removeDislike(commentId, loggedUser.getUserName());
-					} catch (SQLException e) {
-						request.setAttribute("error", "Problem with the database. Could not execute query!");
-					}
-				}
-				comment.setUsersWhoDislikeComment(usersDislikeNew);
-			} else {
-				likersUpdated.remove(loggedUser);
-				request.getSession().setAttribute("Liked", false);
-				request.getSession().setAttribute("post", post);
-				try {
-					commentDao.removeLikeComment(commentId, loggedUser.getUserName());
+					commentDao.removeDislike(commentId, loggedUser.getUserName());
 				} catch (SQLException e) {
 					request.setAttribute("error", "Problem with the database. Could not execute query!");
 				}
+				comment.setUsersWhoDislikeComment(dislikersUpdated);
 			}
-			comment.setUsersWhoLikeComment(likersUpdated);
-		} else {
-			// return "login"; // TODO return RespEntity with status and
-			// error
-			// message
-		}
-		for (Comment com : commentsNew) {
-			if (com.getId().equals(commentId)) {
-				// com = comment;
-				com = comment;
-				break;
+
+			// actual like
+			likersUpdated.add(loggedUser); // like (in copy collection)
+			try {
+				commentDao.likeComment(commentId, loggedUser.getUserName());
+			} catch (SQLException e1) {
+				request.setAttribute("error", "Problem with the database. Could not execute query!");
 			}
 		}
-		// TODO people who like are not in session
-		// TODO change dislike like like
-		post.setCommentsOfPost(commentsNew);
-		request.getSession().setAttribute("post", post);
-		CommentDto dto = null;
-		UserDto userDto = new UserDto(userId, loggedUser.getUserName());
+		comment.setUsersWhoLikeComment(likersUpdated); // updating session state
+
+		// transform as DTO
+		UserDto userDto = loggedUser.dto();
 		List<UserDto> dtoLikers = likersUpdated.stream().map(userLiker -> userLiker.dto()).collect(Collectors.toList());
-		List<UserDto> dtoDislikers = usersDislikeNew.stream().map(userDisliker -> userDisliker.dto())
+		List<UserDto> dtoDislikers = dislikersUpdated.stream().map(userDisliker -> userDisliker.dto())
 				.collect(Collectors.toList());
-		dto = new CommentDto(commentId, userDto, post.getId(), dtoLikers, dtoDislikers);
+		CommentDto dto = new CommentDto(commentId, userDto, post.getId(), dtoLikers, dtoDislikers);
 		return new ResponseEntity<CommentDto>(dto, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dislikeComment", method = RequestMethod.POST)
 	public ResponseEntity disLikeComment(@RequestParam("commentId") Long commentId, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		Long userId = ((User) session.getAttribute("user")).getId();
+		// TODO validate input data
+
 		Post post = ((Post) session.getAttribute("post"));
+		if (session.getAttribute("user") == null) {
+			// return "login"; // TODO !!!! return RespEntity with status and
+			// error message
+			return null;
+		}
 		User loggedUser = (User) session.getAttribute("user");
-		Set<Comment> comments = post.getCommentsOfPost();
+		Long userId = loggedUser.getId();
+
+		Set<Comment> postComments = post.getCommentsOfPost();
 		Comment comment = null;
-		for (Comment com : comments) {
-			if (com.getId().equals(commentId)) {
-				comment = com;
-				comment.setUserName(loggedUser.getUserName());
+		for (Comment commentOfPost : postComments) {
+			if (commentOfPost.getId().equals(commentId)) {
+				comment = commentOfPost;
+				break;
 			}
 		}
-		Set<User> likers = comment.getUsersWhoLikeComment();
-		Set<User> likersUpdated = likers;
-		Set<User> usersDislike = comment.getUsersWhoDislikeComment();
-		Set<User> usersDislikeNew = usersDislike;
 
-		if (session.getAttribute("user") != null) {
-			// TODO add user to people who likes
-			usersDislikeNew = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
-			for (User user : usersDislike) {
-				usersDislikeNew.add(user);
+		Set<User> dislikers = comment.getUsersWhoDislikeComment();
+		Set<User> dislikersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
+		dislikersUpdated.addAll(dislikers);
+
+		Set<User> likers = comment.getUsersWhoLikeComment();
+		Set<User> likersUpdated = likers; // by default
+
+		boolean userIsAlreadyDisliker = false;
+		for (User user : dislikersUpdated) {
+			if (user.getId().equals(userId)) {
+				userIsAlreadyDisliker = true;
+				break;
 			}
-			boolean userIsInDislikers = false;
-			for (User user : usersDislikeNew) {
+		}
+
+		if (userIsAlreadyDisliker) {
+			// undislike only
+			dislikersUpdated.remove(loggedUser);
+			try {
+				commentDao.removeDislike(commentId, loggedUser.getUserName());
+			} catch (SQLException e) {
+				request.setAttribute("error", "Problem with the database. Could not execute query!");
+			}
+		} else {
+			likersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
+			likersUpdated.addAll(likers);
+
+			boolean userHasLikedComment = false;
+			for (User user : likersUpdated) {
 				if (user.getId().equals(userId)) {
-					userIsInDislikers = true;
+					userHasLikedComment = true;
 					break;
 				}
 			}
-			if (!userIsInDislikers) {
-				usersDislikeNew.add(loggedUser);
+
+			if (userHasLikedComment) {
+				// remove it from like list
+				likersUpdated.remove(loggedUser);
 				try {
-					commentDao.addDislike(commentId, loggedUser.getUserName());
-				} catch (SQLException e1) {
-					request.setAttribute("error", "Problem with the database. Could not execute query!");
-				}
-				request.getSession().setAttribute("Disliked", true);
-				request.getSession().setAttribute("post", post);
-				// remove it from dislike list if it's there
-				likersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
-				for (User user : likers) {
-					likersUpdated.add(user);
-				}
-				boolean userIsInLikers = false;
-				for (User user : likersUpdated) {
-					if (user.getId().equals(userId)) {
-						userIsInLikers = true;
-						break;
-					}
-				}
-				if (userIsInLikers) {
-					likersUpdated.remove(loggedUser);
-					request.getSession().setAttribute("Liked", false);
-					try {
-						commentDao.removeLikeComment(commentId, loggedUser.getUserName());
-					} catch (SQLException e) {
-						request.setAttribute("error", "Problem with the database. Could not execute query!");
-					}
-				}
-				post.setUsersWhoLike(likersUpdated);
-			} else {
-				usersDislikeNew.remove(loggedUser);
-				request.getSession().setAttribute("Disliked", false);
-				// post.setLiked(false);
-				request.getSession().setAttribute("post", post);
-				try {
-					commentDao.removeDislike(commentId, loggedUser.getUserName());
+					commentDao.removeLikeComment(commentId, loggedUser.getUserName());
 				} catch (SQLException e) {
 					request.setAttribute("error", "Problem with the database. Could not execute query!");
 				}
+				comment.setUsersWhoLikeComment(likersUpdated);
 			}
-			post.setUsersWhoDislike(usersDislikeNew);
-		} else {
-			// return "login"; // TODO return RespEntity with status and error
-			// message
+
+			// actual dislike
+			dislikersUpdated.add(loggedUser); // dislike (in copy collection)
+			try {
+				commentDao.addDislike(commentId, loggedUser.getUserName());
+			} catch (SQLException e1) {
+				request.setAttribute("error", "Problem with the database. Could not execute query!");
+			}
 		}
-		request.getSession().setAttribute("post", post);
-		CommentDto dto = null;
-		UserDto userDto = new UserDto(userId, loggedUser.getUserName());
+		comment.setUsersWhoDislikeComment(dislikersUpdated); // updating session
+																// state
+
+		// transform as DTO
+		UserDto userDto = loggedUser.dto();
 		List<UserDto> dtoLikers = likersUpdated.stream().map(userLiker -> userLiker.dto()).collect(Collectors.toList());
-		List<UserDto> dtoDislikers = usersDislikeNew.stream().map(userDisliker -> userDisliker.dto())
+		List<UserDto> dtoDislikers = dislikersUpdated.stream().map(userDisliker -> userDisliker.dto())
 				.collect(Collectors.toList());
-		dto = new CommentDto(commentId, userDto, post.getId(), dtoLikers, dtoDislikers);
+		CommentDto dto = new CommentDto(commentId, userDto, post.getId(), dtoLikers, dtoDislikers);
 		return new ResponseEntity<CommentDto>(dto, HttpStatus.OK);
 	}
 }
