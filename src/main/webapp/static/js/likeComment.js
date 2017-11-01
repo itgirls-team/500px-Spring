@@ -1,5 +1,4 @@
-function likeComment(id) {
-	var commentId = id;
+function likeComment(commentId) {
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function() {
 		//when response is received
@@ -14,8 +13,7 @@ function likeComment(id) {
 	request.open("POST", "/comment/likeComment?commentId="+commentId, true);
 	request.send();
 }
-function disLikeComment(id) {
-	var commentId = id;
+function disLikeComment(commentId) {
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function() {
 		//when response is received
