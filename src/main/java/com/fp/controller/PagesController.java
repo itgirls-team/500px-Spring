@@ -23,6 +23,7 @@ public class PagesController {
 		return "logout";
 	}
 
+
 	@GetMapping("/follow")
 	public String getFollowPage() {
 		return "follow";

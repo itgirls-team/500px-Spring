@@ -159,7 +159,12 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	@RequestMapping(value = "/main", method = RequestMethod.GET)
+	public String main() {
+		return "main";
+	}
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
 		if (request.getSession().getAttribute("user") != null) {
