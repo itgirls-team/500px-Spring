@@ -114,7 +114,9 @@ input[type=text]:focus {
 <table id="followers-table" border="1">
 			<c:forEach var="entry" items="${sessionScope.isFollowed}">
 				<tr>
-					<td><img id="avatar" src="/fetch-user-pic?id=${entry.key.id}"></td>
+					<td><img id="profilePicture"
+		src="/fetch-user-pic?id=${entry.key.id}"
+		style="width: 140px; height: 140px; border-radius: 50%;"></td>
 					<td> ${entry.key.userName}</td>	
 					<c:set var="followername" scope="session" value="${entry.key.userName}"/>			
 						<c:if test="${entry.value}">

@@ -56,10 +56,10 @@ input[type=text]:focus {
 	font-family: ProximaNova;
 	font-size: 14px;
 	font-weight: 100;
-	color: rgba(208,207,207,1.00);
+	color: rgba(80,80,80,1.00);
 }
 .mainContent .section1 .section1Content span {
-	color: rgba(146,146,146,1.00);
+	color: rgba(50,50,50,1.00);
 	font-family: sans-serif;
 }
   </style>
@@ -115,7 +115,10 @@ input[type=text]:focus {
 <table id="following-table" border="1">
 			<c:forEach var="entry" items="${sessionScope.isFollowed}">
 				<tr>
-					<td><img id="avatar" src="/fetch-user-pic?id=${entry.key.id}"></td>
+					<td>
+					 <img id="profilePicture"
+		src="/fetch-user-pic?id=${entry.key.id}"
+		style="width: 140px; height: 140px; border-radius: 50%;"></td>
 					<td> ${entry.key.userName}</td>	
 					<c:set var="followername" scope="session" value="${entry.key.userName}"/>			
 						<c:if test="${entry.value}">
