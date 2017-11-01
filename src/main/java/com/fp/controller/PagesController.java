@@ -53,4 +53,14 @@ public class PagesController {
 		return "createAlbum";
 	}
 
+	@GetMapping("/albums")
+	public String getAlbumPage() {
+		return "album";
+	}
+
+	@GetMapping("/posts")
+	public String getPostsPage() {
+		return "posts";
+	}
+
 }

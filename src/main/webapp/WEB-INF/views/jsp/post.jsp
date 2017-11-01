@@ -5,13 +5,109 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<script src="/static/js/posts.js"></script>
-<script src="/static/js/likeComment.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post</title>
+	<script src="/static/js/posts.js"></script>
+	<script src="/static/js/likeComment.js"></script>
+	<script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/wow.js"></script>
+    <script src="/static/js/jquery.mb.YTPlayer.js"></script>
+    <script src="/static/js/isotope.pkgd.js"></script>
+    <script src="/static/js/imagesloaded.pkgd.js"></script>
+    <script src="/static/js/jquery.flexslider.js"></script>
+    <script src="/static/js/owl.carousel.min.js"></script>
+    <script src="/static/js/smoothscroll.js"></script>
+    <script src="/static/js/jquery.magnific-popup.js"></script>
+    <script src="/static/js/jquery.simple-text-rotator.min.js"></script>
+    <script src="/static/js/plugins.js"></script>
+    <script src="/static/js/main.js"></script>
+      <!-- Default stylesheets-->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template specific stylesheets-->
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/et-line-font.css" rel="stylesheet">
+    <link href="/static/css/flexslider.css" rel="stylesheet">
+    <link href="/static/css//owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/css/owl.theme.default.min.css" rel="stylesheet">
+    <link href="/static/css/magnific-popup.css" rel="stylesheet">
+    <link href="/static/css/simpletextrotator.css" rel="stylesheet">
+    <!-- Main stylesheet and color file-->
+    <link href="/static/css/styleNew.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
+    
+    <style>
+	 .bg-img-c {
+	  -webkit-background-size: cover;
+	  background-size: cover;
+	  background-position: center;
+	 }
+	 .img {
+	  display: inline-block;
+	 }
+	 .img:before {
+	  content: '';
+	  display: block;
+	  padding-top: 75%;
+	 }
+	 .home-Btn{
+	position:absolute;
+	top:30px;
+	right:530px;
+	font-size: 20px;
+	color:white;
+	font-weight: bold;
+}
+.posts-Btn{
+	position:absolute;
+	top:30px;
+	right:400px;
+	font-size: 20px;
+	color:white;
+	font-weight: bold;
+}
+.profilePic{
+   display: block;
+   margin: 0 auto;
+	border-radius: 50px;
+}
+.likeBtn{
+text-align:center;
+}
+.dislikeBtn{
+text-align:center;
+}
+</style>
 </head>
-<body>	
+<body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">	
+	<main>
+      <div class="page-loader">
+        <div class="loader">Loading...</div>
+      </div>
+      <nav class="navbar navbar-custom navbar-fixed-top navbar-transparent" role="navigation">
+        <div class="container" style="background-color: black; width: 100%;">
+          <div class="navbar-header">
+           <div class="container-up-right">
+	           <jsp:include page="headerNew.jsp"></jsp:include>
+				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
+				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
+			</div>
+			 <h1 style="color:white;">500px</h1>
+		</div>
+        </div>
+      </nav>
+        <div class="hero-slider">
+            <li class="bg-dark">
+              <div class="container">
+              </div>
+            </li>
+        </div>
+      <div class="main">
 
-			<img src="<c:url value = "/postId/${sessionScope.postId}" />">
+        	<img src="<c:url value = "/postId/${sessionScope.postId}"/>" class="profilePic">
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
 			
 			<c:set var="isLiked" value="false"/>
@@ -20,11 +116,14 @@
 					<c:set var="isLiked" value="true"/>
 				</c:if>
 			</c:forEach>
-			<c:if test="${isLiked==true}">
-				<button style="background-color: grey" id="likebutton" onclick="likePost()">Unlike</button></c:if>
-			<c:if test="${isLiked==false}">
-				<button style="background-color: blue" id="likebutton" onclick="likePost()">Like</button>
-			</c:if>
+			
+			<div class="likeBtn">
+				<c:if test="${isLiked==true}">
+					<button style="background-color: grey" id="likebutton" onclick="likePost()">Unlike</button></c:if>
+				<c:if test="${isLiked==false}">
+					<button style="background-color: blue" id="likebutton" onclick="likePost()">Like</button>
+				</c:if>
+			</div>
 			
 			<c:set var="isDisliked" value="false"/>
 			<c:forEach items="${sessionScope.post.usersWhoDislike}"  var="disliker">
@@ -32,12 +131,15 @@
 					<c:set var="isDisliked" value="true"/>
 				</c:if>
 			</c:forEach>
+			
+			<div class="dislikeBtn">
 			<c:if test="${isDisliked==true}">
 				<button style="background-color: grey" id="dislikebutton" onclick="disLikePost()">Undislike</button>
 			</c:if>
 			<c:if test="${isDisliked==false}">
 				<button style="background-color: blue" id="dislikebutton" onclick="disLikePost()">Dislike</button>
 			</c:if>
+			</div>
 			
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
 			<h5>Likes: </h5><h5 id="number-of-likes-container"> ${sessionScope.post.usersWhoLike.size()} </h5>
@@ -121,5 +223,9 @@
 				</tr>
 			   </c:forEach>
 		   </table> 
+	
+       <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
+      </div>
+    </main>	
 </body>
 </html>

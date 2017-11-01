@@ -29,7 +29,7 @@
 	<div style="color: white">Profile picture</div><input type="file" name="avatar" accept="image/*"><br>
 	<br>
 	<input type="submit" value="Register">
-	If you already have an account, please login <a style="color: white" href="/page/login">here</a>.
+	If you already have an account, please login <a style="color: white" href="/page/login"> here</a>.
 </form>
 </div>
 

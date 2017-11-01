@@ -27,7 +27,7 @@
 	        
 	        <input type="submit" value="Login">
 	        <br>
-			If you do not have an account, please register<a  style="color: white" href="/page/register">here</a>
+			If you do not have an account, please register <a  style="color: white" href="/page/register"> here</a>
 </form>
 </div>
 </body>

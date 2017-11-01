@@ -34,11 +34,11 @@
     <link href="/static/css/magnific-popup.css" rel="stylesheet">
     <link href="/static/css/simpletextrotator.css" rel="stylesheet">
     <!-- Main stylesheet and color file-->
-    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/styleNew.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
 
-<title>Insert title here</title>
-
+<title>Albums</title>
 <style>
 	 .bg-img-c {
 	  -webkit-background-size: cover;
@@ -53,37 +53,46 @@
 	  display: block;
 	  padding-top: 75%;
 	 }
+	 .home-Btn{
+	position:absolute;
+	top:30px;
+	right:500px;
+	font-size: 20px;
+	color:white;
+	font-weight: bold;
+}
 </style>
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
-<jsp:include page="header.jsp"></jsp:include>
- 		<h1>Albums</h1>
-		<form action="/page/addNewAlbum">
-				<input type="submit" value="Create new album">
-		</form>
-		<a style="color:white;" href="/page/main">Home</a>
     <main>
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
       <nav class="navbar navbar-custom navbar-fixed-top navbar-transparent" role="navigation">
-        <div class="container">
+        <div class="container" style="background-color: black; width: 100%;">
           <div class="navbar-header">
-	         <h1 style="color:white;">500px</h1>
-          </div>
+           <div class="container-up-right">
+	           <jsp:include page="headerNew.jsp"></jsp:include>
+				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
+			</div>
+			 <h1 style="color:white;">500px</h1>
+		</div>
         </div>
       </nav>
-      
+        <div class="hero-slider">
+            <li class="bg-dark">
+              <div class="container">
+              </div>
+            </li>
+        </div>
       <div class="main">
         <section class="module-medium">
           <div class="container">
-           <c:forEach items="${sessionScope.user.albumsOfUser}"  var="album">	
-           
-			<%-- <span>
-				<div id="albumCover" class="img bg-img-c" style="width: 400px; background-image: url(/fetch-cover?id=${album.id})"></div>
-				<a href = "/posts?albumId=${album.id}">${album.category}</a>
-			</span> --%>
-			
+          <h1>Albums</h1>	
+          <form style="padding-top: 50px; padding-bottom: 50px;" action="/page/addNewAlbum">
+						<input type="submit" value="Create new album">
+		  </form>
+          <c:forEach items="${sessionScope.user.albumsOfUser}"  var="album">	
             <ul class="works-grid works-grid-gut works-hover-d" id="works-grid">
               <li class="work-item illustration webdesign">
               	<a href="/posts?albumId=${album.id}">
@@ -91,7 +100,7 @@
                   		<img src="/fetch-cover?id=${album.id}" alt="Portfolio Item"/>
             		 </div>
                   	<div class="work-caption font-alt">
-                    	<h3 class="work-title">${album.category}</h3>
+                    	<h3 class="work-title" style="font-weight: bold; font-size:50px">${album.category}</h3>
                   	</div>
                  </a>
               </li>
@@ -100,6 +109,7 @@
           </div>
         </section>
         <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
+      </div>
     </main>
 </body>
 </html>
