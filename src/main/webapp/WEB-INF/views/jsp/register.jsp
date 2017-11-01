@@ -19,15 +19,15 @@
 
 <div id="register">
 <form action="/register" method="post" enctype="multipart/form-data" name='form-register'>
-	Username<input type="text" name="username"><br>
-	Password<input type="password" name="password"><br>
-	Confirm password<input type="password" name="confpassword"><br>
-	First Name<input type="text" name="firstname"><br>
-	Last Name<input type="text" name="lastname"><br>
-	Email<input type="email" name="email"><br>
-	Description <input type="text" name="description"><br>
-	Profile picture<input type="file" name="avatar" accept="image/*"><br>
-	
+	<div style="color: white">Username</div><input type="text" name="username"><br>
+	<div style="color: white">Password</div><input type="password" name="password" ><br>
+	<div style="color: white">Confirm password</div><input type="password" name="confpassword" ><br>
+	<div style="color: white">First Name</div><input type="text" name="firstname"><br>
+	<div style="color: white">Last Name</div><input type="text" name="lastname" ><br>
+	<div style="color: white">Email</div><input type="email" name="email" ><br>
+	<div style="color: white">Description</div> <input type="text" name="description"><br>
+	<div style="color: white">Profile picture</div><input type="file" name="avatar" accept="image/*"><br>
+	<br>
 	<input type="submit" value="Register">
 	If you already have an account, please login <a style="color: white" href="/page/login">here</a>.
 </form>

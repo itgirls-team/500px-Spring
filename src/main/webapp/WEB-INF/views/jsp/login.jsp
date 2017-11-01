@@ -26,11 +26,8 @@
 	          <input type="password" name="password" placeholder="Password">
 	        
 	        <input type="submit" value="Login">
+	        <br>
 			If you do not have an account, please register<a  style="color: white" href="/page/register">here</a>
-	
-		<!-- Username<input type="text" name="username"><br>
-		Password<input type="password" name="password"><br>
-		<input type="submit" value="Login"> -->
 </form>
 </div>
 </body>

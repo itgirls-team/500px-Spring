@@ -99,9 +99,10 @@
 						</c:if>
 					</c:forEach>
 					<c:if test="${isCommentLiked==true}">
-						<button style="background-color: grey" id="commentlikebutton" onclick="likeComment()">Unlike</button></c:if>
+						<td><button style="background-color: grey" id="commentlikebutton" onclick="likeComment()">Unlike</button></td>
+					</c:if>
 					<c:if test="${isCommentLiked==false}">
-						<button style="background-color: blue" id="commentlikebutton" onclick="likeComment()">Like</button>
+						<td><button style="background-color: blue" id="commentlikebutton" onclick="likeComment()">Like</button></td>
 					</c:if>
 					
 					<c:set var="isCommentDisliked" value="false"/>
@@ -111,10 +112,10 @@
 						</c:if>
 					</c:forEach>
 					<c:if test="${isCommentDisliked==true}">
-						<button style="background-color: grey" id="commentdislikebutton" onclick="disLikeComment()">Undislike</button>
+						<td><button style="background-color: grey" id="commentdislikebutton" onclick="disLikeComment()">Undislike</button></td>
 					</c:if>
 					<c:if test="${isCommentDisliked==false}">
-						<button style="background-color: blue" id="commentdislikebutton" onclick="disLikeComment()">Dislike</button>
+						<td><button style="background-color: blue" id="commentdislikebutton" onclick="disLikeComment()">Dislike</button></td>
 					</c:if>
 					
 				</tr>

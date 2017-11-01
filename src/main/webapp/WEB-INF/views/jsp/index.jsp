@@ -34,7 +34,6 @@
     <!-- Main stylesheet and color file-->
     <link href="/static/css/style.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
-  </head>
 <title>Welcome page</title>
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
@@ -85,7 +84,5 @@
         </div>
         <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
     </main>
-		
-		
 </body>
 </html>

@@ -23,6 +23,11 @@ public class PagesController {
 		return "logout";
 	}
 
+	@GetMapping("/main")
+	public String getMainPage() {
+		return "main";
+	}
+
 	@GetMapping("/follow")
 	public String getFollowPage() {
 		return "follow";

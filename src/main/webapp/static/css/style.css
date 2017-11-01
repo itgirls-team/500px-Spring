@@ -1909,7 +1909,7 @@ Google map
 .work-image img {
   display: block;
   overflow: hidden;
-  width: 100%;
+  width: 100%;  
 }
 
 .work-image:after {
@@ -1917,7 +1917,7 @@ Google map
   display: block;
   content: "";
   height: 100%;
-  width: 100%;
+ 
   top: 0;
   left: 0;
 }
