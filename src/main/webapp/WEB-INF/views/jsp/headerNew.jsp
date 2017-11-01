@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
@@ -22,15 +20,15 @@
 	 }
 	  .welcome{
 	 	position:absolute;
-	    top:30px;
+	    top:50px;
 	    right:50px;
 	    font-size: 10px;
 	    color:white;
 	 }
 	  .logout{
 	 	position:absolute;
-	    top:50px;
-	    right:300px;
+	    top:70px;
+	    right:320px;
 	 }
 	</style>
 	</head>
@@ -48,19 +46,4 @@
 			<h3 class="welcome">Welcome, ${ sessionScope.user.userName }</h3>
 		</div>
 	</body>
-	<!--
-	<script>
-	 function searchAutoComplete(term) {
-	        $.ajax({
-	            type: 'GET',
-	            url: "http://localhost:8080/search/"+term,
-	            success: function (response) {
-	                fillSearchDropdown(response);
-	            }
-	        });
-	    }
-
-	</script>
-	  -->
 </html>
->>>>>>> feature/fix-controllers

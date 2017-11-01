@@ -23,6 +23,10 @@ public class PagesController {
 		return "logout";
 	}
 
+	@GetMapping("/main")
+	public String getMainPage() {
+		return "main";
+	}
 
 	@GetMapping("/follow")
 	public String getFollowPage() {
@@ -47,6 +51,16 @@ public class PagesController {
 	@GetMapping("/addNewAlbum")
 	public String getCreateAlbumPage() {
 		return "createAlbum";
+	}
+
+	@GetMapping("/albums")
+	public String getAlbumPage() {
+		return "album";
+	}
+
+	@GetMapping("/posts")
+	public String getPostsPage() {
+		return "posts";
 	}
 
 }

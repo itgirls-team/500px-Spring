@@ -168,11 +168,11 @@ public class CommentController {
 		}
 		for (Comment com : commentsNew) {
 			if (com.getId().equals(commentId)) {
+				// com = comment;
 				com = comment;
 				break;
 			}
 		}
-
 		// TODO people who like are not in session
 		// TODO change dislike like like
 		post.setCommentsOfPost(commentsNew);
