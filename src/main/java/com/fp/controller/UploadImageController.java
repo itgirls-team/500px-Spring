@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
@@ -47,7 +48,7 @@ class UploadImageController {
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request) {
+	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request,HttpSession sess) {
 		// SAVE IMAGE
 		try {
 			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
@@ -60,12 +61,10 @@ class UploadImageController {
 			for (String string : inputTags) {
 				tags.add(new Tag(string));
 			}
-			long albumId = (long) request.getSession().getAttribute("albumId");
 
-			Post post = new Post(file.getOriginalFilename(), description, tags, albumId,
-					Timestamp.valueOf(LocalDateTime.now()));
-
-			request.getSession().setAttribute("post", post);
+			long albumId = (long) sess.getAttribute("albumId");
+ 			Post post = new Post(file.getOriginalFilename(), description, tags,albumId,Timestamp.valueOf(LocalDateTime.now()));
+ 			sess.setAttribute("post", post);
 			postDao.uploadPost(post);
 			file.transferTo(f);
 

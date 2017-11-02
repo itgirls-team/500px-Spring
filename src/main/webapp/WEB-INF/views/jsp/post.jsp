@@ -107,7 +107,11 @@ text-align:center;
         </div>
       <div class="main">
 
+<<<<<<< HEAD
+			<img  style = "width: 300px ; heigth : 100px;" src="<c:url value = "/postId/${sessionScope.postId}" />">
+=======
         	<img src="<c:url value = "/postId/${sessionScope.postId}"/>" class="profilePic">
+>>>>>>> feature/fix-controllers
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
 			
 			<c:set var="isLiked" value="false"/>

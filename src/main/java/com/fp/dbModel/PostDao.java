@@ -255,7 +255,6 @@ public class PostDao {
 					usersWhoLike, usersWhoDislike, date));
 		}
 		return posts;
-
 	}
 
 	// get all tags from post
