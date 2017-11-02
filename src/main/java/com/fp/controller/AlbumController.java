@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,18 +29,20 @@ public class AlbumController {
 
 	// Album
 	@RequestMapping(value = "/albums", method = RequestMethod.GET)
-	public String showAlbums(HttpSession session, HttpServletRequest request) {
+	public String showAlbums(HttpSession session, HttpServletRequest request,Model model) {
 		try {
 			User realUser;
 			if (request.getParameter("searchUser") != null) {
 				realUser = userDao.getUser((String) request.getParameter("searchUser"));
+				model.addAttribute("hideCreateAlbum",true);
 			} else {
 				User u = (User) request.getSession().getAttribute("user");
 				realUser = userDao.getUser(u.getUserName());
+				model.addAttribute("hideCreateAlbum",false);
 			}
 			realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
 			request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
-			request.getSession().setAttribute("user", realUser);
+			//request.getSession().setAttribute("user", realUser);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

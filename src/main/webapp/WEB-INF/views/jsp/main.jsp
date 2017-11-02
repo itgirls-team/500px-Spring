@@ -84,7 +84,7 @@ input[type=text]:focus {
       <ul class="nav navbar-nav navbar-right">
        <li><form action="<c:url value="/search" />" >
 		<input type="search" name="search" placeholder="Search.."  style="width: 170px; height: 20px; pading: 20px; margin: 20px; border-radius: 20%;"></form></li>
-		<li><img src="/avatar"  style="width: 50px; height: 50px; border-radius: 50%;" ></li>
+		<li><a href = "/main"><img src="/avatar"  style="width: 50px; height: 50px; border-radius: 50%;" ></a></li>
        <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
      
       </ul>
@@ -98,10 +98,27 @@ input[type=text]:focus {
  		<h2>My profile</h2><br>	
     		
       <ul class="nav nav-pills nav-stacked">
-       			<li class="active"><a href="/main">View Profile</a></li>
-        		<li><a href="/followers">Followers</a></li>
-        		<li><a href="/following">Following</a></li>
-        		<li><a href="/albums">My albums</a></li>      
+      		
+       			<li>
+       			<form action="/main">
+       			<input  class="btn btn-d btn-circle btn-block" type="submit" value="View Profile">
+       			</form></li>
+       			
+       			
+				<li><form action="/followers">
+				<input type="hidden" name="pageToRedirect" value="followers" />	
+				<input  class="btn btn-d btn-circle btn-block" type="submit" value="Followers">
+				</form></li>
+				
+       			<li><form action="/following">
+				<input type="hidden" name="pageToRedirect" value="following" /> 	
+				<input  class="btn btn-d btn-circle btn-block" type="submit" value="Following">
+				</form></li>
+	
+        		<li><form action="/albums">
+				<input class="btn btn-d btn-circle btn-block" type="submit" value="Albums">
+				</form></li>
+     			  
       </ul><br>
      </div>
     

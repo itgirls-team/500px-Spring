@@ -91,7 +91,7 @@ text-align:center;
         <div class="container" style="background-color: black; width: 100%;">
           <div class="navbar-header">
            <div class="container-up-right">
-	           <jsp:include page="headerNew.jsp"></jsp:include>
+	           <jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
 				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
 			</div>
@@ -107,11 +107,8 @@ text-align:center;
         </div>
       <div class="main">
 
-<<<<<<< HEAD
-			<img  style = "width: 300px ; heigth : 100px;" src="<c:url value = "/postId/${sessionScope.postId}" />">
-=======
         	<img src="<c:url value = "/postId/${sessionScope.postId}"/>" class="profilePic">
->>>>>>> feature/fix-controllers
+
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
 			
 			<c:set var="isLiked" value="false"/>

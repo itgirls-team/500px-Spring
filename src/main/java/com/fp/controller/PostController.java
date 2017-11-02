@@ -60,12 +60,12 @@ public class PostController {
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
 	public String showAllPosts(HttpSession session, HttpServletRequest request, Model model) {
 		try {
+			model.addAttribute("hideUploadPost",false);
 			long albumId = Long.parseLong(request.getParameter("albumId"));
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			session.setAttribute("album", album);
 			session.setAttribute("albumId", albumId);
-			model.addAttribute("hideUploadPost", false);
 			model.addAttribute("currentPage", "posts");
 			session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
@@ -77,7 +77,6 @@ public class PostController {
 
 	@RequestMapping(value = "/postId/{id}", method = RequestMethod.GET)
 	public void getPicture(@PathVariable("id") Long postId, HttpServletResponse response, HttpServletRequest request) {
-
 		try {
 			Post post = postDao.getPost(postId);
 			String cover = post.getPath();
@@ -90,8 +89,9 @@ public class PostController {
 	// Show picture of post
 	@RequestMapping(value = "/showPosts", method = RequestMethod.GET)
 	public void getPicture(@RequestParam("postId") Long postId, HttpServletRequest request,
-			HttpServletResponse response, HttpSession session) {
+			HttpServletResponse response, HttpSession session,Model model) {
 		try {
+			model.addAttribute("hideUploadPost",true);
 			Post post = (Post) postDao.getPost(postId);
 			String cover = post.getPath();
 			CommonUtils.showPicture(cover, response, request);
@@ -99,15 +99,6 @@ public class PostController {
 			e.printStackTrace();
 		}
 	}
-	/*
-	 * @RequestMapping(value = "/deletePost/postId", method = RequestMethod.GET)
-	 * public String deleteVideoPost(@RequestParam ("postId") Long
-	 * postId,HttpServletRequest request) { try {
-	 * System.out.println("vleze tuk"); //long postId =
-	 * Long.parseLong(request.getParameter("postId")); Post post =
-	 * postDao.getPost(postId); postDao.deletePost(post); } catch (SQLException
-	 * e) { e.printStackTrace(); } return "posts"; }
-	 */
 
 	@RequestMapping(value = "/likePost", method = RequestMethod.POST)
 	public ResponseEntity likePost(@RequestParam("postId") Long postId, HttpSession session, HttpServletRequest request,
