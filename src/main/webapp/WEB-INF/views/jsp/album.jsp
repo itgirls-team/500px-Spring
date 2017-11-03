@@ -90,11 +90,13 @@
       <div class="main">
         <section class="module-medium">
           <div class="container">
-          <h1>Albums</h1>	
+          <h1>Albums</h1>
+          <c:if test="${(hideCreateAlbum != null) && (!hideCreateAlbum)}">	
           <form style="padding-top: 50px; padding-bottom: 50px;" action="/page/addNewAlbum">
 						<input type="submit" value="Create new album">
 		  </form>
-          <c:forEach items="${sessionScope.user.albumsOfUser}"  var="album">	
+		  </c:if>
+          <c:forEach items="${albums}"  var="album">	
             <ul class="works-grid works-grid-gut works-hover-d" id="works-grid">
               <li class="work-item illustration webdesign">
               	<a href="/posts?albumId=${album.id}">

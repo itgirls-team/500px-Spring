@@ -1,6 +1,7 @@
 package com.fp.controller;
 
 import java.sql.SQLException;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,27 +30,30 @@ public class AlbumController {
 
 	// Album
 	@RequestMapping(value = "/albums", method = RequestMethod.GET)
-	public String showAlbums(HttpSession session, HttpServletRequest request) {
+	public String showAlbums(HttpSession session, HttpServletRequest request,Model model) {
 		try {
 			User realUser;
 			if (request.getParameter("searchUser") != null) {
 				realUser = userDao.getUser((String) request.getParameter("searchUser"));
+				model.addAttribute("hideCreateAlbum",true);
 			} else {
 				User u = (User) request.getSession().getAttribute("user");
 				realUser = userDao.getUser(u.getUserName());
+				model.addAttribute("hideCreateAlbum",false);
 			}
-			realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
+			Set<Album> albums = albumDao.getAllAlbumFromUser(realUser.getUserName());
+			realUser.setAlbumsOfUser(albums);
 			request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
-			request.getSession().setAttribute("user", realUser);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return "error500";
 		}
 		return "album";
 	}
 
 	// CreateAlbum
 	@RequestMapping(value = "/createAlbum", method = RequestMethod.POST)
-	public String doPost(HttpServletRequest request, HttpServletResponse response) {
+	public String doPost(HttpServletRequest request, HttpServletResponse response,Model model) {
 		String albumCategory = (String) request.getParameter("category");
 		String validationMessage = validateInputData(albumCategory);
 		if (validationMessage.equals(REG_SUCC_MSG)) {
@@ -66,7 +71,8 @@ public class AlbumController {
 					return "createAlbum";
 				}
 			} catch (SQLException e) {
-				request.setAttribute("error", "Problem with the database. Could not execute query!");
+				e.printStackTrace();
+				return "error500";
 			}
 		} else {
 			request.setAttribute("emptyCategoryField", validationMessage);

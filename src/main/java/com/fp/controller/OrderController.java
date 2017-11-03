@@ -38,6 +38,12 @@ public class OrderController {
 		sortPosts(param,session,model);
 		return "search";
 	}
+	@RequestMapping(value="/newsfeed/{param}", method = RequestMethod.GET)
+	public String sortPostsBySearchUser(HttpSession session, Model model, @PathVariable("param") String param){
+		model.addAttribute("currentPage", "newsfeed");
+		sortPosts(param,session,model);
+		return "posts";
+	}
 	private void sortPosts(String param,HttpSession session,Model model){
 		List<Post> posts = new ArrayList<> ((HashSet<Post>)session.getAttribute("posts"));
 		switch (param) {

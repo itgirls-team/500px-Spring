@@ -116,6 +116,7 @@ text-align:center;
         </div>
       <div class="main">
         	<img class="postPhoto" src="<c:url value = "/postId/${sessionScope.postId}"/>" class="profilePic">
+
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
 			
 			<c:set var="isLiked" value="false"/>

@@ -133,16 +133,24 @@ input[type=text]:focus {
 		style="width: 140px; height: 140px; border-radius: 50%;">
 		 <c:if test = "${noFollowed}">
 		<form action="/followInAnotherPage" method="POST">
-			<input style=" font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;"  type="submit"  value="Follow" />
-			
+			<!-- <input style=" font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;"  type="submit"  value="Follow" /> -->
+			<button style="font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;" type="submit" value="Unfollow"> Follow </button>
 		</form>
 		</c:if>
 		
 		<c:if test = "${!noFollowed}">
 		<form action="/unfollowInAnotherPage" method="POST">
-			 <input style=" font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #FF0000;" type="submit" value="Unfollow" />
+			 <button style="font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #FF0000;" type="submit" value="Unfollow"> Unfollow </button>
 		</form>
 		</c:if>
+		
+		<div class="likeBtn">
+				<c:if test="${isLiked==true}">
+					<button style="background-color: grey" id="likebutton" onclick="likePost()">Unlike</button></c:if>
+				<c:if test="${isLiked==false}">
+					<button style="background-color: blue" id="likebutton" onclick="likePost()">Like</button>
+				</c:if>
+		</div>
 	      <p><span>Username :</span><c:out value="${searchUser.userName}"/></p>		
 	      <p><span>Email :</span> <c:out value="${searchUser.email}"/></p>
 	      <p><span>First Name :</span><c:out value="${searchUser.firstName}"/></p>
