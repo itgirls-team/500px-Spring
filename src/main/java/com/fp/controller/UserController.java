@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -43,7 +42,7 @@ public class UserController {
 			.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	private static final Pattern VALID_USERNAME = Pattern.compile("^[a-zA-Z0-9._-]{3,}$", Pattern.CASE_INSENSITIVE);
 	private static final String REG_SUCC_MSG = "Registration successful";
-	
+
 	@Autowired
 	private DbManager manager;
 	@Autowired
@@ -64,10 +63,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "*", method = RequestMethod.GET)
-	public String handleError(){
+	public String handleError() {
 		return "error404";
 	}
-	
+
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerUser(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("avatar") MultipartFile file) {
@@ -133,7 +132,7 @@ public class UserController {
 				User user = userDao.getUser(username);
 				request.getSession().setAttribute("user", user);
 				request.getSession().setAttribute("logged", true);
-				//add to followed users
+				// add to followed users
 				loadFollowedUser(request);
 				return "main";
 			} else {
@@ -148,8 +147,8 @@ public class UserController {
 			return "login";
 		}
 	}
-	
-	private void loadFollowedUser(HttpServletRequest request){
+
+	private void loadFollowedUser(HttpServletRequest request) {
 		boolean followedUserIsFollowed = true;
 		Set<User> followed;
 		Map<User, Boolean> followedUsersAreFollowed = new HashMap<User, Boolean>();
@@ -174,7 +173,7 @@ public class UserController {
 	public String main() {
 		return "main";
 	}
-	
+
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logoutGet(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
@@ -185,7 +184,7 @@ public class UserController {
 		request.getSession().invalidate();
 		return "index";
 	}
-	
+
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public String logoutPost(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
@@ -196,7 +195,7 @@ public class UserController {
 		request.getSession().invalidate();
 		return "index";
 	}
-	
+
 	@RequestMapping(value = "/followInAnotherPage", method = RequestMethod.POST)
 	public String followInAnotherPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		try {
@@ -219,10 +218,10 @@ public class UserController {
 		}
 		return "profile";
 	}
-	
+
 	@RequestMapping(value = "/unfollowInAnotherPage", method = RequestMethod.POST)
 	public String unfollowInAnotherPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-	try {
+		try {
 			User followedUser = (User) (session.getAttribute("searchUser"));
 			String followedUserName = followedUser.getUserName();
 			User loggedUser = (User) (request.getSession().getAttribute("user"));
@@ -242,7 +241,7 @@ public class UserController {
 		}
 		return "profile";
 	}
-	
+
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
 	public String follow(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String pageToRedirect = "";
@@ -346,7 +345,7 @@ public class UserController {
 	public String showNewsFeed(HttpServletRequest request, Model model, HttpSession session) {
 		LinkedHashSet<Post> posts;
 		try {
-			model.addAttribute("sortPost",true);
+			model.addAttribute("sortPost", true);
 			posts = postDao.getAllPostOrderByDate();
 			model.addAttribute("posts", posts);
 			request.getSession().setAttribute("posts", posts);
