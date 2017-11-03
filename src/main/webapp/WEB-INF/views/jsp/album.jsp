@@ -37,9 +37,7 @@
     <link href="/static/css/styleNew.css" rel="stylesheet">
     <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 <title>Albums</title>
 <style>
 	 .bg-img-c {
@@ -57,7 +55,7 @@
 	 }
 	 .home-Btn{
 	position:absolute;
-	top:20px;
+	top:30px;
 	right:500px;
 	font-size: 20px;
 	color:white;
@@ -74,7 +72,7 @@
         <div class="container" style="background-color: black; width: 100%;">
           <div class="navbar-header">
            <div class="container-up-right">
-	           <jsp:include page="header.jsp"></jsp:include>
+	           <jsp:include page="headerNew.jsp"></jsp:include>
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
 			</div>
 			 <h1 style="color:white;">500px</h1>
@@ -101,7 +99,7 @@
               <li class="work-item illustration webdesign">
               	<a href="/posts?albumId=${album.id}">
                   	<div id="albumCover" class="work-image">
-                  		<img src="/fetch-cover?id=${album.id}" alt="Portfolio Item"/>
+                  		<img src="/fetch-cover?id=${album.id}"/>
             		 </div>
                   	<div class="work-caption font-alt">
                     	<h3 class="work-title" style="font-weight: bold; font-size:50px">${album.category}</h3>

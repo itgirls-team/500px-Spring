@@ -346,6 +346,7 @@ public class UserController {
 		LinkedHashSet<Post> posts;
 		try {
 			model.addAttribute("sortPost", true);
+			model.addAttribute("hideUploadPost", true);
 			posts = postDao.getAllPostOrderByDate();
 			model.addAttribute("posts", posts);
 			request.getSession().setAttribute("posts", posts);

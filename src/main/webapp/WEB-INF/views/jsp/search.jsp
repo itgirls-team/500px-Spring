@@ -46,17 +46,14 @@
 	background-size: cover;
 	background-position: center;
 }
-
 .img {
 	display: inline-block;
 }
-
 .img:before {
 	content: '';
 	display: block;
 	padding-top: 75%;
 }
-
 .home-Btn {
 	position: absolute;
 	top: 30px;
@@ -81,13 +78,11 @@
 	color: white;
 	font-weight: bold;
 }
-
 .sort {
 	margin: 15px;
 	display: inline-block;
 	font-size: 20px;
 }
-
 .upload {
 	margin: 15px;
 	display: inline-block;
@@ -125,9 +120,9 @@
 		<div class="container">
 			<h1>Posts</h1>
 			<select class="sort" onchange="location = this.value;">
-				<option value="<c:url value="/${currentPage}/date" />"
+				<option value="<c:url value="/newsfeed/date" />"
 					<c:if test="${sessionScope.sort eq \"date\" }"> selected </c:if>>SortByDate</option>
-				<option value="<c:url value="/${currentPage}/like" />"
+				<option value="<c:url value="/newsfeed/like" />"
 					<c:if test="${sessionScope.sort eq \"like\" }"> selected </c:if>>SortByLikes</option>
 			</select>
 			<form class="upload" action="/upload" method="get">
