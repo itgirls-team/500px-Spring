@@ -43,6 +43,7 @@ public class UserController {
 			.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	private static final Pattern VALID_USERNAME = Pattern.compile("^[a-zA-Z0-9._-]{3,}$", Pattern.CASE_INSENSITIVE);
 	private static final String REG_SUCC_MSG = "Registration successful";
+	
 	@Autowired
 	private DbManager manager;
 	@Autowired
@@ -62,6 +63,11 @@ public class UserController {
 		}
 	}
 
+	@RequestMapping(value = "*", method = RequestMethod.GET)
+	public String handleError(){
+		return "error404";
+	}
+	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerUser(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("avatar") MultipartFile file) {

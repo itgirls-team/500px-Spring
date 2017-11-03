@@ -25,8 +25,10 @@ public class CommentDao {
 	private static final String LIKE_COMMENT = "INSERT INTO users_like_comments (user_id,comment_id) VALUES (?,?)";
 	private static final String REMOVE_COMMENTS_LIKES = "DELETE FROM users_like_comments WHERE comment_id = ?";
 	private static final String REMOVE_COMMENTS_DISLIKES = "DELETE FROM users_dislike_comments WHERE comment_id = ?";
+	
 	@Autowired
 	private DbManager manager;
+	
 	@Autowired
 	private UserDao userDao;
 
@@ -53,21 +55,6 @@ public class CommentDao {
 			rs.close();
 		}
 		return comment;
-	}
-	/*
-	 * // delete all comments public synchronized void deleteComments(Post p)
-	 * throws SQLException { PreparedStatement ps =
-	 * manager.getConnection().prepareStatement(DELETE_ALL_COMMENTS);
-	 * ps.setLong(1, p.getId()); ps.executeUpdate(); if (ps != null) {
-	 * ps.close(); } }
-	 */
-
-	// delete all comments
-	public synchronized void deleteComments(Post p) throws SQLException {
-		Set<Comment> comments = this.getAllComments(p.getId());
-		for (Comment comment : comments) {
-			deleteComment(comment.getId());
-		}
 	}
 
 	// delete comment
@@ -381,7 +368,7 @@ public class CommentDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("IZLIZASH LI TUK?");
 		return userName;
 	}
+	
 }
