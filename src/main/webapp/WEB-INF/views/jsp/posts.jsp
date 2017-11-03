@@ -37,27 +37,11 @@
     <link href="/static/css/styleNew.css" rel="stylesheet">
         <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
-
-<<<<<<< HEAD
-	<h1>Posts</h1>
-
-	
-	 <c:forEach items="${posts}" var="post">
-	 	<a href="/post?postId=${post.id}"><img src="/showPosts?postId=${post.id}"  style = "width: 300px ; heigth : 100px; " ></a>
-	 </c:forEach>
-	
-	<%--  <c:if test = "${hideUploadPost != null && !hideUploadPost}"> --%>
-	<form action="/upload" method="get">
-		<input type="submit" value="Upload Post">
-	</form>
-	
-	<select onchange="location = this.value;">
-			 <option value="<c:url value="/${currentPage}/date" />" <c:if test="${sessionScope.sort eq \"date\" }"> selected </c:if>>SortByDate</option>
-			 <option value="<c:url value="/${currentPage}/like" />" <c:if test="${sessionScope.sort eq \"like\" }"> selected </c:if>>SortByLikes</option>
-	</select>
-	
-=======
-<title>My albums</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
+<title>Posts</title>
 
 <style>
 	 .bg-img-c {
@@ -110,7 +94,7 @@
         <div class="container" style="background-color: black; width: 100%;">
           <div class="navbar-header">
            <div class="container-up-right">
-	           <jsp:include page="headerNew.jsp"></jsp:include>
+	           <jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>
 				<a class="albums-Btn" style="color:white;" href="/page/albums">Albums</a>	
 			</div>
@@ -157,6 +141,5 @@
         <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
       </div>
     </main>   
->>>>>>> feature/fix-controllers
 </body>
 </html>

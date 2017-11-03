@@ -38,6 +38,9 @@
     <link href="/static/css/styleNew.css" rel="stylesheet">
     <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     
     <style>
 	 .bg-img-c {
@@ -47,6 +50,12 @@
 	 }
 	 .img {
 	  display: inline-block;
+	 }
+	 .postPhoto{
+	  display: block;
+	   	 margin: 0 auto;
+		 border-radius: 50px;
+		 margin-top: 200px;
 	 }
 	 .img:before {
 	  content: '';
@@ -91,7 +100,7 @@ text-align:center;
         <div class="container" style="background-color: black; width: 100%;">
           <div class="navbar-header">
            <div class="container-up-right">
-	           <jsp:include page="headerNew.jsp"></jsp:include>
+	           <jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
 				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
 			</div>
@@ -106,12 +115,7 @@ text-align:center;
             </li>
         </div>
       <div class="main">
-
-<<<<<<< HEAD
-			<img  style = "width: 300px ; heigth : 100px;" src="<c:url value = "/postId/${sessionScope.postId}" />">
-=======
-        	<img src="<c:url value = "/postId/${sessionScope.postId}"/>" class="profilePic">
->>>>>>> feature/fix-controllers
+        	<img class="postPhoto" src="<c:url value = "/postId/${sessionScope.postId}"/>" class="profilePic">
 			<input type="hidden" id="post-id-container" value="${sessionScope.postId}">
 			
 			<c:set var="isLiked" value="false"/>
