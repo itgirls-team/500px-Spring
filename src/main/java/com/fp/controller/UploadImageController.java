@@ -85,17 +85,17 @@ class UploadImageController {
 			request.getSession().setAttribute("user", realUser);
 
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "error500";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "error500";
 		} catch (MimeTypeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "error500";
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "error500";
 		}
 		return "album";
 	}

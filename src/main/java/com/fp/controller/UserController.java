@@ -90,14 +90,14 @@ public class UserController {
 				avatarUrl = userName + ext;
 			}
 		} catch (IllegalStateException e) {
-			request.setAttribute("error", "A method has been invoked at an illegal or inappropriate time!");
-			return "register";
+			e.printStackTrace();
+			return "error500";
 		} catch (IOException e) {
-			request.setAttribute("error", "Problem with reading/writing from/to a file!");
-			return "register";
+			e.printStackTrace();
+			return "error500";
 		} catch (MimeTypeException e) {
-			request.setAttribute("error", "Problem with the parsing of the picture!");
-			return "register";
+			e.printStackTrace();
+			return "error500";
 		}
 
 		String validationMessage = validateRegisterData(userName, password, confirmPassword, email, firstName,
@@ -112,9 +112,8 @@ public class UserController {
 				loadFollowedUser(request);
 				return "main";
 			} catch (SQLException e) {
-				System.out.println("Problem with the database. Could not execute query!");
-				request.setAttribute("error", "Problem with the database. Could not execute query!");
-				return "login";
+				e.printStackTrace();
+				return "error500";
 			}
 		} else {
 			request.setAttribute("error", validationMessage);
@@ -142,9 +141,8 @@ public class UserController {
 				return "login";
 			}
 		} catch (SQLException e) {
-			System.out.println("problem with the database. Could not execute query!");
-			request.setAttribute("error", "problem with the database. Could not execute query! ");
-			return "login";
+			e.printStackTrace();
+			return "error500";
 		}
 	}
 
@@ -236,8 +234,8 @@ public class UserController {
 			request.getSession().setAttribute("isFollowed", followers);
 			request.getSession().setAttribute("noFollowed", true);
 		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
 			e.printStackTrace();
+			return "error500";
 		}
 		return "profile";
 	}
@@ -260,8 +258,8 @@ public class UserController {
 			request.getSession().setAttribute("isFollowed", followers);
 
 		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
 			e.printStackTrace();
+			return "error500";
 		}
 		return pageToRedirect;
 	}
@@ -283,8 +281,8 @@ public class UserController {
 			}
 			request.getSession().setAttribute("isFollowed", followers);
 		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
 			e.printStackTrace();
+			return "error500";
 		}
 		return pageToRedirect;
 	}
@@ -309,7 +307,8 @@ public class UserController {
 				request.getSession().setAttribute("noFollowed", true);
 			}
 		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
+			e.printStackTrace();
+			return "error500";
 		}
 		return "following";
 	}
@@ -336,7 +335,8 @@ public class UserController {
 				request.getSession().setAttribute("noFollowers", true);
 			}
 		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
+			e.printStackTrace();
+			return "error500";
 		}
 		return "followers";
 	}
@@ -352,6 +352,7 @@ public class UserController {
 			request.getSession().setAttribute("posts", posts);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return "error500";
 		}
 		return "posts";
 	}

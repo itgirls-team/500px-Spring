@@ -53,8 +53,8 @@ public class SearchController {
 				}
 			}
 		} catch (SQLException e) {
-			model.addAttribute("exception", "SQLException");
-			model.addAttribute("getMessage", e.getMessage());
+			e.printStackTrace();
+			return "error500";
 		}
 		return "search";
 	}
@@ -65,6 +65,7 @@ public class SearchController {
 			model.addAttribute("searchUser",userDao.getUser((String)request.getParameter("searchUsername")));
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return "error500";
 		}
 		return "profile";
 	}

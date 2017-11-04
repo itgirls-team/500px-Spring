@@ -30,8 +30,9 @@ public class CoverController {
 		try {
 			cover = albumDao.getCover(id);
 		} catch (SQLException e) {
-			// TODO handle error message
+			e.printStackTrace();
+			
 		}
-		CommonUtils.showPicture(cover, response, request);
+		CommonUtils.showPicture(cover, response, request); 
 	}
 }
