@@ -1,3 +1,40 @@
+function postComment() {
+	var postId=document.getElementById("post-id-container").value;
+	var commentText= document.getElementById("commentdesc").value;
+	
+	 var request = new XMLHttpRequest();
+	 if (commentText==null || commentText == '') {
+			alert('Please enter text for your comment!');
+			return;
+		}
+	 
+		request.onload = function() {
+			//when response is received
+			
+			if (this.readyState == 4 && this.status == 200) {
+				var newComment = JSON.parse(this.response);
+				var table = document.getElementById("commentstable");
+				// Create an empty <tr> element and add it to the 1st position of the table:
+				var row = table.insertRow(0);
+
+				// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+				row.insertCell(0).innerHTML = 'Username : '+newComment.userName;
+				row.insertCell(1).innerHTML = 'Description : '+newComment.description;
+				row.insertCell(2).innerHTML = 'Date : '+fomatDate(newComment.dateAndTimeOfUpload);
+				row.insertCell(3).innerHTML = 'Likes : '+newComment.numberOfLikes;
+				row.insertCell(4).innerHTML = 'Deslikes : '+newComment.numberOfDislikes;
+				
+				document.getElementById("commentdesc").value='';
+			}
+			else
+			if (this.readyState == 4 && this.status == 401) {
+				alert("Sorry, you must log in to post a comment");
+			}		
+		}
+		request.open("POST", "/comment/addComment?postId="+postId+"&commenttxt="+commentText);
+		request.send(); 
+}
+
 function likeComment(commentId) {
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function() {
@@ -53,7 +90,7 @@ function renderNewCommentInTable(result, commentId){
 		//like btn non active ne go e like-nal unlike
 		button.setAttribute("class", "not-liked");
 		button.innerHTML = "Like";
-		button.style.background='blue';
+		button.style.background='#6CD7FE';
 	}
 	var userIsDisliker=false;
 	for(i in dislikers){
@@ -70,7 +107,7 @@ function renderNewCommentInTable(result, commentId){
 	if(!userIsDisliker){
 		dislikeBtn.setAttribute("class", "not-disliked");
 		dislikeBtn.innerHTML = "Dislike";
-		dislikeBtn.style.background='blue';
+		dislikeBtn.style.background='#6CD7FE';
 	}
 	document.getElementById("number-of-commentslikes-container-"+commentId).innerHTML=likers.length;
 	document.getElementById("number-of-commentsdislikes-container-"+commentId).innerHTML=dislikers.length;

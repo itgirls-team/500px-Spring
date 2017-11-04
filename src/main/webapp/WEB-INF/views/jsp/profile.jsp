@@ -1,137 +1,149 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html lang="en">
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
-  <title>Profile</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="apple-touch-icon" sizes="57x57" href="assets/images/favicons/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="assets/images/favicons/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/images/favicons/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/images/favicons/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/images/favicons/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/images/favicons/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="assets/images/favicons/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/favicons/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicons/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/images/favicons/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicons/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="assets/images/favicons/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  	<style>
-input[type=text] {
-    width: 130px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
-    background-image: url('searchicon.png');
-    background-position: 10px 10px; 
-    background-repeat: no-repeat;
-    padding: 12px 20px 12px 40px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-}
-input[type=text]:focus {
-    width: 100%;
-}
-    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-    .row.content {height: 1200px}
-    
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color:  #f1f1f1;
-      height: 100%;
-    }
-    
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #666;
-      color: white;
-      padding: 15px;
-    }
-    
-    /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
-      .sidenav {
-        height: auto;
-        padding: 15px;
-      }
-      .row.content {height: auto;} 
-    }
-	
-.mainContent .section1 .section1Content {
-	font-family: ProximaNova;
-	font-size: 14px;
-	font-weight: 100;
-	color:  rgba(80,80,80,1.00);
-}
-.mainContent .section1 .section1Content span {
-	color: rgba(50,50,50,1.00);
-	font-family: sans-serif;
-}
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/wow.js"></script>
+    <script src="/static/js/jquery.mb.YTPlayer.js"></script>
+    <script src="/static/js/isotope.pkgd.js"></script>
+    <script src="/static/js/imagesloaded.pkgd.js"></script>
+    <script src="/static/js/jquery.flexslider.js"></script>
+    <script src="/static/js/owl.carousel.min.js"></script>
+    <script src="/static/js/smoothscroll.js"></script>
+    <script src="/static/js/jquery.magnific-popup.js"></script>
+    <script src="/static/js/jquery.simple-text-rotator.min.js"></script>
+    <script src="/static/js/plugins.js"></script>
+    <script src="/static/js/main.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
+      <!-- Default stylesheets-->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template specific stylesheets-->
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/et-line-font.css" rel="stylesheet">
+    <link href="/static/css/flexslider.css" rel="stylesheet">
+    <link href="/static/css//owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/css/owl.theme.default.min.css" rel="stylesheet">
+    <link href="/static/css/magnific-popup.css" rel="stylesheet">
+    <link href="/static/css/simpletextrotator.css" rel="stylesheet">
+    <!-- Main stylesheet and color file-->
+    <link href="/static/css/styleNew.css" rel="stylesheet">
+        <link href="/static/css/styles.css" rel="stylesheet">
+    <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<title>User profile</title>
+<style>
+	 .bg-img-c {
+	  -webkit-background-size: cover;
+	  background-size: cover;
+	  background-position: center;
+	 }
+	 .img {
+	  display: inline-block;
+	 }
+	 #profilePicture{
+		 display: block;
+	   	 margin: 0 auto;
+		 border-radius: 50px;
+		 margin-top: 200px;
+	 }
+	 .img:before {
+	  content: '';
+	  display: block;
+	  padding-top: 75%;
+	 }
+	 .home-Btn{
+	position:absolute;
+	top:30px;
+	right:530px;
+	font-size: 20px;
+	color:white;
+	font-weight: bold;
+}
+.posts-Btn{
+	position:absolute;
+	top:30px;
+	right:400px;
+	font-size: 20px;
+	color:white;
+	font-weight: bold;
+}
+.profilePic{
+   display: block;
+   margin: 0 auto;
+   border-radius: 50px;
+}
+.likeBtn{
+text-align:center;
+}
+.dislikeBtn{
+text-align:center;
+}
+.col-sm-9{
+text-align:center;
+left:190px;
+}
+.forms{
+ margin-bottom: 10px;
+ padding:8px;
+ text-align:center;
+ width: 50px;
+ top:20px;
+}
+.main{
+background-color:#B8B1A7;
+position: absolute;
+top: 100px;
+left: 0px;
+width: 300px;
+height:150%;
+}
 </style>
 </head>
-<body>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand">500px</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-       <li><a href="/newsfeed">Newsfeed</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-       <li><form action="<c:url value="/search" />" >
-		<input type="search" name="search" placeholder="Search.."  style="width: 170px; height: 20px; pading: 20px; margin: 20px; border-radius: 20%;"></form></li>
-		<li><img src="/avatar"  style="width: 50px; height: 50px; border-radius: 50%;" ></li>
-       <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-     
-      </ul>
-    
-    </div>
-  </div>
-</nav>
-<div class="container-fluid">
-  <div class="row content">
-   	 <div class="col-sm-3 sidenav">
- 		<h2>Welcome <c:out value="${searchUser.userName}"/> </h2><br>	
-    		
-      <ul class="nav nav-pills nav-stacked">
-       			<li><form action="albums">
-				<input type="hidden" name="searchUser" value="${searchUser.userName}" />
-				<input class="btn btn-d btn-circle btn-block" type="submit" value="Albums" />
-				</form></li>		    
-      </ul><br>
-     </div>
-    
-   <div class="col-sm-9">
-   
-     <section class="mainContent"> 
-	  <section class="section1">
-	    <hr class="sectionTitleRule">
-	    <hr class="sectionTitleRule2">
-	    <div class="section1Content">
+<body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+<c:if test="${ sessionScope.user == null }">
+			<c:redirect url="/page/login"></c:redirect>
+	</c:if>
+      <div class="page-loader">
+        <div class="loader">Loading...</div>
+      </div>
+      <nav class="navbar navbar-custom navbar-fixed-top navbar-transparent" role="navigation">
+        <div class="container" style="background-color: black; width: 100%;">
+          <div class="navbar-header">
+           <div class="container-up-right">
+	           <jsp:include page="header.jsp"></jsp:include>
+			</div>
+			 <!-- <h1 style="color:white;">500px</h1> -->
+			 <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
+		</div>
+        </div>
+      </nav>
+        <div class="hero-slider">
+            <li class="bg-dark">
+              <div class="container">
+              </div>
+            </li>
+        </div>
 	    <img id="profilePicture"
 		src="/avatar?profilePicture=${searchUser.profilePicture}"
 		style="width: 140px; height: 140px; border-radius: 50%;">
-		 <c:if test = "${noFollowed}">
+		<div class="col-sm-9">
+     <section class="mainContent"> 
+	  <section class="section1">
+	    <h2 class="sectionTitle">Profile</h2>
+	    <hr class="sectionTitleRule">
+	    <hr class="sectionTitleRule2">
+	    <div class="section1Content">
+	     <c:if test = "${noFollowed}">
 		<form action="/followInAnotherPage" method="POST">
 			<!-- <input style=" font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;"  type="submit"  value="Follow" /> -->
 			<button style="font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;" type="submit" value="Unfollow"> Follow </button>
@@ -161,7 +173,14 @@ input[type=text]:focus {
     </section>
      </div>
 	 </div>
-  </div>
-  <jsp:include page="footer.jsp"></jsp:include>
+ <div class="main">
+	<div id="inner">
+		<form class="forms" action="/albums">
+					<input type="hidden" name="searchUser" value="${searchUser.userName}" />
+					<input class="btn btn-d btn-circle" type="submit" value="Albums" />
+		</form>
+		</div>
+		</div>
+       <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
 </body>
 </html>

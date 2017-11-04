@@ -77,7 +77,7 @@
 	           <jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
 			</div>
-			 <h1 style="color:white;">500px</h1>
+			<a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
       </nav>
@@ -101,7 +101,7 @@
               <li class="work-item illustration webdesign">
               	<a href="/posts?albumId=${album.id}">
                   	<div id="albumCover" class="work-image">
-                  		<img src="/fetch-cover?id=${album.id}" alt="Portfolio Item"/>
+                  		<img src="/fetch-cover?id=${album.id}"/>
             		 </div>
                   	<div class="work-caption font-alt">
                     	<h3 class="work-title" style="font-weight: bold; font-size:50px">${album.category}</h3>

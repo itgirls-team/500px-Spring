@@ -98,7 +98,7 @@
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>
 				<a class="albums-Btn" style="color:white;" href="/page/albums">Albums</a>	
 			</div>
-			 <h1 style="color:white;">500px</h1>
+			<a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
       </nav>
@@ -127,7 +127,7 @@
               <li class="work-item illustration webdesign">
               	<a href="/post?postId=${post.id}">
                   	<div id="albumCover" class="work-image">
-                  	 <img width="300" src="/showPosts?postId=${post.id}" alt="Portfolio Item"/>
+                  	 <img width="300" src="/showPosts?postId=${post.id}"/>
             		 </div>
                   	 <div class="work-caption font-alt">
                     	<h3 class="work-title" style="font-weight: bold; font-size:50px"></h3>
