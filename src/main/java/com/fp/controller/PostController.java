@@ -48,7 +48,7 @@ public class PostController {
 	public String showPost(HttpSession session, HttpServletRequest request) {
 		try {
 			long postId = Long.parseLong(request.getParameter("postId"));
-			//request.getSession().setAttribute("postId", postId);
+			request.getSession().setAttribute("postId", postId);
 			request.getSession().setAttribute("post", postDao.getPost(postId));
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,7 +67,7 @@ public class PostController {
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
 			session.setAttribute("album", album);
-			//session.setAttribute("albumId", albumId);
+			session.setAttribute("albumId", albumId);
 			model.addAttribute("currentPage", "posts");
 			session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
