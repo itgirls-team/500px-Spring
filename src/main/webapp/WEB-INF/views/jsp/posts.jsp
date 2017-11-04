@@ -118,7 +118,7 @@
 			</select>
 			</c:if>
 			
-			<c:if test="${(hideUploadPost == null) && (!hideUploadPost)}">
+			<c:if test="${(hideUploadPost == null) || (!hideUploadPost)}">
 				<form class="upload" action="/upload" method="get">
 					<input type="submit" value="Upload Post">
 				</form>
