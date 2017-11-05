@@ -37,8 +37,11 @@
 <link href="/static/css/styleNew.css" rel="stylesheet">
 <link href="/static/css/styles.css" rel="stylesheet">
 <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
-
-<title>My albums</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ 
+<title>Posts</title>
 
 <style>
 .bg-img-c {
@@ -85,6 +88,9 @@
 <body data-spy="scroll" data-target=".onpage-navigation"
 	data-offset="60">
 	<main>
+	 <c:if test="${ sessionScope.user == null }">
+			<c:redirect url="/page/login"></c:redirect>
+	</c:if>
 	<div class="page-loader">
 		<div class="loader">Loading...</div>
 	</div>
@@ -93,7 +99,7 @@
 	<div class="container" style="background-color: black; width: 100%;">
 		<div class="navbar-header">
 			<div class="container-up-right">
-				<jsp:include page="headerNew.jsp"></jsp:include>
+				<jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color: white;" href="/page/main">Home</a>
 			</div>
 			<a href="/newsfeed"><h1 style="color:white;">500px</h1></a>

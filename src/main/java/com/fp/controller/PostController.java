@@ -60,8 +60,8 @@ public class PostController {
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
 	public String showAllPosts(HttpSession session, HttpServletRequest request, Model model) {
 		try {
-			if(session.getAttribute("searchUser") != null){
-				model.addAttribute("hideUploadPost",true);
+			if (session.getAttribute("searchUser") != null) {
+				model.addAttribute("hideUploadPost", true);
 			}
 			long albumId = Long.parseLong(request.getParameter("albumId"));
 			Album album = albumDao.getAlbum(albumId);
@@ -91,7 +91,7 @@ public class PostController {
 	// Show picture of post
 	@RequestMapping(value = "/showPosts", method = RequestMethod.GET)
 	public void getPicture(@RequestParam("postId") Long postId, HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,Model model) {
+			HttpServletResponse response, HttpSession session, Model model) {
 		try {
 			Post post = (Post) postDao.getPost(postId);
 			String cover = post.getPath();
@@ -112,7 +112,6 @@ public class PostController {
 		Set<User> usersDislikeNew = usersDislike;
 		User loggedUser = (User) session.getAttribute("user");
 		if (session.getAttribute("user") != null) {
-			// TODO add user to people who likes
 			likersUpdated = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
 			for (User user : likers) {
 				likersUpdated.add(user);
@@ -209,7 +208,6 @@ public class PostController {
 		Set<User> usersDislikeNew = usersDislike;
 		User loggedUser = (User) session.getAttribute("user");
 		if (session.getAttribute("user") != null) {
-			// TODO add user to people who likes
 			usersDislikeNew = new TreeSet<>(Comparator.comparing(User::getUserName).reversed());
 			for (User user : usersDislike) {
 				usersDislikeNew.add(user);

@@ -102,6 +102,9 @@ font-weight: bold;
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">	
 	<main>
+	 <c:if test="${ sessionScope.user == null }">
+			<c:redirect url="/page/login"></c:redirect>
+	</c:if>
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
