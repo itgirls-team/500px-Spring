@@ -102,7 +102,6 @@ function likePost() {
 			}
 			document.getElementById("number-of-likes-container").innerHTML=likers.length;
 			document.getElementById("number-of-dislikes-container").innerHTML=dislikers.length;
-			
 		}
 		else
 		if (this.readyState == 4 && this.status == 401) {

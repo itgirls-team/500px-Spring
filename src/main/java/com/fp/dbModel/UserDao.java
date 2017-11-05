@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.fp.model.User;
 import com.fp.utils.CommonUtils;
-import com.fp.utils.Encrypter;
 
 @Component
 public class UserDao {
@@ -31,7 +30,8 @@ public class UserDao {
 		ps.setString(2, lastName);
 		ps.setString(3, email);
 		ps.setString(4, userName);
-		ps.setString(5, Encrypter.encrypt(password));
+		// ps.setString(5, Encrypter.encrypt(password));
+		ps.setString(5, password);
 		ps.setDate(6, Date.valueOf(LocalDate.now()));
 		ps.setString(7, pictureName);
 		ps.setString(8, description);
@@ -431,7 +431,8 @@ public class UserDao {
 		rs.next();
 
 		String actualPass = rs.getString(1);
-		if (Encrypter.encrypt(password).equals(actualPass)) {
+		// if (Encrypter.encrypt(password).equals(actualPass)) {
+		if (password.equals(actualPass)) {
 			passMatchUsername = true;
 		}
 		if (ps != null) {
