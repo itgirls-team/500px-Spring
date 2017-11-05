@@ -38,7 +38,6 @@ public class SearchController {
 				if (search.charAt(0) == '@') {
 					User user = userDao.getUser(search.substring(1, search.length()));
 					if(user != null){
-
 						model.addAttribute("searchUser", user);
 						session.setAttribute("searchUser", user);
 						return "profile";
@@ -46,7 +45,6 @@ public class SearchController {
 				} else {
 					List<Post> posts = tagDao.searchPostByTag(search);
 					if (posts != null) {
-						model.addAttribute("hideUploadPost",true);
 						model.addAttribute("posts", posts);
 						request.getSession().setAttribute("posts", posts);
 						model.addAttribute("currentPage", "search");
@@ -55,8 +53,8 @@ public class SearchController {
 				}
 			}
 		} catch (SQLException e) {
-			model.addAttribute("exception", "SQLException");
-			model.addAttribute("getMessage", e.getMessage());
+			e.printStackTrace();
+			return "error500";
 		}
 		return "search";
 	}
@@ -67,6 +65,7 @@ public class SearchController {
 			model.addAttribute("searchUser",userDao.getUser((String)request.getParameter("searchUsername")));
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return "error500";
 		}
 		return "profile";
 	}

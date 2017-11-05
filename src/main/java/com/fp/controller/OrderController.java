@@ -40,6 +40,8 @@ public class OrderController {
 	}
 	@RequestMapping(value="/newsfeed/{param}", method = RequestMethod.GET)
 	public String sortPostsBySearchUser(HttpSession session, Model model, @PathVariable("param") String param){
+		model.addAttribute("sortPost", true);
+		model.addAttribute("hideUploadPost", true);
 		model.addAttribute("currentPage", "newsfeed");
 		sortPosts(param,session,model);
 		return "posts";

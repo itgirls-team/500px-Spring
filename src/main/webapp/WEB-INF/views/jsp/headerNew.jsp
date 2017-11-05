@@ -35,7 +35,7 @@
 	<body>
 		<div class="header">
 		    <form action="<c:url value="/search" />" method="get">
-				<div class="search"><h5 style="color:white;">Search : <input type="search" name="search" placeholder="Search..."> </h5></div>
+				<div class="search"><h5 style="color:white;">Search : <input type="search" name="search" placeholder="Search user with @ and tag ..."> </h5></div>
 			</form> 
 			
 			<br>

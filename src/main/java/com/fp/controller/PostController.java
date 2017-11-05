@@ -60,7 +60,9 @@ public class PostController {
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
 	public String showAllPosts(HttpSession session, HttpServletRequest request, Model model) {
 		try {
-			model.addAttribute("hideUploadPost",false);
+			if(session.getAttribute("searchUser") != null){
+				model.addAttribute("hideUploadPost",true);
+			}
 			long albumId = Long.parseLong(request.getParameter("albumId"));
 			Album album = albumDao.getAlbum(albumId);
 			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
@@ -69,8 +71,8 @@ public class PostController {
 			model.addAttribute("currentPage", "posts");
 			session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
 		} catch (SQLException e) {
-			System.out.println();
 			e.printStackTrace();
+			return "error500";
 		}
 		return "posts";
 	}
@@ -91,7 +93,6 @@ public class PostController {
 	public void getPicture(@RequestParam("postId") Long postId, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,Model model) {
 		try {
-			model.addAttribute("hideUploadPost",true);
 			Post post = (Post) postDao.getPost(postId);
 			String cover = post.getPath();
 			CommonUtils.showPicture(cover, response, request);

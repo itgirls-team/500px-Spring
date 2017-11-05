@@ -37,12 +37,10 @@ public class AlbumController {
 				realUser = userDao.getUser((String) request.getParameter("searchUser"));
 				model.addAttribute("hideCreateAlbum",true);
 			} else {
-				User u = (User) request.getSession().getAttribute("user");
-				realUser = userDao.getUser(u.getUserName());
+				realUser = (User) request.getSession().getAttribute("user");
 				model.addAttribute("hideCreateAlbum",false);
 			}
-			Set<Album> albums = albumDao.getAllAlbumFromUser(realUser.getUserName());
-			realUser.setAlbumsOfUser(albums);
+			realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
 			request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -62,10 +60,9 @@ public class AlbumController {
 					String albumImage = "defaultAlbumImage.jpg";
 					Long userId = ((User) request.getSession().getAttribute("user")).getId();
 					albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
-					User u = (User) request.getSession().getAttribute("user");
-					User realUser = userDao.getUser(u.getUserName());
+					User realUser =  (User) request.getSession().getAttribute("user");
 					realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
-					request.getSession().setAttribute("user", realUser);
+					request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
 				} else {
 					request.setAttribute("albumAlreadyExists", "This album category already exists!");
 					return "createAlbum";
