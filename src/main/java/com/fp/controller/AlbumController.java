@@ -1,8 +1,6 @@
 package com.fp.controller;
 
 import java.sql.SQLException;
-import java.util.Set;
-import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +22,7 @@ public class AlbumController {
 
 	public static final String ALBUM_PICTURE_URL = "C:/pictures/";
 	private static final String REG_SUCC_MSG = "Album crated successful";
-	
+
 	@Autowired
 	UserDao userDao;
 	@Autowired
@@ -73,6 +71,7 @@ public class AlbumController {
 						User realUser = (User) request.getSession().getAttribute("user");
 						realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
 						request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
+						model.addAttribute("hideCreateAlbum", false);
 					} else {
 						request.setAttribute("albumAlreadyExists", "This album category already exists!");
 						return "createAlbum";

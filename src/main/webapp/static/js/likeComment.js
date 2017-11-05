@@ -10,7 +10,6 @@ function postComment() {
 	 
 		request.onload = function() {
 			//when response is received
-			
 			if (this.readyState == 4 && this.status == 200) {
 				var newComment = JSON.parse(this.response);
 				var table = document.getElementById("commentstable");
@@ -21,14 +20,16 @@ function postComment() {
 				row.insertCell(0).innerHTML = 'Username : '+newComment.userName;
 				row.insertCell(1).innerHTML = 'Description : '+newComment.description;
 				row.insertCell(2).innerHTML = 'Date : '+fomatDate(newComment.dateAndTimeOfUpload);
-				row.insertCell(3).innerHTML = 'Likes : '+newComment.numberOfLikes;
-				row.insertCell(4).innerHTML = 'Deslikes : '+newComment.numberOfDislikes;
+				row.insertCell(3).innerHTML = '<h5>Likes : </h5>' + '<h5 id="number-of-commentslikes-container-'+newComment.id+'">0</h5>';
+				row.insertCell(4).innerHTML = '<h5>Dislikes : </h5>' + '<h5 id="number-of-commentsdislikes-container-'+newComment.id+'">0</h5>';
+				row.insertCell(5).innerHTML = '<button style="background-color: #6CD7FE" id="commentlikebutton-'+newComment.id+'" onclick="likeComment('+newComment.id+')">Like</button>';
+				row.insertCell(6).innerHTML = '<button style="background-color: #6CD7FE" id="commentdislikebutton-'+newComment.id+'" onclick="disLikeComment('+newComment.id+')">Dislike</button>';
 				
 				document.getElementById("commentdesc").value='';
 			}
-			else
-			if (this.readyState == 4 && this.status == 401) {
-				alert("Sorry, you must log in to post a comment");
+			else {
+				var mesage = this.response;
+				alert(mesage);
 			}		
 		}
 		request.open("POST", "/comment/addComment?postId="+postId+"&commenttxt="+commentText);
@@ -42,8 +43,7 @@ function likeComment(commentId) {
 		if (this.readyState == 4 && this.status == 200) {
 			renderNewCommentInTable(this, commentId);
 		}
-		else
-		if (this.readyState == 4 && this.status == 401) {
+		else if (this.readyState == 4 && this.status == 401) {
 			alert("Sorry, you must log in to like this comment!");
 		}	
 	}

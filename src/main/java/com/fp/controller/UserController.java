@@ -125,8 +125,6 @@ public class UserController {
 				User user = userDao.getUser(username);
 				request.getSession().setAttribute("user", user);
 				request.getSession().setAttribute("logged", true);
-				// add to followed users
-				//!!!loadFollowedUser(request);
 				return "main";
 			} else {
 				// redirect to error page or to login.html again with popup for
@@ -166,7 +164,6 @@ public class UserController {
 		request.getSession().invalidate();
 		return "index";
 	}
-	
 
 	@RequestMapping(value = "/followInAnotherPage", method = RequestMethod.POST)
 	public String followInAnotherPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
@@ -224,8 +221,8 @@ public class UserController {
 				pageToRedirect = (String) request.getSession().getAttribute("pageToRedirect");
 				User loggedUser = (User) (request.getSession().getAttribute("user"));
 				userDao.addToFollowedUsers(followedUserName, loggedUser.getUserName());
-				//add in collections
-				
+				// add in collections
+
 				Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
 				for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
 					if (entry.getKey().getUserName().equals(followedUserName)) {
@@ -233,7 +230,8 @@ public class UserController {
 						break;
 					}
 				}
-				request.getSession().setAttribute("isFollowed", followers);
+				// request.getSession().setAttribute("isFollowed", followers);
+				// // TODO no need for resetting
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -290,9 +288,6 @@ public class UserController {
 					followedUsersAreFollowed.put(followedUser, followedUserIsFollowed);
 				}
 				request.getSession().setAttribute("isFollowed", followedUsersAreFollowed);
-				if (followedUsersAreFollowed.isEmpty()) {
-					request.getSession().setAttribute("noFollowed", true);
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "error500";
@@ -322,9 +317,6 @@ public class UserController {
 					userFollowersAreFollowed.put(follower, userFollowerIsFollowed);
 				}
 				request.getSession().setAttribute("isFollowed", userFollowersAreFollowed);
-				if (userFollowersAreFollowed.isEmpty()) {
-					request.getSession().setAttribute("noFollowers", true);
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "error500";

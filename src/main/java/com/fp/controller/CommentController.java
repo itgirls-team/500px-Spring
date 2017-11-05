@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
 
 import com.fp.dbModel.CommentDao;
 import com.fp.dbModel.DbManager;
@@ -33,7 +34,7 @@ import com.fp.model.User;
 public class CommentController {
 
 	private static final String REG_SUCC_MSG = "Comment add successful";
-	
+
 	@Autowired
 	private DbManager manager;
 	@Autowired
@@ -48,6 +49,7 @@ public class CommentController {
 		// check if text is empty,null
 		// if sth is wring set status!=200
 		// update sessionScope.post.commentsOfPost after insert in db
+		description = HtmlUtils.htmlEscape(description.trim());
 		Comment comment = null;
 		Long userId = ((User) session.getAttribute("user")).getId();
 		String userName = ((User) session.getAttribute("user")).getUserName();
@@ -55,9 +57,8 @@ public class CommentController {
 			try {
 				comment = commentDao.addComment(userId, description, postId);
 			} catch (SQLException e) {
-				request.setAttribute("error", "Problem with the database. Could not execute query!");
-				// TODO set resp status
-				// return "index"; // TODO
+				return new ResponseEntity<String>("Problem with the database. Could not execute query!",
+						HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			Set<Comment> comments = new TreeSet<>(Comparator.comparing(Comment::getdateAndTimeOfUpload).reversed());
 			for (Comment commentInPost : ((Post) (session.getAttribute("post"))).getCommentsOfPost()) {
@@ -69,7 +70,6 @@ public class CommentController {
 			}
 
 			((Post) session.getAttribute("post")).setCommentsOfPost(comments);
-			response.setStatus(200);
 		} else {
 			// return "login"; // TODO return RespEntity with status and error
 			// message
@@ -258,7 +258,7 @@ public class CommentController {
 		CommentDto dto = new CommentDto(commentId, userDto, post.getId(), dtoLikers, dtoDislikers);
 		return new ResponseEntity<CommentDto>(dto, HttpStatus.OK);
 	}
-	
+
 	private String validateInputData(String comment) {
 		if (comment == null || comment.isEmpty()) {
 			return "Please enter comment!";

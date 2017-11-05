@@ -17,6 +17,7 @@ import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +37,7 @@ import com.fp.model.User;
 class UploadImageController {
 
 	private static final String REG_SUCC_MSG = "Post upload successful";
-	
+
 	@Autowired
 	PostDao postDao;
 	@Autowired
@@ -55,7 +56,7 @@ class UploadImageController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String zapishiSnimka(@RequestParam("failche") MultipartFile file, HttpServletRequest request,
-			HttpSession ses) {
+			HttpSession ses, Model model) {
 		// SAVE IMAGE
 		if (request.getSession().getAttribute("user") == null) {
 			return "login";
@@ -74,28 +75,28 @@ class UploadImageController {
 				String description = (String) request.getParameter("description");
 				String validationMessage = validateInputData(description);
 				if (validationMessage.equals(REG_SUCC_MSG)) {
-				Post post = new Post(file.getOriginalFilename(), description, tags, albumId,
-						Timestamp.valueOf(LocalDateTime.now()));
-				ses.setAttribute("post", post);
-				postDao.uploadPost(post);
-				file.transferTo(f);
+					Post post = new Post(file.getOriginalFilename(), description, tags, albumId,
+							Timestamp.valueOf(LocalDateTime.now()));
+					ses.setAttribute("post", post);
+					postDao.uploadPost(post);
+					file.transferTo(f);
 
-				// update session
-				Album album = albumDao.getAlbum(albumId);
-				album.setPosts(postDao.getAllPostsFromAlbum(albumId));
-				request.getSession().setAttribute("album", album);
+					// update session
+					Album album = albumDao.getAlbum(albumId);
+					album.setPosts(postDao.getAllPostsFromAlbum(albumId));
+					request.getSession().setAttribute("album", album);
 
-				// change album cover
-				String albumImage = post.getPath();
-				album.setPicture(albumImage);
-				albumDao.changeCover(album.getId(), albumImage);
+					// change album cover
+					String albumImage = post.getPath();
+					album.setPicture(albumImage);
+					albumDao.changeCover(album.getId(), albumImage);
 
-				User u = (User) request.getSession().getAttribute("user");
-				User realUser = userDao.getUser(u.getUserName());
-				realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
-				request.getSession().setAttribute("user", realUser);
-				}
-				else{
+					User u = (User) request.getSession().getAttribute("user");
+					User realUser = userDao.getUser(u.getUserName());
+					realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
+					request.getSession().setAttribute("user", realUser);
+					model.addAttribute("hideCreateAlbum", false);
+				} else {
 					request.setAttribute("emptyDescriptionField", validationMessage);
 					return "upload";
 				}
@@ -116,7 +117,7 @@ class UploadImageController {
 			return "album";
 		}
 	}
-	
+
 	private String validateInputData(String description) {
 		if (description == null || description.isEmpty()) {
 			return "Please fill all the required fields!";

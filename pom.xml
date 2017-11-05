@@ -97,7 +97,12 @@
 		    <artifactId>spring-jdbc</artifactId>
 		    <version>5.0.1.RELEASE</version>
 		</dependency>
-		
+		<!-- Escaping HTML -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>

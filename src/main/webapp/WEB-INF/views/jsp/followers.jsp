@@ -147,7 +147,7 @@ left:500px;
 	    <hr class="sectionTitleRule">
 	    <hr class="sectionTitleRule2">
 	    <div class="section1Content">
-	    <c:if test="${!sessionScope.noFollowers}">
+	    <c:if test="${not empty sessionScope.isFollowed}">
 <div class="table-users">   
 <table id="followers-table" border="1">
 			<c:forEach var="entry" items="${sessionScope.isFollowed}">
@@ -173,10 +173,10 @@ left:500px;
 						</c:if>
 				</tr>
 			</c:forEach>		
-	</table>
+	</table> 
 </div>	 	
 </c:if>
-<c:if test="${sessionScope.noFollowers}">
+<c:if test="${empty sessionScope.isFollowed}">
 			<p>You have no followers!</p>
 </c:if>
 	   </div>
