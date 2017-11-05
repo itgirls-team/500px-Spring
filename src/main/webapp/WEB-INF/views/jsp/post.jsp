@@ -89,10 +89,22 @@ text-align:center;
 .dislikeBtn{
 text-align:center;
 }
+.postDesc{
+text-align: center;
+}
+.commentTable{
+ margin: 0 auto;
+}
+button{
+font-weight: bold;
+}
 </style>
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">	
 	<main>
+	 <c:if test="${ sessionScope.user == null }">
+			<c:redirect url="/page/login"></c:redirect>
+	</c:if>
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
@@ -104,7 +116,7 @@ text-align:center;
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
 				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
 			</div>
-			 <h1 style="color:white;">500px</h1>
+			 <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
       </nav>
@@ -130,7 +142,7 @@ text-align:center;
 				<c:if test="${isLiked==true}">
 					<button style="background-color: grey" id="likebutton" onclick="likePost()">Unlike</button></c:if>
 				<c:if test="${isLiked==false}">
-					<button style="background-color: blue" id="likebutton" onclick="likePost()">Like</button>
+					<button style="background-color: #6CD7FE" id="likebutton" onclick="likePost()">Like</button>
 				</c:if>
 			</div>
 			
@@ -146,10 +158,10 @@ text-align:center;
 				<button style="background-color: grey" id="dislikebutton" onclick="disLikePost()">Undislike</button>
 			</c:if>
 			<c:if test="${isDisliked==false}">
-				<button style="background-color: blue" id="dislikebutton" onclick="disLikePost()">Dislike</button>
+				<button style="background-color: #6CD7FE" id="dislikebutton" onclick="disLikePost()">Dislike</button>
 			</c:if>
 			</div>
-			
+		<div class="postDesc">	
 			<h5>Description :  ${sessionScope.post.description} </h5><br>
 			<h5>Likes: </h5><h5 id="number-of-likes-container"> ${sessionScope.post.usersWhoLike.size()} </h5>
 			<h5>Dislikes: </h5><h5 id="number-of-dislikes-container"> ${sessionScope.post.usersWhoDislike.size()} </h5>
@@ -172,28 +184,11 @@ text-align:center;
 					<h5 id="people-who-disliked-container"> ${user.userName} </h5>	
 			</c:forEach>
 			<br>
-			
-			<%-- <h5> Comments : </h5> <br>
-			<p>Add comment</p><br>
-			<textarea id="commentdesc" rows="2"></textarea><br>
-			<button onclick="postComment()">Submit comment</button><br>
-			<table border="1" id="commentstable"> 
-				<c:forEach items="${sessionScope.post.commentsOfPost}" var="comment">
-				<tr>
-					<td>Username : ${comment.userName} </td> 
-					<td>Description : ${comment.description} </td> 
-					<td>Date : ${comment.dateAndTimeOfUpload} </td>
-					<td>Likes : ${comment.numberOfLikes} </td> 
-					<td>Dislikes : ${comment. numberOfDislikes} </td>
-				</tr>
-			   </c:forEach> 
-		   </table>
-			 --%>
 			 <h5> Comments : </h5> <br>
 			<p>Add comment</p><br>
 			<textarea id="commentdesc" rows="2" required></textarea><br>
 			<button onclick="postComment()">Submit comment</button><br>
-			<table border="1" id="commentstable"> 
+			<table class="commentTable" border="1" id="commentstable"> 
 				<c:forEach items="${sessionScope.post.commentsOfPost}" var="comment">
 				<input type="hidden" id="comment-id-container" value="${comment.id}"> 
 				<tr>
@@ -213,7 +208,7 @@ text-align:center;
 						<td><button style="background-color: grey" id="commentlikebutton-${comment.id}" onclick="likeComment( ${comment.id} )">Unlike</button></td>
 					</c:if>
 					<c:if test="${isCommentLiked==false}">
-						<td><button style="background-color: blue" id="commentlikebutton-${comment.id}" onclick="likeComment( ${comment.id} )">Like</button></td>
+						<td><button style="background-color: #6CD7FE" id="commentlikebutton-${comment.id}" onclick="likeComment( ${comment.id} )">Like</button></td>
 					</c:if>
 					
 					<c:set var="isCommentDisliked" value="false"/>
@@ -226,13 +221,13 @@ text-align:center;
 						<td><button style="background-color: grey" id="commentdislikebutton-${comment.id}" onclick="disLikeComment(${comment.id})">Undislike</button></td>
 					</c:if>
 					<c:if test="${isCommentDisliked==false}">
-						<td><button style="background-color: blue" id="commentdislikebutton-${comment.id}" onclick="disLikeComment(${comment.id})">Dislike</button></td>
+						<td><button style="background-color: #6CD7FE" id="commentdislikebutton-${comment.id}" onclick="disLikeComment(${comment.id})">Dislike</button></td>
 					</c:if>
 					
 				</tr>
 			   </c:forEach>
 		   </table> 
-	
+	</div>
        <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
       </div>
     </main>	

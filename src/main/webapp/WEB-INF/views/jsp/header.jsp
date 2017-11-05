@@ -54,9 +54,10 @@
 			      </ul>
 			      <ul class="nav navbar-nav navbar-right">
 			       <li><form action="<c:url value="/search" />" >
-					<input type="search" name="search" placeholder="Search.."  style="width: 170px; height: 20px; pading: 20px; margin: 20px; border-radius: 20%;"></form></li>
+					<input type="search" name="search" placeholder="Search user with @ and tag ..."  style="width: 170px; height: 20px; pading: 20px; margin: 20px; border-radius: 20%;"></form></li>
 					<li><a href="/page/main"><img src="/avatar"  style="width: 50px; height: 50px; border-radius: 50%;" ></a></li>
 			       <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+			      <li><h3 class="welcome">Welcome, ${ sessionScope.user.userName }</h3></li>
 			      </ul>
     		</div>
 		</div>

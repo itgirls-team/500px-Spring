@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<<<<<<< HEAD
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+=======
+     <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+>>>>>>> feature/fix-controllers
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -66,6 +70,9 @@ margin:200px;
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
 	 <main>
+	  <c:if test="${ sessionScope.user == null }">
+			<c:redirect url="/page/login"></c:redirect>
+	 </c:if>
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
@@ -77,7 +84,7 @@ margin:200px;
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>
 				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
 			</div>
-			 <h1 style="color:white;">500px</h1>
+			  <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
       </nav>

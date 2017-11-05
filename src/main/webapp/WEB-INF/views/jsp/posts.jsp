@@ -37,8 +37,11 @@
 <link href="/static/css/styleNew.css" rel="stylesheet">
 <link href="/static/css/styles.css" rel="stylesheet">
 <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
-
-<title>My albums</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ 
+<title>Posts</title>
 
 <style>
 .bg-img-c {
@@ -85,6 +88,9 @@
 <body data-spy="scroll" data-target=".onpage-navigation"
 	data-offset="60">
 	<main>
+	 <c:if test="${ sessionScope.user == null }">
+			<c:redirect url="/page/login"></c:redirect>
+	</c:if>
 	<div class="page-loader">
 		<div class="loader">Loading...</div>
 	</div>
@@ -93,23 +99,24 @@
 	<div class="container" style="background-color: black; width: 100%;">
 		<div class="navbar-header">
 			<div class="container-up-right">
-				<jsp:include page="headerNew.jsp"></jsp:include>
+				<jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color: white;" href="/page/main">Home</a>
 			</div>
-			<h1 style="color: white;">500px</h1>
+			<a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
-	</div>
-	</nav>
-	<div class="hero-slider">
-		<li class="bg-dark">
-			<div class="container"></div>
-		</li>
-	</div>
-	<div class="main">
-		<section class="module-medium">
-		<div class="container">
-			<h1>Posts</h1>
-			<c:if test="${(sortPost)}">
+        </div>
+      </nav>
+        <div class="hero-slider">
+            <li class="bg-dark">
+              <div class="container">
+              </div>
+            </li>
+        </div>
+      <div class="main">
+        <section class="module-medium">
+          <div class="container">
+          <h1>Posts</h1>	
+		  <c:if test="${(sortPost)}">
 			<select class="sort" onchange="location = this.value;">
 				<option value="<c:url value="/newsfeed/date" />"
 					<c:if test="${sessionScope.sort eq \"date\" }"> selected </c:if>>SortByDate</option>
@@ -117,34 +124,31 @@
 					<c:if test="${sessionScope.sort eq \"like\" }"> selected </c:if>>SortByLikes</option>
 			</select>
 			</c:if>
-			
-			<c:if test="${(hideUploadPost == null) || (!hideUploadPost)}">
+		  
+		 <c:if test="${(hideUploadPost == null) || (!hideUploadPost)}">
 				<form class="upload" action="/upload" method="get">
 					<input type="submit" value="Upload Post">
 				</form>
 			</c:if>
-			
-			<c:forEach items="${posts}" var="post">
-				<ul class="works-grid works-grid-gut works-hover-d" id="works-grid">
-					<li class="work-item illustration webdesign"><a
-						href="/post?postId=${post.id}">
-							<div id="albumCover" class="work-image">
-								<img width="300" src="/showPosts?postId=${post.id}"
-									alt="Portfolio Item" />
-							</div>
-							<div class="work-caption font-alt">
-								<h3 class="work-title"
-									style="font-weight: bold; font-size: 50px"></h3>
-							</div>
-					</a></li>
-				</ul>
-			</c:forEach>
-		</div>
-		</section>
-		<div class="scroll-up">
-			<a href="#totop"><i class="fa fa-angle-double-up"></i></a>
-		</div>
-	</div>
-	</main>
+		  
+          <c:forEach items="${posts}" var="post">
+            <ul class="works-grid works-grid-gut works-hover-d" id="works-grid">
+              <li class="work-item illustration webdesign">
+              	<a href="/post?postId=${post.id}">
+                  	<div id="albumCover" class="work-image">
+                  	 <img width="300" src="/showPosts?postId=${post.id}"/>
+            		 </div>
+                  	 <div class="work-caption font-alt">
+                    	<h3 class="work-title" style="font-weight: bold; font-size:50px"></h3>
+                  	</div> 
+                 </a>
+              </li>
+            </ul>
+           </c:forEach>	 
+          </div>
+        </section>
+        <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
+      </div>
+    </main>   
 </body>
 </html>

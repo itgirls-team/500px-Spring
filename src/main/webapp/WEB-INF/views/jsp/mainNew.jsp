@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-        <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,7 +40,7 @@
         <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
       <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-      <link rel="stylesheet" href="/static/css/table.css">
+<title>Home Page</title>
 <style>
 	 .bg-img-c {
 	  -webkit-background-size: cover;
@@ -107,18 +107,14 @@ left: 0px;
 width: 300px;
 height:150%;
 }
-#followers-table{
-left:500px;
-}
 </style>
-<title>Following</title>
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
-
 <main>
+	 
 	 <c:if test="${ sessionScope.user == null }">
 			<c:redirect url="/page/login"></c:redirect>
-	 </c:if>
+	</c:if>
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
@@ -128,6 +124,7 @@ left:500px;
            <div class="container-up-right">
 	           <jsp:include page="header.jsp"></jsp:include>
 			</div>
+			 <!-- <h1 style="color:white;">500px</h1> -->
 			 <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
@@ -141,48 +138,6 @@ left:500px;
 	
 <img id="profilePicture" src="/avatar">
 
-<div class="col-sm-9">
-     <section class="mainContent"> 
-	  <section class="section1">
-	    <h2 class="sectionTitle">Following</h2>
-	    <hr class="sectionTitleRule">
-	    <hr class="sectionTitleRule2">
-	    <div class="section1Content">
-<c:if test="${!sessionScope.noFollowed}">
-<div class="table-users">   
-<table id="following-table" border="1">
-			<c:forEach var="entry" items="${sessionScope.isFollowed}">
-				<tr>
-					<td class="photo"><img id="avatar" src="/fetch-user-pic?id=${entry.key.id}"></td>
-					<td> ${entry.key.userName}</td>	
-					<c:set var="followername" scope="session" value="${entry.key.userName}"/>			
-						<c:if test="${entry.value}">
-								<td>
-										<form action="/unfollow" method="post">
-										<input type="hidden" name="followedUserName" value="${followername}" />
-											<input type="submit" value="Unfollow"/> 
-										</form>
-						</c:if>
-						<c:if test="${not entry.value}">
-								<td>
-										<form  action="/follow" method="post">
-										<input type="hidden" name="followedUserName" value="${followername}" />
-											<input type="submit" value="Follow"/> 
-										</form>
-								</td>
-						</c:if>
-				</tr>
-			</c:forEach>		
-	</table>
-	</div>
-</c:if>
-<c:if test="${sessionScope.noFollowed}">
-		<p>You're not following anyone!</p>
-</c:if>
-</div>
-	  </section>        
-    </section>
-   </div>
 	<div class="main">
 	<dir id="inner">
 		<form class="forms" action="/albums">
@@ -202,5 +157,6 @@ left:500px;
 		</div>
 		
        <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
+</body>	
 </body>
 </html>

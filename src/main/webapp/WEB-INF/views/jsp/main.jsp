@@ -124,7 +124,6 @@ height:150%;
            <div class="container-up-right">
 	           <jsp:include page="header.jsp"></jsp:include>
 			</div>
-			 <!-- <h1 style="color:white;">500px</h1> -->
 			 <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>

@@ -1,4 +1,4 @@
-function postComment() {
+/*function postComment() {
 	var postId=document.getElementById("post-id-container").value;
 	var commentText= document.getElementById("commentdesc").value;
 	
@@ -23,6 +23,15 @@ function postComment() {
 				row.insertCell(2).innerHTML = 'Date : '+fomatDate(newComment.dateAndTimeOfUpload);
 				row.insertCell(3).innerHTML = 'Likes : '+newComment.numberOfLikes;
 				row.insertCell(4).innerHTML = 'Deslikes : '+newComment.numberOfDislikes;
+				
+				var btn = document.createElement("BUTTON");
+				var t = document.createTextNode("Like");       // Create a text node
+				btn.appendChild(t); 
+				btn.onclick = 
+				
+				row.insertCell(5).innerHTML = "Like";
+				row.insertCell(6).innerHTML = "Dislike";
+				
 				//append first child to table of comments with the value
 				
 				document.getElementById("commentdesc").value='';
@@ -34,7 +43,7 @@ function postComment() {
 		}
 		request.open("POST", "/comment/addComment?postId="+postId+"&commenttxt="+commentText);
 		request.send(); 
-}
+}*/
 
 function fomatDate(date) {
 	var dateAsString = '';
@@ -72,7 +81,7 @@ function likePost() {
 				//like btn non active ne go e like-nal unlike
 				button.setAttribute("class", "not-liked");
 				button.innerHTML = "Like";
-				button.style.background='blue';
+				button.style.background='#6CD7FE';
 			}
 			var userIsDisliker=false;
 			for(i in dislikers){
@@ -89,7 +98,7 @@ function likePost() {
 			if(!userIsDisliker){
 				dislikeBtn.setAttribute("class", "not-disliked");
 				dislikeBtn.innerHTML = "Dislike";
-				dislikeBtn.style.background='blue';
+				dislikeBtn.style.background='#6CD7FE';
 			}
 			document.getElementById("number-of-likes-container").innerHTML=likers.length;
 			document.getElementById("number-of-dislikes-container").innerHTML=dislikers.length;
@@ -133,7 +142,7 @@ function disLikePost() {
 				//like btn non active ne go e like-nal unlike
 				button.setAttribute("class", "not-liked");
 				button.innerHTML = "Like";
-				button.style.background='blue';
+				button.style.background='#6CD7FE';
 			}
 			var userIsDisliker=false;
 			for(i in dislikers){
@@ -150,7 +159,7 @@ function disLikePost() {
 			if(!userIsDisliker){
 				dislikeBtn.setAttribute("class", "not-disliked");
 				dislikeBtn.innerHTML = "Dislike";
-				dislikeBtn.style.background='blue';
+				dislikeBtn.style.background='#6CD7FE';
 			}
 			document.getElementById("number-of-likes-container").innerHTML=likers.length;
 			document.getElementById("number-of-dislikes-container").innerHTML=dislikers.length;
