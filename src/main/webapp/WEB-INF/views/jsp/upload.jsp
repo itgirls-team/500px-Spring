@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-     <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -90,12 +92,16 @@ margin:200px;
               </div>
             </li>
         </div>
+        
          <div class="form"> 
            	<h1>Upload file</h1>
+           	<c:if test="${ requestScope.emptyDescriptionField != null }">
+					<h1 style="color: red">Sorry, upload new post unsuccessful. Reason: ${requestScope.emptyDescriptionField }</h1>
+			</c:if>
 			<form  class="upload" action="/upload" method="POST" enctype="multipart/form-data">
-			Description<input type="text" name="description"><br>
+			Description<input type="text" name="description" required><br>
 			Tags<input type="text" name="tags"><br>
-			<input type="file" id="file" name="failche" accept="upload/*">
+			<input type="file" id="file" name="failche" required accept="upload/*">
 			<input type="submit" value="Upload now">
 			</form>
 		</div>

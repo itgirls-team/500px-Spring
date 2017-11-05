@@ -62,11 +62,6 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "*", method = RequestMethod.GET)
-	public String handleError() {
-		return "error404";
-	}
-
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerUser(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("avatar") MultipartFile file) {
@@ -109,7 +104,6 @@ public class UserController {
 				userDao.insertUser(userName, password, email, firstName, lastName, description, avatarUrl);
 				User user = new User(userName, password, email, firstName, lastName, description, avatarUrl);
 				request.getSession().setAttribute("user", user);
-				loadFollowedUser(request);
 				return "main";
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -132,7 +126,7 @@ public class UserController {
 				request.getSession().setAttribute("user", user);
 				request.getSession().setAttribute("logged", true);
 				// add to followed users
-				loadFollowedUser(request);
+				//!!!loadFollowedUser(request);
 				return "main";
 			} else {
 				// redirect to error page or to login.html again with popup for
@@ -143,27 +137,6 @@ public class UserController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return "error500";
-		}
-	}
-
-	private void loadFollowedUser(HttpServletRequest request) {
-		boolean followedUserIsFollowed = true;
-		Set<User> followed;
-		Map<User, Boolean> followedUsersAreFollowed = new HashMap<User, Boolean>();
-		try {
-			followed = userDao
-					.getAllFollowedForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
-			request.getSession().setAttribute("followed", followed);
-
-			for (User followedUser : followed) {
-				followedUsersAreFollowed.put(followedUser, followedUserIsFollowed);
-			}
-			request.getSession().setAttribute("isFollowed", followedUsersAreFollowed);
-			if (followedUsersAreFollowed.isEmpty()) {
-				request.getSession().setAttribute("noFollowed", true);
-			}
-		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
 		}
 	}
 
@@ -193,168 +166,191 @@ public class UserController {
 		request.getSession().invalidate();
 		return "index";
 	}
+	
 
 	@RequestMapping(value = "/followInAnotherPage", method = RequestMethod.POST)
 	public String followInAnotherPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		try {
-			User followedUser = (User) (session.getAttribute("searchUser"));
-			String followedUserName = followedUser.getUserName();
-			User loggedUser = (User) (request.getSession().getAttribute("user"));
-			userDao.addToFollowedUsers(followedUserName, loggedUser.getUserName());
-			Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
-			for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
-				if (entry.getKey().getUserName().equals(followedUserName)) {
-					entry.setValue(true);
-					break;
-				}
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			try {
+				User followedUser = (User) (session.getAttribute("searchUser"));
+				String followedUserName = followedUser.getUserName();
+				User loggedUser = (User) (request.getSession().getAttribute("user"));
+				userDao.addToFollowedUsers(followedUserName, loggedUser.getUserName());
+				request.getSession().setAttribute("isFollowing", true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
 			}
-			request.getSession().setAttribute("isFollowed", followers);
-			request.getSession().setAttribute("noFollowed", false);
-		} catch (SQLException e) {
-			request.setAttribute("error", "problem with the database. Could not execute query!");
-			e.printStackTrace();
+			return "profile";
 		}
-		return "profile";
 	}
 
 	@RequestMapping(value = "/unfollowInAnotherPage", method = RequestMethod.POST)
 	public String unfollowInAnotherPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		try {
-			User followedUser = (User) (session.getAttribute("searchUser"));
-			String followedUserName = followedUser.getUserName();
-			User loggedUser = (User) (request.getSession().getAttribute("user"));
-			userDao.removeFromFollowedUsers(followedUserName, loggedUser.getUserName());
-			Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
-			for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
-				if (entry.getKey().getUserName().equals(followedUserName)) {
-					entry.setValue(false);
-					break;
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			try {
+				User followedUser = (User) (session.getAttribute("searchUser"));
+				String followedUserName = followedUser.getUserName();
+				User loggedUser = (User) (request.getSession().getAttribute("user"));
+				userDao.removeFromFollowedUsers(followedUserName, loggedUser.getUserName());
+				Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
+				for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
+					if (entry.getKey().getUserName().equals(followedUserName)) {
+						entry.setValue(false);
+						break;
+					}
 				}
+				request.getSession().setAttribute("isFollowing", false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
 			}
-			request.getSession().setAttribute("isFollowed", followers);
-			request.getSession().setAttribute("noFollowed", true);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
+			return "profile";
 		}
-		return "profile";
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
 	public String follow(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		String pageToRedirect = "";
-		try {
-			String followedUserName = request.getParameter("followedUserName");
-			pageToRedirect = (String) request.getSession().getAttribute("pageToRedirect");
-			User loggedUser = (User) (request.getSession().getAttribute("user"));
-			userDao.addToFollowedUsers(followedUserName, loggedUser.getUserName());
-			Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
-			for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
-				if (entry.getKey().getUserName().equals(followedUserName)) {
-					entry.setValue(true);
-					break;
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			String pageToRedirect = "";
+			try {
+				String followedUserName = request.getParameter("followedUserName");
+				pageToRedirect = (String) request.getSession().getAttribute("pageToRedirect");
+				User loggedUser = (User) (request.getSession().getAttribute("user"));
+				userDao.addToFollowedUsers(followedUserName, loggedUser.getUserName());
+				//add in collections
+				
+				Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
+				for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
+					if (entry.getKey().getUserName().equals(followedUserName)) {
+						entry.setValue(true);
+						break;
+					}
 				}
-			}
-			request.getSession().setAttribute("isFollowed", followers);
+				request.getSession().setAttribute("isFollowed", followers);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
+			}
+
+			return pageToRedirect;
 		}
-		return pageToRedirect;
 	}
 
 	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
 	public String unfollow(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		String pageToRedirect = "";
-		try {
-			String followedUserName = request.getParameter("followedUserName");
-			pageToRedirect = (String) request.getSession().getAttribute("pageToRedirect");
-			User loggedUser = (User) (request.getSession().getAttribute("user"));
-			userDao.removeFromFollowedUsers(followedUserName, loggedUser.getUserName());
-			Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
-			for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
-				if (entry.getKey().getUserName().equals(followedUserName)) {
-					entry.setValue(false);
-					break;
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			String pageToRedirect = "";
+			try {
+				String followedUserName = request.getParameter("followedUserName");
+				pageToRedirect = (String) request.getSession().getAttribute("pageToRedirect");
+				User loggedUser = (User) (request.getSession().getAttribute("user"));
+				userDao.removeFromFollowedUsers(followedUserName, loggedUser.getUserName());
+				Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
+				for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
+					if (entry.getKey().getUserName().equals(followedUserName)) {
+						entry.setValue(false);
+						break;
+					}
 				}
+				request.getSession().setAttribute("isFollowed", followers);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
 			}
-			request.getSession().setAttribute("isFollowed", followers);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
+			return pageToRedirect;
 		}
-		return pageToRedirect;
 	}
 
 	@RequestMapping(value = "/following", method = RequestMethod.GET)
 	public String following(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		String pageToRedirect = request.getParameter("pageToRedirect");
-		request.getSession().setAttribute("pageToRedirect", pageToRedirect);
-		boolean followedUserIsFollowed = true;
-		Set<User> followed;
-		Map<User, Boolean> followedUsersAreFollowed = new HashMap<User, Boolean>();
-		try {
-			followed = userDao
-					.getAllFollowedForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
-			request.getSession().setAttribute("followed", followed);
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			String pageToRedirect = request.getParameter("pageToRedirect");
+			request.getSession().setAttribute("pageToRedirect", pageToRedirect);
+			boolean followedUserIsFollowed = true;
+			Set<User> followed;
+			Map<User, Boolean> followedUsersAreFollowed = new HashMap<User, Boolean>();
+			try {
+				followed = userDao
+						.getAllFollowedForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
+				request.getSession().setAttribute("followed", followed);
 
-			for (User followedUser : followed) {
-				followedUsersAreFollowed.put(followedUser, followedUserIsFollowed);
+				for (User followedUser : followed) {
+					followedUsersAreFollowed.put(followedUser, followedUserIsFollowed);
+				}
+				request.getSession().setAttribute("isFollowed", followedUsersAreFollowed);
+				if (followedUsersAreFollowed.isEmpty()) {
+					request.getSession().setAttribute("noFollowed", true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
 			}
-			request.getSession().setAttribute("isFollowed", followedUsersAreFollowed);
-			if (followedUsersAreFollowed.isEmpty()) {
-				request.getSession().setAttribute("noFollowed", true);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
+			return "following";
 		}
-		return "following";
 	}
 
 	@RequestMapping(value = "/followers", method = RequestMethod.GET)
 	public String followers(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		String pageToRedirect = request.getParameter("pageToRedirect");
-		request.getSession().setAttribute("pageToRedirect", pageToRedirect);
-		boolean userFollowerIsFollowed;
-		Set<User> followers;
-		Map<User, Boolean> userFollowersAreFollowed = new HashMap<User, Boolean>();
-		try {
-			followers = userDao
-					.getAllFollowersForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
-			request.getSession().setAttribute("followers", followers);
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			String pageToRedirect = request.getParameter("pageToRedirect");
+			request.getSession().setAttribute("pageToRedirect", pageToRedirect);
+			boolean userFollowerIsFollowed;
+			Set<User> followers;
+			Map<User, Boolean> userFollowersAreFollowed = new HashMap<User, Boolean>();
+			try {
+				followers = userDao
+						.getAllFollowersForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
+				request.getSession().setAttribute("followers", followers);
 
-			for (User follower : followers) {
-				userFollowerIsFollowed = userDao.userFollowerIsFollowed(
-						((User) (request.getSession().getAttribute("user"))).getUserName(), follower.getUserName());
-				userFollowersAreFollowed.put(follower, userFollowerIsFollowed);
+				for (User follower : followers) {
+					userFollowerIsFollowed = userDao.userFollowerIsFollowed(
+							((User) (request.getSession().getAttribute("user"))).getUserName(), follower.getUserName());
+					userFollowersAreFollowed.put(follower, userFollowerIsFollowed);
+				}
+				request.getSession().setAttribute("isFollowed", userFollowersAreFollowed);
+				if (userFollowersAreFollowed.isEmpty()) {
+					request.getSession().setAttribute("noFollowers", true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
 			}
-			request.getSession().setAttribute("isFollowed", userFollowersAreFollowed);
-			if (userFollowersAreFollowed.isEmpty()) {
-				request.getSession().setAttribute("noFollowers", true);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
+			return "followers";
 		}
-		return "followers";
 	}
 
 	@RequestMapping(value = "/newsfeed", method = RequestMethod.GET)
 	public String showNewsFeed(HttpServletRequest request, Model model, HttpSession session) {
-		LinkedHashSet<Post> posts;
-		try {
-			model.addAttribute("sortPost", true);
-			model.addAttribute("hideUploadPost", true);
-			posts = postDao.getAllPostOrderByDate();
-			model.addAttribute("posts", posts);
-			request.getSession().setAttribute("posts", posts);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			LinkedHashSet<Post> posts;
+			try {
+				model.addAttribute("sortPost", true);
+				model.addAttribute("hideUploadPost", true);
+				posts = postDao.getAllPostOrderByDate();
+				model.addAttribute("posts", posts);
+				request.getSession().setAttribute("posts", posts);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
+			}
+			return "posts";
 		}
-		return "posts";
 	}
 
 	private boolean validateLogInData(String username, String password) throws SQLException {
@@ -425,6 +421,11 @@ public class UserController {
 			return "There is problem with the prepared statement";
 		}
 		return REG_SUCC_MSG;
+	}
+
+	@RequestMapping(value = "*", method = RequestMethod.GET)
+	public String handleError() {
+		return "error404";
 	}
 
 }

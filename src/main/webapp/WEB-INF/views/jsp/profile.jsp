@@ -143,14 +143,14 @@ height:150%;
 	    <hr class="sectionTitleRule">
 	    <hr class="sectionTitleRule2">
 	    <div class="section1Content">
-	     <c:if test = "${noFollowed}">
+	     <c:if test = "${!isFollowing}">
 		<form action="/followInAnotherPage" method="POST">
 			<!-- <input style=" font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;"  type="submit"  value="Follow" /> -->
 			<button style="font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;" type="submit" value="Unfollow"> Follow </button>
 		</form>
 		</c:if>
 		
-		<c:if test = "${!noFollowed}">
+		<c:if test = "${isFollowing}">
 		<form action="/unfollowInAnotherPage" method="POST">
 			 <button style="font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #FF0000;" type="submit" value="Unfollow"> Unfollow </button>
 		</form>

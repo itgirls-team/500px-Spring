@@ -46,6 +46,9 @@ public class PostController {
 	// Post
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
 	public String showPost(HttpSession session, HttpServletRequest request) {
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else{
 		try {
 			long postId = Long.parseLong(request.getParameter("postId"));
 			request.getSession().setAttribute("postId", postId);
@@ -54,11 +57,15 @@ public class PostController {
 			e.printStackTrace();
 		}
 		return "post";
+		}
 	}
 
 	// ShowPostsFromAlbum
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
 	public String showAllPosts(HttpSession session, HttpServletRequest request, Model model) {
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else{
 		try {
 			if (session.getAttribute("searchUser") != null) {
 				model.addAttribute("hideUploadPost", true);
@@ -75,6 +82,7 @@ public class PostController {
 			return "error500";
 		}
 		return "posts";
+		}
 	}
 
 	@RequestMapping(value = "/postId/{id}", method = RequestMethod.GET)
