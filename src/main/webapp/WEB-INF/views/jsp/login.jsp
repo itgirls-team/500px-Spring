@@ -20,10 +20,10 @@
 	<form  action="/login" name='form-login' method="post">
 		<h1 style="color: white">Login Form</h1>
 				<span class="fontawesome-user"></span>
-	          <input type="text" name="username" placeholder="Username">
+	          <input  required type="text" name="username" placeholder="Username">
 	       
 	        <span class="fontawesome-lock"></span>
-	          <input type="password" name="password" placeholder="Password">
+	          <input required type="password" name="password" placeholder="Password">
 	        
 	        <input type="submit" value="Login">
 	        <br>

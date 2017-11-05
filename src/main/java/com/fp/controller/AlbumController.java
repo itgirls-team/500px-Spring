@@ -2,6 +2,7 @@ package com.fp.controller;
 
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ public class AlbumController {
 
 	public static final String ALBUM_PICTURE_URL = "C:/pictures/";
 	private static final String REG_SUCC_MSG = "Album crated successful";
+	
 	@Autowired
 	UserDao userDao;
 	@Autowired
@@ -30,53 +32,61 @@ public class AlbumController {
 
 	// Album
 	@RequestMapping(value = "/albums", method = RequestMethod.GET)
-	public String showAlbums(HttpSession session, HttpServletRequest request,Model model) {
-		try {
-			User realUser;
-			if (request.getParameter("searchUser") != null) {
-				realUser = userDao.getUser((String) request.getParameter("searchUser"));
-				model.addAttribute("hideCreateAlbum",true);
-			} else {
-				realUser = (User) request.getSession().getAttribute("user");
-				model.addAttribute("hideCreateAlbum",false);
-			}
-			realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
-			request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
-		}
-		return "album";
-	}
-
-	// CreateAlbum
-	@RequestMapping(value = "/createAlbum", method = RequestMethod.POST)
-	public String doPost(HttpServletRequest request, HttpServletResponse response,Model model) {
-		String albumCategory = (String) request.getParameter("category");
-		String validationMessage = validateInputData(albumCategory);
-		if (validationMessage.equals(REG_SUCC_MSG)) {
+	public String showAlbums(HttpSession session, HttpServletRequest request, Model model) {
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
 			try {
-				if (!albumDao.existAlbum(albumCategory, ((User) (request.getSession().getAttribute("user"))).getId())) {
-					String albumImage = "defaultAlbumImage.jpg";
-					Long userId = ((User) request.getSession().getAttribute("user")).getId();
-					albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
-					User realUser =  (User) request.getSession().getAttribute("user");
-					realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
-					request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
+				User realUser;
+				if (request.getParameter("searchUser") != null) {
+					realUser = userDao.getUser((String) request.getParameter("searchUser"));
+					model.addAttribute("hideCreateAlbum", true);
 				} else {
-					request.setAttribute("albumAlreadyExists", "This album category already exists!");
-					return "createAlbum";
+					realUser = (User) request.getSession().getAttribute("user");
+					model.addAttribute("hideCreateAlbum", false);
 				}
+				realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
+				request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "error500";
 			}
-		} else {
-			request.setAttribute("emptyCategoryField", validationMessage);
-			return "createAlbum";
+			return "album";
 		}
+	}
 
-		return "album";
+	// CreateAlbum
+	@RequestMapping(value = "/createAlbum", method = RequestMethod.POST)
+	public String doPost(HttpServletRequest request, HttpServletResponse response, Model model) {
+		if (request.getSession().getAttribute("user") == null) {
+			return "login";
+		} else {
+			String albumCategory = (String) request.getParameter("category");
+			String validationMessage = validateInputData(albumCategory);
+			if (validationMessage.equals(REG_SUCC_MSG)) {
+				try {
+					if (!albumDao.existAlbum(albumCategory,
+							((User) (request.getSession().getAttribute("user"))).getId())) {
+						String albumImage = "defaultAlbumImage.jpg";
+						Long userId = ((User) request.getSession().getAttribute("user")).getId();
+						albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
+						User realUser = (User) request.getSession().getAttribute("user");
+						realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
+						request.getSession().setAttribute("albums", realUser.getAlbumsOfUser());
+					} else {
+						request.setAttribute("albumAlreadyExists", "This album category already exists!");
+						return "createAlbum";
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return "error500";
+				}
+			} else {
+				request.setAttribute("emptyCategoryField", validationMessage);
+				return "createAlbum";
+			}
+			return "album";
+		}
 	}
 
 	private String validateInputData(String category) {

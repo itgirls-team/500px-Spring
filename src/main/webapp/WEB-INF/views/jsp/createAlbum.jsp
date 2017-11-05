@@ -117,7 +117,7 @@ margin:200px;
 			</c:if>
 			<form  action="/createAlbum" method="post" >
 					Add category for your album<br>
-					<input type="text" name="category"><br>
+					<input type="text" name="category" required><br>
 					<input type="submit" value="Create Album"><br>
 			</form>
 		</div>

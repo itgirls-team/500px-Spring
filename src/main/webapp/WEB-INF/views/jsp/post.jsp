@@ -191,7 +191,7 @@ text-align:center;
 			 --%>
 			 <h5> Comments : </h5> <br>
 			<p>Add comment</p><br>
-			<textarea id="commentdesc" rows="2"></textarea><br>
+			<textarea id="commentdesc" rows="2" required></textarea><br>
 			<button onclick="postComment()">Submit comment</button><br>
 			<table border="1" id="commentstable"> 
 				<c:forEach items="${sessionScope.post.commentsOfPost}" var="comment">

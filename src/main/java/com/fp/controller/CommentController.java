@@ -32,6 +32,8 @@ import com.fp.model.User;
 @RequestMapping(value = "/comment")
 public class CommentController {
 
+	private static final String REG_SUCC_MSG = "Comment add successful";
+	
 	@Autowired
 	private DbManager manager;
 	@Autowired
@@ -257,4 +259,13 @@ public class CommentController {
 		CommentDto dto = new CommentDto(commentId, userDto, post.getId(), dtoLikers, dtoDislikers);
 		return new ResponseEntity<CommentDto>(dto, HttpStatus.OK);
 	}
+	
+
+	private String validateInputData(String comment) {
+		if (comment == null || comment.isEmpty()) {
+			return "Please enter comment!";
+		}
+		return REG_SUCC_MSG;
+	}
+
 }

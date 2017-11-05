@@ -134,6 +134,11 @@ public class User implements Serializable {
 	}
 
 	@Override
+	public String toString() {
+		return "User [userName=" + userName + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
