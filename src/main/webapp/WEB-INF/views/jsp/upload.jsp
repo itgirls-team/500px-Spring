@@ -80,7 +80,7 @@ margin:200px;
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>
 				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
 			</div>
-			 <h1 style="color:white;">500px</h1>
+			  <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
       </nav>

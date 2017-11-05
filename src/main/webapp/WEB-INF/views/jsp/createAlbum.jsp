@@ -91,10 +91,9 @@ margin:200px;
           <div class="navbar-header">
            <div class="container-up-right">
 	           <jsp:include page="header.jsp"></jsp:include>
-				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
-				<a class="albums-Btn" style="color:white;" href="/page/albums">Albums</a>	
+				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>		
 			</div>
-			 <h1 style="color:white;">500px</h1>
+			 <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>
         </div>
       </nav>
