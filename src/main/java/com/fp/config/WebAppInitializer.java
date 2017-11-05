@@ -55,12 +55,12 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 														// Beyond that size
 														// spring will throw
 														// exception.
-	private static final long MAX_REQUEST_SIZE = 20971520; // 20MB : Total
+	private static final long MAX_REQUEST_SIZE = 209715200; // 20MB : Total
 															// request size
 															// containing Multi
 															// part.
 
-	private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after
+	private static final int FILE_SIZE_THRESHOLD = 209715200; // Size threshold after
 														// which files will be
 														// written to disk
 

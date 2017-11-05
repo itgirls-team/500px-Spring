@@ -250,7 +250,6 @@ public class CommentController {
 		}
 		comment.setUsersWhoDislikeComment(dislikersUpdated); // updating session
 																// state
-
 		// transform as DTO
 		UserDto userDto = loggedUser.dto();
 		List<UserDto> dtoLikers = likersUpdated.stream().map(userLiker -> userLiker.dto()).collect(Collectors.toList());
@@ -260,7 +259,6 @@ public class CommentController {
 		return new ResponseEntity<CommentDto>(dto, HttpStatus.OK);
 	}
 	
-
 	private String validateInputData(String comment) {
 		if (comment == null || comment.isEmpty()) {
 			return "Please enter comment!";

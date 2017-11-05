@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -143,10 +143,7 @@ height:150%;
 	    <hr class="sectionTitleRule">
 	    <hr class="sectionTitleRule2">
 	    <div class="section1Content">
-	    <img id="profilePicture"
-		src="/avatar?profilePicture=${searchUser.profilePicture}"
-		style="width: 140px; height: 140px; border-radius: 50%;">
-		 <c:if test = "${!isFollowing}">
+	     <c:if test = "${!isFollowing}">
 		<form action="/followInAnotherPage" method="POST">
 			<!-- <input style=" font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;"  type="submit"  value="Follow" /> -->
 			<button style="font-size : 10px; width: 70px; height: 30px; border-radius: 50%; background-color: #6495ED;" type="submit" value="Unfollow"> Follow </button>
@@ -175,6 +172,7 @@ height:150%;
 	  </section>        
     </section>
      </div>
+	 </div>
  <div class="main">
 	<div id="inner">
 		<form class="forms" action="/albums">

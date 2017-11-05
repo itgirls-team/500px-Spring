@@ -66,7 +66,7 @@ public class SearchController {
 							return "posts";
 						}
 						else{
-							request.setAttribute("noTag"," don`t have tag with this word :(");
+							request.setAttribute("noTag", "don`t have tag with this word :( ");
 							return "noFound";
 						}
 					}

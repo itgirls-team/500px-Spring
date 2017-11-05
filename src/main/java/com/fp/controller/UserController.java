@@ -104,7 +104,6 @@ public class UserController {
 				userDao.insertUser(userName, password, email, firstName, lastName, description, avatarUrl);
 				User user = new User(userName, password, email, firstName, lastName, description, avatarUrl);
 				request.getSession().setAttribute("user", user);
-				//loadFollowedUser(request);
 				return "main";
 			} catch (SQLException e) {
 				e.printStackTrace();
