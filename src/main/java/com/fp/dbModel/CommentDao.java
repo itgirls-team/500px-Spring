@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fp.model.Comment;
-import com.fp.model.Post;
 import com.fp.model.User;
 
 @Component
@@ -25,10 +24,10 @@ public class CommentDao {
 	private static final String LIKE_COMMENT = "INSERT INTO users_like_comments (user_id,comment_id) VALUES (?,?)";
 	private static final String REMOVE_COMMENTS_LIKES = "DELETE FROM users_like_comments WHERE comment_id = ?";
 	private static final String REMOVE_COMMENTS_DISLIKES = "DELETE FROM users_dislike_comments WHERE comment_id = ?";
-	
+
 	@Autowired
 	private DbManager manager;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -327,7 +326,6 @@ public class CommentDao {
 	}
 
 	public String getUserName(long commentId, long userId) {
-		System.out.println("VLIZASH LI TUK????");
 		PreparedStatement ps;
 		String userName = null;
 		try {
@@ -351,5 +349,5 @@ public class CommentDao {
 		}
 		return userName;
 	}
-	
+
 }

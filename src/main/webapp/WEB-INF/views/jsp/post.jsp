@@ -39,7 +39,7 @@
     <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     
     <style>
@@ -114,7 +114,7 @@ font-weight: bold;
            <div class="container-up-right">
 	           <jsp:include page="header.jsp"></jsp:include>
 				<a class="home-Btn" style="color:white;" href="/page/main">Home</a>	
-				<a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	
+				<!-- <a class="posts-Btn" style="color:white;" href="/page/posts">Posts</a>	 -->
 			</div>
 			 <a href="/newsfeed"><h1 style="color:white;">500px</h1></a>
 		</div>

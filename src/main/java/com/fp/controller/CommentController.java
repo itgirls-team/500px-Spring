@@ -45,14 +45,13 @@ public class CommentController {
 	@RequestMapping(value = "/addComment", method = RequestMethod.POST)
 	public ResponseEntity addComment(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@RequestParam("postId") Long postId, @RequestParam("commenttxt") String description) {
-		// check if user is logged
-		// check if text is empty,null
-		// if sth is wring set status!=200
-		// update sessionScope.post.commentsOfPost after insert in db
 		description = HtmlUtils.htmlEscape(description.trim());
 		Comment comment = null;
 		Long userId = ((User) session.getAttribute("user")).getId();
 		String userName = ((User) session.getAttribute("user")).getUserName();
+		if (!validateInputData(description)) {
+			return new ResponseEntity<String>("Please enter text for your comment!", HttpStatus.BAD_REQUEST);
+		}
 		if (session.getAttribute("user") != null) {
 			try {
 				comment = commentDao.addComment(userId, description, postId);
@@ -71,8 +70,7 @@ public class CommentController {
 
 			((Post) session.getAttribute("post")).setCommentsOfPost(comments);
 		} else {
-			// return "login"; // TODO return RespEntity with status and error
-			// message
+			return new ResponseEntity<String>("Sorry, you must log in to add comment!!", HttpStatus.BAD_REQUEST);
 		}
 
 		CommentDto dto = null;
@@ -86,13 +84,12 @@ public class CommentController {
 	@RequestMapping(value = "/likeComment", method = RequestMethod.POST)
 	public ResponseEntity likeComment(@RequestParam("commentId") Long commentId, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		// TODO validate input data
-
+		if (commentId == null) {
+			return new ResponseEntity<String>("Invalid data", HttpStatus.BAD_REQUEST);
+		}
 		Post post = ((Post) session.getAttribute("post"));
 		if (session.getAttribute("user") == null) {
-			// return "login"; // TODO !!!! return RespEntity with status and
-			// error message
-			return null;
+			return new ResponseEntity<String>("Sorry, you must log in to like this comment!", HttpStatus.BAD_REQUEST);
 		}
 		User loggedUser = (User) session.getAttribute("user");
 		Long userId = loggedUser.getId();
@@ -174,13 +171,14 @@ public class CommentController {
 	@RequestMapping(value = "/dislikeComment", method = RequestMethod.POST)
 	public ResponseEntity disLikeComment(@RequestParam("commentId") Long commentId, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		// TODO validate input data
+		if (commentId == null) {
+			return new ResponseEntity<String>("Invalid data", HttpStatus.BAD_REQUEST);
+		}
 
 		Post post = ((Post) session.getAttribute("post"));
 		if (session.getAttribute("user") == null) {
-			// return "login"; // TODO !!!! return RespEntity with status and
-			// error message
-			return null;
+			return new ResponseEntity<String>("Sorry, you must log in to dislike this comment!",
+					HttpStatus.BAD_REQUEST);
 		}
 		User loggedUser = (User) session.getAttribute("user");
 		Long userId = loggedUser.getId();
@@ -259,11 +257,11 @@ public class CommentController {
 		return new ResponseEntity<CommentDto>(dto, HttpStatus.OK);
 	}
 
-	private String validateInputData(String comment) {
-		if (comment == null || comment.isEmpty()) {
-			return "Please enter comment!";
+	private boolean validateInputData(String comment) {
+		if (comment == null || comment.isEmpty() || comment.trim().equals("")) {
+			return false;
 		}
-		return REG_SUCC_MSG;
+		return true;
 	}
 
 }

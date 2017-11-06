@@ -32,7 +32,6 @@ public class UserDao {
 		ps.setString(3, email);
 		ps.setString(4, userName);
 		ps.setString(5, Encrypter.encrypt(password));
-		// ps.setString(5, password);
 		ps.setDate(6, Date.valueOf(LocalDate.now()));
 		ps.setString(7, pictureName);
 		ps.setString(8, description);
@@ -114,10 +113,6 @@ public class UserDao {
 					rs.getString("email"), rs.getString("username"), rs.getDate("register_date").toLocalDate(),
 					rs.getString("profile_picture"), rs.getString("description"));
 
-			// Set<Album> albumsOfUser =
-			// AlbumDao.getInstance().getAllAlbumFromUser(user);
-			// user.setAlbumsOfUser(albumsOfUser);
-
 			Set<User> followers = getAllFollowersForUser(username);
 			user.setFollowers(followers);
 
@@ -146,10 +141,6 @@ public class UserDao {
 			user = new User(rs.getLong("user_id"), rs.getString("first_name"), rs.getString("last_name"),
 					rs.getString("email"), rs.getString("username"), rs.getDate("register_date").toLocalDate(),
 					rs.getString("profile_picture"), rs.getString("description"));
-
-			// Set<Album> albumsOfUser =
-			// AlbumDao.getInstance().getAllAlbumFromUser(user);
-			// user.setAlbumsOfUser(albumsOfUser);
 
 			Set<User> followers = getAllFollowersForUser(user.getUserName());
 			user.setFollowers(followers);
@@ -433,7 +424,6 @@ public class UserDao {
 
 		String actualPass = rs.getString(1);
 		if (Encrypter.encrypt(password).equals(actualPass)) {
-			// if (password.equals(actualPass)) {
 			passMatchUsername = true;
 		}
 		if (ps != null) {

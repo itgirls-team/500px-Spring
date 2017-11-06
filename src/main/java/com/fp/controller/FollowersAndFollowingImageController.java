@@ -27,7 +27,6 @@ public class FollowersAndFollowingImageController {
 		if (id == null) {
 			// TODO return response with error
 		}
-
 		String pic = null;
 		try {
 			pic = userDao.getUserPic(id);

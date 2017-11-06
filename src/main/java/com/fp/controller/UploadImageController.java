@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.AlbumDao;
@@ -37,6 +38,7 @@ import com.fp.model.User;
 class UploadImageController {
 
 	private static final String REG_SUCC_MSG = "Post upload successful";
+	private static final String[] availablePictureTypes = { ".jpeg", ".gif", ".png", ".jpg" };
 
 	@Autowired
 	PostDao postDao;
@@ -65,14 +67,28 @@ class UploadImageController {
 				MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
 				MimeType type = allTypes.forName(file.getContentType());
 				String ext = type.getExtension();
+				boolean extMatches = false;
+				for (String typeOfPic : availablePictureTypes) {
+					if (typeOfPic.equals(ext)) {
+						extMatches = true;
+						break;
+					}
+				}
+				if (!extMatches) {
+					request.setAttribute("error", "Invalid picture type!");
+					return "upload";
+				}
 				File f = new File(WebAppInitializer.LOCATION + File.separator + file.getOriginalFilename());
 				String[] inputTags = request.getParameter("tags").split(",");
 				Set<Tag> tags = new HashSet<>();
 				for (String string : inputTags) {
+					string = HtmlUtils.htmlEscape(string.trim());
 					tags.add(new Tag(string));
 				}
 				long albumId = (long) ses.getAttribute("albumId");
 				String description = (String) request.getParameter("description");
+				// prevent sql injection of all inputs
+				description = HtmlUtils.htmlEscape(description.trim());
 				String validationMessage = validateInputData(description);
 				if (validationMessage.equals(REG_SUCC_MSG)) {
 					Post post = new Post(file.getOriginalFilename(), description, tags, albumId,
@@ -119,7 +135,7 @@ class UploadImageController {
 	}
 
 	private String validateInputData(String description) {
-		if (description == null || description.isEmpty()) {
+		if (description == null || description.isEmpty() || description.trim().equals("")) {
 			return "Please fill all the required fields!";
 		}
 		return REG_SUCC_MSG;

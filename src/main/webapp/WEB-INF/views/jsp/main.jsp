@@ -21,7 +21,7 @@
     <script src="/static/js/jquery.simple-text-rotator.min.js"></script>
     <script src="/static/js/plugins.js"></script>
     <script src="/static/js/main.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="/static/js/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     
       <!-- Default stylesheets-->
@@ -106,6 +106,10 @@ top: 100px;
 left: 0px;
 width: 300px;
 height:150%;
+}
+btn btn-d btn-circle:hover input{ 
+   color: yellow;
+}
 }
 </style>
 </head>

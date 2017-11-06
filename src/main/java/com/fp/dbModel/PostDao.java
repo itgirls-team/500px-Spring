@@ -322,13 +322,9 @@ public class PostDao {
 			int countLikes = rs.getInt("counts_likes");
 			int countDislikes = rs.getInt("counts_dislikes");
 			Timestamp date = rs.getTimestamp("date_upload");
-			// OK
 			Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
-			// OK
 			Set<Comment> commentsOfPost = commentDao.getAllComments(rs.getLong("post_id"));
-			// OK
 			Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
-			// OK
 			Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 
 			posts.add(new Post(postId, url, description, countLikes, countDislikes, tags, albumId, commentsOfPost,
@@ -347,13 +343,9 @@ public class PostDao {
 		int countLikes = rs.getInt("counts_likes");
 		int countDislikes = rs.getInt("counts_dislikes");
 		Timestamp date = rs.getTimestamp("date_upload");
-		// OK
 		Set<Tag> tags = tagDao.getAllTagsFromPost(postId);
-		// OK
 		Set<Comment> commentsOfPost = commentDao.getAllComments(rs.getLong("post_id"));
-		// OK
 		Set<User> usersWhoLike = this.getAllUsersWhoLikePost(postId);
-		// OK
 		Set<User> usersWhoDislike = this.getAllUsersWhoDislikePost(postId);
 
 		Post post = new Post(postId, url, description, countLikes, countDislikes, tags, commentsOfPost, usersWhoLike,

@@ -6,7 +6,7 @@
 <head>
 
 <link href="<c:url value="/static/css/styleError.css" />" rel="stylesheet" type="text/css">
-<script src="https://code.jquery.com/jquery-1.8.3.js" type = "text/javascript"></script>
+<script src="/static/js/jquery-1.8.3.js" type = "text/javascript"></script>
 
 </head>
 	<body id="errorpage" class="error404">

@@ -3,11 +3,10 @@ function postComment() {
 	var commentText= document.getElementById("commentdesc").value;
 	
 	 var request = new XMLHttpRequest();
-	 if (commentText==null || commentText == '') {
+	 if (commentText==null || commentText.trim() == '') {
 			alert('Please enter text for your comment!');
 			return;
 		}
-	 
 		request.onload = function() {
 			//when response is received
 			if (this.readyState == 4 && this.status == 200) {
@@ -38,28 +37,29 @@ function postComment() {
 
 function likeComment(commentId) {
 	var request = new XMLHttpRequest();
-	request.onreadystatechange = function() {
+	request.onload = function() {
 		//when response is received
 		if (this.readyState == 4 && this.status == 200) {
 			renderNewCommentInTable(this, commentId);
 		}
-		else if (this.readyState == 4 && this.status == 401) {
-			alert("Sorry, you must log in to like this comment!");
-		}	
+		else {
+			var mesage = this.response;
+			alert(mesage);
+		}
 	}
 	request.open("POST", "/comment/likeComment?commentId="+commentId, true);
 	request.send();
 }
 function disLikeComment(commentId) {
 	var request = new XMLHttpRequest();
-	request.onreadystatechange = function() {
+	request.onload = function() {
 		//when response is received
 		if (this.readyState == 4 && this.status == 200) {
 			renderNewCommentInTable(this, commentId);
 		}
-		else
-		if (this.readyState == 4 && this.status == 401) {
-			alert("Sorry, you must log in to like this comment!");
+		else {
+			var mesage = this.response;
+			alert(mesage);
 		}	
 	}
 	request.open("POST", "/comment/dislikeComment?commentId="+commentId, true);

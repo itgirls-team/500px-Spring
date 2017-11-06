@@ -21,7 +21,6 @@ public class AlbumDao {
 
 	private static final String CREATE_ALBUM = "INSERT INTO albums (category, date_upload, picture, user_id ) VALUES (?,?,?,?)";
 	private static final String SELECT_ALBUMS_BY_USER = "SELECT album_id, category, picture, user_id, date_upload FROM albums WHERE user_id = ?";
-	//private static final String SELECT_POST_FROM_ALBUM = "SELECT post_id, image, counts_likes, counts_dislikes, description FROM posts WHERE album_id = ?";
 	private static final String DELETE_POSTS_FROM_ALBUM = "DELETE FROM posts WHERE album_id = ?";
 	private static final String DELETE_ALBUM = "DELETE FROM albums WHERE album_id =?";
 	private static final String SELECT_ALBUM_BY_ALBUM_ID = "SELECT album_id,category,date_upload,picture,user_id FROM albums WHERE album_id = ?";

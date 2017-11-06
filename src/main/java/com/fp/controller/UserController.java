@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import com.fp.config.WebAppInitializer;
 import com.fp.dbModel.DbManager;
@@ -42,7 +43,7 @@ public class UserController {
 			.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	private static final Pattern VALID_USERNAME = Pattern.compile("^[a-zA-Z0-9._-]{3,}$", Pattern.CASE_INSENSITIVE);
 	private static final String REG_SUCC_MSG = "Registration successful";
-
+	private static final String[] availablePictureTypes = { ".jpeg", ".gif", ".png", ".jpg" };
 	@Autowired
 	private DbManager manager;
 	@Autowired
@@ -73,27 +74,14 @@ public class UserController {
 		String lastName = request.getParameter("lastname");
 		String description = request.getParameter("description");
 		String avatarUrl = "";
-		try {
-			MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
-			MimeType type = allTypes.forName(file.getContentType());
-			String ext = type.getExtension();
-			File f = new File(WebAppInitializer.LOCATION + File.separator + userName + ext);
-			file.transferTo(f);
-			if (f.length() == 0) {
-				avatarUrl = "default.jpg";
-			} else {
-				avatarUrl = userName + ext;
-			}
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			return "error500";
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "error500";
-		} catch (MimeTypeException e) {
-			e.printStackTrace();
-			return "error500";
-		}
+		// prevent sql injection of all inputs
+		userName = HtmlUtils.htmlEscape(userName.trim());
+		password = HtmlUtils.htmlEscape(password.trim());
+		confirmPassword = HtmlUtils.htmlEscape(confirmPassword.trim());
+		email = HtmlUtils.htmlEscape(email.trim());
+		firstName = HtmlUtils.htmlEscape(firstName.trim());
+		lastName = HtmlUtils.htmlEscape(lastName.trim());
+		description = HtmlUtils.htmlEscape(description.trim());
 
 		String validationMessage = validateRegisterData(userName, password, confirmPassword, email, firstName,
 				lastName);
@@ -101,14 +89,49 @@ public class UserController {
 		// Registration of user
 		if (validationMessage.equals(REG_SUCC_MSG)) {
 			try {
+				MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
+				MimeType type = allTypes.forName(file.getContentType());
+				String ext = type.getExtension();
+				boolean extMatches = false;
+				for (String typeOfPic : availablePictureTypes) {
+					if (typeOfPic.equals(ext)) {
+						extMatches = true;
+						break;
+					}
+				}
+				if (!extMatches) {
+					request.setAttribute("error", "Invalid picture type!");
+					return "register";
+				}
+				File f = new File(WebAppInitializer.LOCATION + File.separator + userName + ext);
+				file.transferTo(f);
+				if (f.length() == 0) {
+					avatarUrl = "default.jpg";
+				} else {
+					avatarUrl = userName + ext;
+				}
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				return "error500";
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "error500";
+			} catch (MimeTypeException e) {
+				e.printStackTrace();
+				return "error500";
+			}
+			try {
 				userDao.insertUser(userName, password, email, firstName, lastName, description, avatarUrl);
-				User user = new User(userName, password, email, firstName, lastName, description, avatarUrl);
+				User user = userDao.getUser(userName);
+				// User user = new User(userName, password, email, firstName,
+				// lastName, description, avatarUrl);
 				request.getSession().setAttribute("user", user);
 				return "main";
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "error500";
 			}
+
 		} else {
 			request.setAttribute("error", validationMessage);
 			return "register";
@@ -119,6 +142,9 @@ public class UserController {
 	public String login(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		// prevent sql injection of all inputs
+		username = HtmlUtils.htmlEscape(username.trim());
+		password = HtmlUtils.htmlEscape(password.trim());
 		try {
 			if (validateLogInData(username, password)) {
 				// login
@@ -127,8 +153,6 @@ public class UserController {
 				request.getSession().setAttribute("logged", true);
 				return "main";
 			} else {
-				// redirect to error page or to login.html again with popup for
-				// error
 				request.setAttribute("error", "username or password mismatch!");
 				return "login";
 			}
@@ -230,9 +254,6 @@ public class UserController {
 						break;
 					}
 				}
-				// request.getSession().setAttribute("isFollowed", followers);
-				// // TODO no need for resetting
-
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "error500";
@@ -410,7 +431,9 @@ public class UserController {
 				return "This username already exists!";
 			}
 		} catch (SQLException e) {
-			return "There is problem with the prepared statement";
+			// return "There is problem with the prepared statement";
+			e.printStackTrace();
+			return "error500";
 		}
 		return REG_SUCC_MSG;
 	}
@@ -419,5 +442,4 @@ public class UserController {
 	public String handleError() {
 		return "error404";
 	}
-
 }

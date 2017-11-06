@@ -9,7 +9,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,45 +21,50 @@ import com.fp.model.Post;
 
 @Controller
 public class OrderController {
-	
-	@Autowired 
+
+	@Autowired
 	PostDao postDao;
 
-	@RequestMapping(value="/posts/{param}", method = RequestMethod.GET)
-	public String sortAlbumPosts(HttpSession session, Model model, @PathVariable("param") String param,HttpServletRequest request) {
+	@RequestMapping(value = "/posts/{param}", method = RequestMethod.GET)
+	public String sortAlbumPosts(HttpSession session, Model model, @PathVariable("param") String param,
+			HttpServletRequest request) {
 		if (request.getSession().getAttribute("user") == null) {
 			return "login";
-		} else{
-		model.addAttribute("currentPage", "posts");
-		sortPosts(param,session,model);
-		return "posts";
+		} else {
+			model.addAttribute("currentPage", "posts");
+			sortPosts(param, session, model);
+			return "posts";
 		}
 	}
-	@RequestMapping(value="/search/{param}", method = RequestMethod.GET)
-	public String sortSearchPosts(HttpSession session, Model model, @PathVariable("param") String param,HttpServletRequest request){
+
+	@RequestMapping(value = "/search/{param}", method = RequestMethod.GET)
+	public String sortSearchPosts(HttpSession session, Model model, @PathVariable("param") String param,
+			HttpServletRequest request) {
 		if (request.getSession().getAttribute("user") == null) {
 			return "login";
-		} else{
-		model.addAttribute("currentPage", "search");
-		sortPosts(param,session,model);
-		return "search";
+		} else {
+			model.addAttribute("currentPage", "search");
+			sortPosts(param, session, model);
+			return "search";
 		}
 	}
-	@RequestMapping(value="/newsfeed/{param}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/newsfeed/{param}", method = RequestMethod.GET)
 	public String sortPostsBySearchUser(HttpSession session, Model model, @PathVariable("param") String param,
-										HttpServletRequest request){
+			HttpServletRequest request) {
 		if (request.getSession().getAttribute("user") == null) {
 			return "login";
-		} else{
-		model.addAttribute("sortPost", true);
-		model.addAttribute("hideUploadPost", true);
-		model.addAttribute("currentPage", "newsfeed");
-		sortPosts(param,session,model);
-		return "posts";
+		} else {
+			model.addAttribute("sortPost", true);
+			model.addAttribute("hideUploadPost", true);
+			model.addAttribute("currentPage", "newsfeed");
+			sortPosts(param, session, model);
+			return "posts";
 		}
 	}
-	private void sortPosts(String param,HttpSession session,Model model){
-		List<Post> posts = new ArrayList<> ((HashSet<Post>)session.getAttribute("posts"));
+
+	private void sortPosts(String param, HttpSession session, Model model) {
+		List<Post> posts = new ArrayList<>((HashSet<Post>) session.getAttribute("posts"));
 		switch (param) {
 		case "date":
 			sortByDate(posts);
@@ -68,7 +72,7 @@ public class OrderController {
 			break;
 		case "like":
 			sortByLikes(posts);
-			session.setAttribute("sort", "like");			
+			session.setAttribute("sort", "like");
 			break;
 		default:
 			sortByDate(posts);
@@ -77,8 +81,8 @@ public class OrderController {
 		}
 		model.addAttribute("posts", posts);
 	}
-	
-	private void sortByLikes(List<Post> posts){
+
+	private void sortByLikes(List<Post> posts) {
 		Collections.sort(posts, new Comparator<Post>() {
 			@Override
 			public int compare(Post o1, Post o2) {
@@ -86,8 +90,8 @@ public class OrderController {
 			}
 		});
 	}
-	
-	private void sortByDate(List<Post> posts){
+
+	private void sortByDate(List<Post> posts) {
 		Collections.sort(posts, new Comparator<Post>() {
 			@Override
 			public int compare(Post o1, Post o2) {
@@ -95,6 +99,5 @@ public class OrderController {
 			}
 		});
 	}
-	
 
 }

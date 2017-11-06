@@ -11,10 +11,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.HtmlUtils;
 
 import com.fp.dbModel.TagDao;
 import com.fp.dbModel.UserDao;
@@ -35,26 +34,28 @@ public class SearchController {
 			return "login";
 		} else {
 			String search = (String) request.getParameter("search");
+			search = HtmlUtils.htmlEscape(search.trim());
 			model.addAttribute("hideUploadPost", true);
 			try {
 				if (search != null) {
+					if (search.trim().isEmpty()) {
+						request.setAttribute("noTag", "don`t have tag with this word :( ");
+						return "noFound";
+					}
 					if (search.charAt(0) == '@') {
 						User searchUser = userDao.getUser(search.substring(1, search.length()));
 						User loggedUser = (User) (request.getSession().getAttribute("user"));
 						if (searchUser != null) {
 							session.setAttribute("searchUser", searchUser);
-							Set<User> followed = userDao
-									.getAllFollowedForUser(loggedUser.getUserName());
-							if(followed.contains(searchUser)){
-								model.addAttribute("isFollowing",true);
-							}
-							else{
-								model.addAttribute("isFollowing",false);
+							Set<User> followed = userDao.getAllFollowedForUser(loggedUser.getUserName());
+							if (followed.contains(searchUser)) {
+								model.addAttribute("isFollowing", true);
+							} else {
+								model.addAttribute("isFollowing", false);
 							}
 							return "profile";
-						}
-						else{
-							request.setAttribute("noUser"," don`t have user with this username :(");
+						} else {
+							request.setAttribute("noUser", " don`t have user with this username :(");
 							return "noFound";
 						}
 					} else {
@@ -64,8 +65,7 @@ public class SearchController {
 							request.getSession().setAttribute("posts", posts);
 							model.addAttribute("currentPage", "search");
 							return "posts";
-						}
-						else{
+						} else {
 							request.setAttribute("noTag", "don`t have tag with this word :( ");
 							return "noFound";
 						}
@@ -78,5 +78,5 @@ public class SearchController {
 			return "search";
 		}
 	}
-	
+
 }

@@ -48,15 +48,16 @@ public class PostController {
 	public String showPost(HttpSession session, HttpServletRequest request) {
 		if (request.getSession().getAttribute("user") == null) {
 			return "login";
-		} else{
-		try {
-			long postId = Long.parseLong(request.getParameter("postId"));
-			request.getSession().setAttribute("postId", postId);
-			request.getSession().setAttribute("post", postDao.getPost(postId));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return "post";
+		} else {
+			try {
+				long postId = Long.parseLong(request.getParameter("postId"));
+				request.getSession().setAttribute("postId", postId);
+				request.getSession().setAttribute("post", postDao.getPost(postId));
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
+			}
+			return "post";
 		}
 	}
 
@@ -65,23 +66,24 @@ public class PostController {
 	public String showAllPosts(HttpSession session, HttpServletRequest request, Model model) {
 		if (request.getSession().getAttribute("user") == null) {
 			return "login";
-		} else{
-		try {
-			if (session.getAttribute("searchUser") != null) {
-				model.addAttribute("hideUploadPost", true);
+		} else {
+			try {
+				if (session.getAttribute("searchUser") != null) {
+					model.addAttribute("hideUploadPost", true);
+				}
+				long albumId = Long.parseLong(request.getParameter("albumId"));
+				Album album = albumDao.getAlbum(albumId);
+				album.setPosts(postDao.getAllPostsFromAlbum(albumId));
+				session.setAttribute("album", album);
+				session.setAttribute("albumId", albumId);
+				model.addAttribute("currentPage", "posts");
+				model.addAttribute("hideUploadPost", false);
+				session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "error500";
 			}
-			long albumId = Long.parseLong(request.getParameter("albumId"));
-			Album album = albumDao.getAlbum(albumId);
-			album.setPosts(postDao.getAllPostsFromAlbum(albumId));
-			session.setAttribute("album", album);
-			session.setAttribute("albumId", albumId);
-			model.addAttribute("currentPage", "posts");
-			session.setAttribute("posts", postDao.getAllPostsFromAlbum(albumId));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error500";
-		}
-		return "posts";
+			return "posts";
 		}
 	}
 
@@ -112,6 +114,9 @@ public class PostController {
 	@RequestMapping(value = "/likePost", method = RequestMethod.POST)
 	public ResponseEntity likePost(@RequestParam("postId") Long postId, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) {
+		if (postId == null) {
+			return new ResponseEntity<String>("Invalid data", HttpStatus.BAD_REQUEST);
+		}
 		Long userId = ((User) session.getAttribute("user")).getId();
 		Post post = ((Post) session.getAttribute("post"));
 		Set<User> likers = post.getUsersWhoLike();
@@ -192,8 +197,7 @@ public class PostController {
 			}
 			post.setUsersWhoLike(likersUpdated);
 		} else {
-			// return "login"; // TODO return RespEntity with status and error
-			// message
+			return new ResponseEntity<String>("Sorry, you must log in to like this post!", HttpStatus.BAD_REQUEST);
 		}
 		request.getSession().setAttribute("post", post);
 		PostDto dto = null;
@@ -208,6 +212,9 @@ public class PostController {
 	@RequestMapping(value = "/disLikePost", method = RequestMethod.POST)
 	public ResponseEntity disLikePost(@RequestParam("postId") Long postId, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
+		if (postId == null) {
+			return new ResponseEntity<String>("Invalid data", HttpStatus.BAD_REQUEST);
+		}
 		Long userId = ((User) session.getAttribute("user")).getId();
 		Post post = ((Post) session.getAttribute("post"));
 		Set<User> likers = post.getUsersWhoLike();
@@ -289,8 +296,7 @@ public class PostController {
 			}
 			post.setUsersWhoDislike(usersDislikeNew);
 		} else {
-			// return "login"; // TODO return RespEntity with status and error
-			// message
+			return new ResponseEntity<String>("Sorry, you must log in to dislike this post!", HttpStatus.BAD_REQUEST);
 		}
 		request.getSession().setAttribute("post", post);
 		PostDto dto = null;

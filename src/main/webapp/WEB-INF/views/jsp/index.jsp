@@ -77,6 +77,17 @@
                   <p>500px is the place for photographers to expand their network,improve their skills, and make new friends doing what they love.</p>
                   <p>Phone: +1 234 567 89 10</p>Fax: +1 234 567 89 10
                   <p>Email:<a href="#">500px@gmail.com</a></p>
+                  <!--page footer-->
+			        <div id="footer">
+			            <div class="container">
+			                <ul class="copyright_info">
+			                    <li>&copy; 2017 500px</li>
+								<li>&middot;</li>
+								<li>Made by Snezhi and Vesi.</li>
+			                </ul>
+							<!--social links-->
+			            </div>
+			        </div>
                 </div>
               </div>
             </div>

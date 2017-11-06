@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.util.HtmlUtils;
 
 import com.fp.dbModel.AlbumDao;
 import com.fp.dbModel.UserDao;
@@ -60,13 +61,13 @@ public class AlbumController {
 			return "login";
 		} else {
 			String albumCategory = (String) request.getParameter("category");
+			albumCategory = HtmlUtils.htmlEscape(albumCategory.trim());
 			String validationMessage = validateInputData(albumCategory);
+			Long userId = ((User) request.getSession().getAttribute("user")).getId();
 			if (validationMessage.equals(REG_SUCC_MSG)) {
 				try {
-					if (!albumDao.existAlbum(albumCategory,
-							((User) (request.getSession().getAttribute("user"))).getId())) {
+					if (!albumDao.existAlbum(albumCategory, userId)) {
 						String albumImage = "defaultAlbumImage.jpg";
-						Long userId = ((User) request.getSession().getAttribute("user")).getId();
 						albumDao.createAlbum(new Album(albumCategory, albumImage, userId));
 						User realUser = (User) request.getSession().getAttribute("user");
 						realUser.setAlbumsOfUser(albumDao.getAllAlbumFromUser(realUser.getUserName()));
@@ -89,7 +90,7 @@ public class AlbumController {
 	}
 
 	private String validateInputData(String category) {
-		if (category == null || category.isEmpty()) {
+		if (category == null || category.isEmpty() || category.trim().equals("")) {
 			return "Please fill all the required fields!";
 		}
 		return REG_SUCC_MSG;

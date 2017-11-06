@@ -39,7 +39,7 @@
         <link href="/static/css/styles.css" rel="stylesheet">
     <link id="color-scheme" href="/static/css/default.css" rel="stylesheet"> 
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     
 <title>Upload post</title>
@@ -95,6 +95,9 @@ margin:200px;
         
          <div class="form"> 
            	<h1>Upload file</h1>
+           	<c:if test="${ requestScope.error != null }">
+			<h1 style="color: red">Sorry, upload of post unsuccessful. Reason: ${requestScope.error }</h1>
+			</c:if>
            	<c:if test="${ requestScope.emptyDescriptionField != null }">
 					<h1 style="color: red">Sorry, upload new post unsuccessful. Reason: ${requestScope.emptyDescriptionField }</h1>
 			</c:if>
