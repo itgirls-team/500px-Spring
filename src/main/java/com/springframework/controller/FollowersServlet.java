@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
+import com.springframework.model.User;
+
+
 
 @WebServlet("/followers")
 public class FollowersServlet extends HttpServlet {
@@ -44,12 +46,12 @@ public class FollowersServlet extends HttpServlet {
 		Set<User> followers;
 		Map<User, Boolean> userFollowersAreFollowed = new HashMap<User, Boolean>();
 		try {
-			followers = UserDao.getInstance(connection)
+			followers = UserDao.getInstance()
 					.getAllFollowersForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
 			request.getSession().setAttribute("followers", followers);
 
 			for (User follower : followers) {
-				userFollowerIsFollowed = UserDao.getInstance(connection).userFollowerIsFollowed(
+				userFollowerIsFollowed = UserDao.getInstance().userFollowerIsFollowed(
 						((User) (request.getSession().getAttribute("user"))).getUserName(), follower.getUserName());
 				userFollowersAreFollowed.put(follower, userFollowerIsFollowed);
 			}

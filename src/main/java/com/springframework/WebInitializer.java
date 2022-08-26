@@ -15,8 +15,8 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return null;
     }
   
-    @Override
-    protected String[] getServletMappings() {
-        return new String[] { "/", "*.html", "*.pdf" };
-    }
+    //@Override
+    //protected String[] getServletMappings() {
+    //    return new String[] { "/", "*.html", "*.pdf" };
+    //}
 }

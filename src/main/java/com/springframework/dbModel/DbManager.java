@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 public class DbManager {
 
 	private Connection con;
-
+	private static DbManager instance;
+	
 	private DbManager() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -30,6 +31,13 @@ public class DbManager {
 			System.out.println("Ops");
 		}
 
+	}
+	
+	public synchronized static DbManager getInstance() {
+		if (instance == null) {
+			instance = new DbManager();
+		}
+		return instance;
 	}
 
 	public Connection getConnection() {

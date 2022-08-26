@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,13 +10,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
+import com.springframework.model.User;
+
+
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Connection connection;
 
 	@Override
@@ -41,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 			if (validateLogInData(username, password)) {
 				// login
-				User user = UserDao.getInstance(connection).getUser(username);
+				User user = UserDao.getInstance().getUser(username);
 				request.getSession().setAttribute("user", user);
 				request.getSession().setAttribute("logged", true);
 				response.sendRedirect("main.jsp");
@@ -60,8 +66,8 @@ public class LoginServlet extends HttpServlet {
 
 	private boolean validateLogInData(String username, String password) throws SQLException {
 		if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
-			if (UserDao.getInstance(connection).existUser(username)
-					&& UserDao.getInstance(connection).checkUserPass(username, password)) {
+			if (UserDao.getInstance().existUser(username)
+					&& UserDao.getInstance().checkUserPass(username, password)) {
 				return true;
 			}
 		}

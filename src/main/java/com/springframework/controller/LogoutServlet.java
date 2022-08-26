@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 

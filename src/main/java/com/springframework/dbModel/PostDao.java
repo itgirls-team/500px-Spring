@@ -50,6 +50,15 @@ public class PostDao {
 	private CommentDao commentDao;
 	@Autowired
 	private PostDao postDao;
+	
+	private static PostDao instance;
+	
+	public static synchronized PostDao getInstance(){
+		if(instance == null){
+			instance = new PostDao();
+		}
+		return instance;
+	}
 
 	// insertPost
 	public synchronized void uploadPost(Post p) throws SQLException {

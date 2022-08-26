@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +17,7 @@ import javax.servlet.http.Part;
 
 import com.springframework.dbModel.PostDao;
 import com.springframework.model.Post;
+import com.springframework.model.Tag;
 
 @WebServlet("/UploadPost")
 public class UploadPost extends HttpServlet {

@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
+import com.springframework.model.User;
+
 
 @WebServlet("/avatar")
 public class AvatarServlet extends HttpServlet {

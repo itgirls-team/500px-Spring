@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,12 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.springframework.dbModel.AlbumDao;
 import com.springframework.dbModel.DbManager;
 import com.springframework.dbModel.UserDao;
+import com.springframework.model.User;
 
 @WebServlet("/albums")
 public class AlbumServlet extends HttpServlet {
 
 	private Connection connection;
-
+	private static UserDao instance;
+	
 	@Override
 	public void init() throws ServletException {
 		// open connections
@@ -38,7 +40,7 @@ public class AlbumServlet extends HttpServlet {
 
 		try {
 			User u = (User) request.getSession().getAttribute("user");
-			User realUser = UserDao.getInstance(connection).getUser(u.getUserName());
+			User realUser = UserDao.getInstance().getUser(u.getUserName());
 			realUser.setAlbumsOfUser(AlbumDao.getInstance().getAllAlbumFromUser(realUser.getUserName()));
 			request.getSession().setAttribute("user", realUser);
 		} catch (SQLException e) {
@@ -46,5 +48,7 @@ public class AlbumServlet extends HttpServlet {
 		}
 		request.getRequestDispatcher("album.jsp").forward(request, response);
 	}
+
+	
 
 }

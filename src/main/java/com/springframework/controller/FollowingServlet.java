@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,9 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
+import com.springframework.model.User;
+
 
 @WebServlet("/following")
 public class FollowingServlet extends HttpServlet {
@@ -44,7 +45,7 @@ public class FollowingServlet extends HttpServlet {
 		Set<User> followed;
 		Map<User, Boolean> followedUsersAreFollowed = new HashMap<User, Boolean>();
 		try {
-			followed = UserDao.getInstance(connection)
+			followed = UserDao.getInstance()
 					.getAllFollowedForUser(((User) (request.getSession().getAttribute("user"))).getUserName());
 			request.getSession().setAttribute("followed", followed);
 

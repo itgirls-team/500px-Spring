@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -11,9 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
+import com.springframework.model.User;
+
 
 @WebServlet("/unfollow")
 public class UnfollowServlet extends HttpServlet {
@@ -41,7 +42,7 @@ public class UnfollowServlet extends HttpServlet {
 			String followedUserName = request.getParameter("followedUserName");
 			String pageToRedirect = (String) request.getSession().getAttribute("pageToRedirect");
 			User loggedUser = (User) (request.getSession().getAttribute("user"));
-			UserDao.getInstance(connection).removeFromFollowedUsers(followedUserName, loggedUser.getUserName());
+			UserDao.getInstance().removeFromFollowedUsers(followedUserName, loggedUser.getUserName());
 			Map<User, Boolean> followers = (Map<User, Boolean>) request.getSession().getAttribute("isFollowed");
 			for (Map.Entry<User, Boolean> entry : followers.entrySet()) {
 				if (entry.getKey().getUserName().equals(followedUserName)) {

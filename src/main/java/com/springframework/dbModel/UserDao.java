@@ -20,6 +20,7 @@ public class UserDao {
 
 	@Autowired
 	private DbManager manager;
+	private static UserDao instance;
 
 	public synchronized void insertUser(String userName, String password, String email, String firstName,
 			String lastName, String description, String pictureName) throws SQLException {
@@ -476,5 +477,12 @@ public class UserDao {
 			manager.getConnection().setAutoCommit(true);
 		}
 		return userFollowerIsFollowed;
+	}
+	
+	public static synchronized UserDao getInstance() {
+		if (instance == null) {
+			instance = new UserDao();
+		}
+		return instance;
 	}
 }

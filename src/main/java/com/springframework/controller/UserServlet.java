@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
+
+
 
 @WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
@@ -37,7 +39,7 @@ public class UserServlet extends HttpServlet {
 		String username = req.getParameter("username");
 
 		try {
-			msg = UserDao.getInstance(connection).deleteUser(username);
+			msg = UserDao.getInstance().deleteUser(username);
 		} catch (SQLException e) {
 			msg = "User could not be deleted.Problem with the DB connection.";
 		}

@@ -28,6 +28,8 @@ public class AlbumDao {
 
 	@Autowired
 	private DbManager manager;
+	
+	private static AlbumDao instance;
 
 	// createAlbum
 	public synchronized void createAlbum(Album a) throws SQLException {
@@ -155,5 +157,12 @@ public class AlbumDao {
 		// System.out.println("ops");
 		// }
 	}
-
+	
+	public static synchronized AlbumDao getInstance(){
+		if(instance == null){
+			instance = new AlbumDao();
+		}
+		return instance;
+	}
+	
 }

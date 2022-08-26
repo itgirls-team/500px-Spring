@@ -1,4 +1,4 @@
-package controller;
+package com.springframework.controller;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,9 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import model.User;
-import model.db.DbManager;
-import model.db.UserDao;
+import com.springframework.dbModel.DbManager;
+import com.springframework.dbModel.UserDao;
+import com.springframework.model.User;
+
 
 @WebServlet("/register")
 @MultipartConfig
@@ -78,7 +79,7 @@ public class RegisterServlet extends HttpServlet {
 		// Registration of user
 		if (validationMessage.equals(REG_SUCC_MSG)) {
 			try {
-				UserDao.getInstance(connection).insertUser(userName, password, email, firstName, lastName, description,
+				UserDao.getInstance().insertUser(userName, password, email, firstName, lastName, description,
 						avatarUrl);
 				User user = new User(userName, password, email, firstName, lastName, description, avatarUrl);
 				request.getSession().setAttribute("user", user);
@@ -147,7 +148,7 @@ public class RegisterServlet extends HttpServlet {
 			return "Confirm password is different than the password!";
 		}
 		try {
-			if (UserDao.getInstance(connection).existUser(userName)) {
+			if (UserDao.getInstance().existUser(userName)) {
 				return "This username already exists!";
 			}
 		} catch (SQLException e) {
